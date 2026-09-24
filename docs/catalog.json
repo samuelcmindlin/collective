@@ -2,6 +2,17 @@
   "version": 1,
   "documents": [
     {
+      "id": "platform.knowledge-implementation",
+      "path": "docs/KNOWLEDGE-IMPLEMENTATION.md",
+      "namespace": "platform",
+      "kind": "description",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["implementation", "knowledge", "retrieval"]
+    },
+    {
       "id": "platform.foundation-implementation",
       "path": "docs/FOUNDATION.md",
       "namespace": "platform",

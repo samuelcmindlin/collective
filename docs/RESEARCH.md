@@ -5,6 +5,12 @@ Upstream pages describe current moving branches; no candidate package has been
 installed, benchmarked, licensed for a particular distribution, or accepted into
 the runtime by this research. Pin versions and recheck contracts during a spike.
 
+Follow-up: the [knowledge implementation record](KNOWLEDGE-IMPLEMENTATION.md)
+contains the subsequent QMD 2.8.3/FTS5 lexical screening and its unmet quality gate.
+QMD was installed temporarily for that experiment; no application dependency was
+added. The repository is now tracked in local Git without a remote. The entries
+below preserve the original research recommendations.
+
 ## What changed after research
 
 The previous plan committed too early to building retrieval directly on SQLite.
@@ -84,8 +90,8 @@ command appeared in the CLI help. No sandbox was installed or started. See
 
 The current GitHub code constructs private-repository and draft-PR requests, but
 never uploads local commits. Both GitHub and Discord configuration-presence
-checks returned false. The platform directory has no `.git`; no remote is set
-up by this app. The new protocol tests use fake credentials and an in-process
+checks returned false. At that baseline the platform directory had no `.git`. Local Git has since
+been initialized; no remote is configured. The new protocol tests use fake credentials and an in-process
 HTTP substitute. They do not establish account permissions or live GitHub success.
 
 GitHub's API separates creating a PR from publishing a branch/ref. Our design

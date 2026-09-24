@@ -8,6 +8,7 @@ document is not a claim that its interfaces or safeguards already exist.
 
 | Document | Purpose | Status |
 | --- | --- | --- |
+| [Shared knowledge implementation](KNOWLEDGE-IMPLEMENTATION.md) | Versioned records, source import, keyword retrieval and remaining gates | Implemented bounded increment |
 | [Core foundation implementation](FOUNDATION.md) | Shipped guarantees, retry limits, migration and verification | Implemented first increment |
 | [Architecture assessment](ASSESSMENT.md) | What is sound, reproduced gaps, and limits of the tests | Recorded baseline |
 | [High-level architecture](HLA.md) | Components, ownership, execution flows, and scaling boundaries | Proposed |
@@ -21,7 +22,7 @@ document is not a claim that its interfaces or safeguards already exist.
 
 The [research memo](RESEARCH.md) compares reusable knowledge systems, workflow
 engines, sandbox options and evaluation tools. It updates the initial proposal:
-retrieval implementation is an open adapter decision until a comparative spike.
+the [lexical screening](KNOWLEDGE-IMPLEMENTATION.md#retrieval-experiment-and-provisional-choice) now records a provisional keyword baseline and the semantic retrieval gap.
 
 | Design | Concrete decisions and acceptance experiments |
 | --- | --- |
@@ -31,9 +32,10 @@ retrieval implementation is an open adapter decision until a comparative spike.
 | [4. Progress and live validation](designs/04-progress.md) | Criteria, protected checks, independent review, comparison trials and stopping rules |
 
 The four designs are targets with implementation tracked in the
-[foundation record](FOUNDATION.md). The suite now has 58 passing checks including
-fault injection and six offline GitHub protocol tests. GitHub and Discord remain
-unconfigured; no new sandbox or knowledge package has been installed.
+[foundation record](FOUNDATION.md) and [knowledge record](KNOWLEDGE-IMPLEMENTATION.md).
+The suite covers fault injection, knowledge boundaries and six offline GitHub
+protocol tests. GitHub and Discord remain unconfigured. QMD was tested in a
+temporary directory; the application has no new knowledge dependency.
 
 ## Decision records
 
@@ -43,18 +45,16 @@ unconfigured; no new sandbox or knowledge package has been installed.
 
 These ADRs are recommendations for review, not a record of user approval.
 
-## How these documents fit the future knowledge system
+## How these documents fit the knowledge system
 
 [catalog.json](catalog.json) gives each document a stable ID, namespace, owner,
-status, and audience. Markdown remains the editable source. The proposed importer
-will publish immutable, hash-addressed revisions into the shared knowledge
-service, preserving the source link. Search results will show whether an item is
-a platform description, proposed design, agent observation, or approved policy.
-
-There is no runtime importer yet. The catalog does not grant permissions and is
-not an additional copy of document content. A future importer must use a
-maintainer-configured source root and approved revision; an agent cannot confer
-platform authority by copying this catalog or adding metadata to a note.
+status and audience. Markdown in Git remains the editable source. At startup,
+the importer reads the committed HEAD snapshot, creates immutable revisions for
+changed registered sources, and preserves proposed/recorded status. Uncommitted
+edits are not imported. Agents can search and read these snapshots, but cannot
+edit protected sources through knowledge tools or promote their own metadata.
+See the [implementation contract](KNOWLEDGE-IMPLEMENTATION.md) for access rules,
+withdrawal, migration and retrieval limits.
 
 Run `npm run docs:check` to validate catalog fields, IDs, source paths, coverage,
 and local Markdown links. Run `npm run build` and then

@@ -1,7 +1,8 @@
 import type { DatabaseSync } from 'node:sqlite';
 import type { Job, Mission, Task } from '../types.js';
+import { knowledgeSchema, migrateLegacyKnowledge } from './knowledge-migration.js';
 
-export const schemaVersion = 2;
+export const schemaVersion = 3;
 
 const migrations = [
   `CREATE TABLE IF NOT EXISTS entities (collection TEXT NOT NULL,id TEXT NOT NULL,data TEXT NOT NULL,PRIMARY KEY(collection,id));
@@ -21,6 +22,7 @@ const migrations = [
      PRIMARY KEY (principal_id, command_id)
    );
    CREATE INDEX command_receipts_mission ON command_receipts(mission_id, principal_id, created_at);`,
+  knowledgeSchema,
 ];
 
 export function migrate(db: DatabaseSync) {
@@ -29,7 +31,10 @@ export function migrate(db: DatabaseSync) {
   if (current === schemaVersion) return;
   db.exec('BEGIN IMMEDIATE');
   try {
-    for (let index = current; index < schemaVersion; index++) db.exec(migrations[index]!);
+    for (let index = current; index < schemaVersion; index++) {
+      db.exec(migrations[index]!);
+      if (index === 2) migrateLegacyKnowledge(db);
+    }
     // Unscoped legacy work is retained. Only work whose mission can be established
     // from an existing task or mission payload is adopted; no date-based guesses.
     if (current === 1) {

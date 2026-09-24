@@ -32,7 +32,7 @@ const findings = [];
   findings.push({ id: 'R1', probe: 'Failure between task creation and job enqueue',
     commandRejected: rejected, tasksPersisted: store.all('tasks').length,
     jobsAdded: store.all('jobs').length - beforeJobs });
-  store.close();
+  service.knowledge.close(); store.close();
 }
 {
   const { store, service } = fixture();
@@ -53,7 +53,7 @@ const findings = [];
   findings.push({ id: 'R2', probe: 'Mutation of a task after its mission is replaced',
     taskInActiveMission: task.missionId === service.activeMission().id,
     oldTaskStatus: store.require('tasks', task.id).status, submissionRejected, reviewRejected });
-  store.close();
+  service.knowledge.close(); store.close();
 }
 {
   const { store, service } = fixture();
@@ -70,12 +70,13 @@ const findings = [];
   findings.push({ id: 'R4', probe: 'Acceptance of current-mission work with unrelated evidence',
     taskInActiveMission: task.missionId === service.activeMission().id,
     taskStatus: store.require('tasks', task.id).status,
-    evidenceTitle: store.require('knowledge', note.id).title,
+    evidenceTitle: service.knowledge.get({ kind: 'agent', id: 'iris' }, { revisionId: note.id }).title,
     reviewNote });
-  store.close();
+  service.knowledge.close(); store.close();
 }
 {
   const { store, service } = fixture();
+  service.setMission('Knowledge retrieval', 'Record and reuse decisions', [], 'operator');
   const original = await service.tool('atlas', 'knowledge_write', {
     title: 'Early important decision', content: 'The game must support keyboard controls.', kind: 'decision',
   });
@@ -84,20 +85,23 @@ const findings = [];
   });
   const context = service.context('ember');
   findings.push({ id: 'R3a', probe: 'Retrieval after 30 newer records',
-    storedRecords: store.all('knowledge').length,
+    storedRecords: store.db.prepare('SELECT COUNT(*) AS count FROM knowledge_revisions').get().count,
     recordsInContext: context.knowledge.length,
-    importantDecisionPresent: context.knowledge.some(k => k.id === original.id) });
+    importantDecisionPresent: context.knowledge.some(k => k.id === original.id),
+    searchableBeyondContext: service.knowledge.search({ kind: 'agent', id: 'ember' }, { query: 'keyboard controls' }).entries.some(k => k.id === original.id) });
   const a = await service.tool('atlas', 'knowledge_write', {
     title: 'Decision revision A', content: 'Keyboard and pointer controls.', kind: 'decision', previousId: original.id,
   });
-  const b = await service.tool('ember', 'knowledge_write', {
+  let competingRevisionRejected = false;
+  try { await service.tool('ember', 'knowledge_write', {
     title: 'Decision revision B', content: 'Pointer controls only.', kind: 'decision', previousId: original.id,
-  });
+  }); } catch { competingRevisionRejected = true; }
   findings.push({ id: 'R3b', probe: 'Competing revisions from the same parent',
-    revisions: [a.revision, b.revision],
-    bothPresentedAsCurrent: service.context('nova').knowledge.filter(k => [a.id, b.id].includes(k.id)).length === 2 });
-  store.close();
+    competingRevisionRejected, currentRevision: service.knowledge.get({ kind: 'agent', id: 'nova' }, { documentId: original.documentId }).id,
+    originalCitationStillReadable: service.knowledge.get({ kind: 'agent', id: 'nova' }, { revisionId: original.id }).content.includes('keyboard'),
+    acceptedRevision: a.id });
+  service.knowledge.close(); store.close();
 }
-const sourceFiles = ['src/service.ts', 'src/store.ts', 'src/scheduler.ts', 'src/discord.ts', 'src/claude.ts', 'src/application/tasks.ts', 'src/application/commands.ts', 'src/storage/migrations.ts'];
+const sourceFiles = ['src/service.ts', 'src/store.ts', 'src/scheduler.ts', 'src/discord.ts', 'src/claude.ts', 'src/application/tasks.ts', 'src/application/commands.ts', 'src/storage/migrations.ts', 'src/knowledge/repository.ts', 'src/knowledge/import.ts', 'src/knowledge/search.ts'];
 console.log(JSON.stringify({ recordedAt: new Date().toISOString(), method: 'In-memory domain probes; no models, credentials, app databases, or network',
   sourceHashes: Object.fromEntries(sourceFiles.map(path => [path, createHash('sha256').update(readFileSync(path)).digest('hex')])), findings }, null, 2));

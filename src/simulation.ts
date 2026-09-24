@@ -4,6 +4,7 @@ import type { Harness, RunResult } from './claude.js';
 import type { Agent, Job, Run } from './types.js';
 import type { CollectiveService } from './service.js';
 import { isTaskTool } from './application/tasks.js';
+import { isKnowledgeWrite } from './knowledge/repository.js';
 
 const game = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Orbit — a Collective rehearsal</title><style>*{box-sizing:border-box}body{margin:0;background:#121916;color:#eef0dd;font:18px system-ui;display:grid;place-items:center;min-height:100vh}main{text-align:center;max-width:540px;padding:32px}h1{font-size:64px;letter-spacing:-4px;margin:0}p{color:#a6b4a4}#board{display:grid;grid-template-columns:repeat(4,70px);gap:10px;justify-content:center;margin:30px 0}button{height:70px;background:#25332c;border:1px solid #485c4b;border-radius:16px;color:#d4e6b0;font-size:28px;cursor:pointer}button:disabled{opacity:.4}#reset{font-size:15px;padding:0 22px;height:45px}small{display:block;margin-top:26px;color:#7c8b80}</style></head><body><main><p>COLLECTIVE · REHEARSAL ARTIFACT</p><h1>Orbit</h1><p>Find all four pairs. Every flip counts.</p><div id="board"></div><p id="status" aria-live="polite">0 moves · 0 of 4 pairs</p><button id="reset">New constellation</button><small>This game is produced by the deterministic simulation, not live agents.</small></main><script>let cards=[],first=null,busy=false,moves=0,pairs=0,generation=0;function setup(){generation++;cards=['☀','☀','☾','☾','✦','✦','◈','◈'].map(v=>({v,k:Math.random()})).sort((a,b)=>a.k-b.k);first=null;busy=false;moves=0;pairs=0;document.querySelector('#board').innerHTML='';cards.forEach((c,i)=>{let b=document.createElement('button');b.textContent='·';b.setAttribute('aria-label','Reveal card '+(i+1));b.onclick=()=>flip(b,i);document.querySelector('#board').append(b)});status()}function status(){document.querySelector('#status').textContent=pairs===4?'Constellation complete in '+moves+' moves!':moves+' moves · '+pairs+' of 4 pairs'}function flip(b,i){if(busy||b.disabled||first?.i===i)return;b.textContent=cards[i].v;if(!first){first={b,i};return}moves++;let prev=first;first=null;if(cards[prev.i].v===cards[i].v){prev.b.disabled=b.disabled=true;pairs++;status()}else{busy=true;let g=generation;setTimeout(()=>{if(g!==generation)return;prev.b.textContent=b.textContent='·';busy=false},700);status()}}document.querySelector('#reset').onclick=setup;setup();</script></body></html>`;
 
@@ -17,7 +18,7 @@ export class SimulationHarness implements Harness {
       onEvent({ type: 'assistant', message: { content: [{ type: 'tool_use', name }] } });
       const count = commandCounts.get(name) ?? 0;
       commandCounts.set(name, count + 1);
-      return this.service.tool(agent.id, name, args, job, isTaskTool(name) ? `simulation:${job.id}:${name}:${count}` : undefined) as Promise<any>;
+      return this.service.tool(agent.id, name, args, job, (isTaskTool(name) || isKnowledgeWrite(name)) ? `simulation:${job.id}:${name}:${count}` : undefined) as Promise<any>;
     };
     const store = this.service.store;
     if (job.kind === 'mission') {

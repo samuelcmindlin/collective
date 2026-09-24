@@ -7,6 +7,7 @@ import type { Agent, Capability, Job, Message, PermissionRequest } from './types
 import type { Config } from './config.js';
 import { TaskCommands, taskSchemas, isTaskTool } from './application/tasks.js';
 import { stable } from './application/commands.js';
+import { KnowledgeRepository, knowledgeSchemas } from './knowledge/repository.js';
 export { stable } from './application/commands.js';
 
 const text = (max = 4000) => z.string().trim().min(1).max(max);
@@ -17,7 +18,7 @@ export const toolSchemas = {
   room_enter: z.object({ roomId: text(100) }),
   room_say: z.object({ content: text(1800), toAgentIds: ids.optional() }),
   ...taskSchemas,
-  knowledge_write: z.object({ title: text(200), content: text(12000), kind: z.enum(['fact', 'hypothesis', 'decision', 'question']), sources: z.array(z.string().max(2000)).max(30).default([]), previousId: text(100).optional() }),
+  ...knowledgeSchemas,
   artifact_publish: z.object({ title: text(200), description: text(), path: text(1000), taskId: text(100).optional() }),
   artifact_read: z.object({ artifactId: text(100) }),
   meeting_schedule: z.object({ title: text(200), agenda: text(), expectedOutcome: text(), roomId: text(100), participants: ids.min(2), startsAt: z.string().datetime(), durationMinutes: z.number().int().min(1).max(60) }),
@@ -36,7 +37,10 @@ export const toolDescriptions: Record<ToolName, string> = {
   task_update: 'Mark your own active-mission task doing or blocked. Include commandId for retry safety and expectedVersion from context to reject stale edits.',
   task_submit: 'Submit your active-mission task with published evidence for independent review. Include commandId and expectedVersion. Reuse the ID only for an identical retry; submission is not completion.',
   task_review: 'Independently review an active-mission task. Inspect evidence, explain the verdict, and include commandId and expectedVersion. Reuse the ID for an identical retry.',
-  knowledge_write: 'Publish sourced knowledge or a clearly labelled hypothesis, decision, or question. To revise knowledge create a new record referring to previousId.',
+  knowledge_write: 'Create a shared or private agent note, or revise using documentId and the exact current previousId. Include stable commandId for retries. Stale revisions conflict; resolveHeads explicitly merges every conflicting legacy head. Protected docs are read-only.',
+  knowledge_search: 'Search all authorized current knowledge using literal keywords (all terms must occur). No recency cutoff. Returns bounded snippets and exact citations, not verified answers. Empty query browses the catalog. Try alternate terms for paraphrases.',
+  knowledge_get: 'Read exact knowledge by documentId (current revision) or revisionId (immutable citation). Inspect evidence with this tool; summaries are incomplete. Conflicts require an exact revision.',
+  knowledge_history: 'List bounded immutable revision history and any conflicting heads for one authorized document.',
   artifact_publish: 'Copy a file from your workspace into immutable shared artifact storage. Returns its evidence ID. HTML can be previewed by the user.',
   artifact_read: 'Read a published text artifact by ID so you can independently inspect evidence. Binary artifacts return metadata only.',
   meeting_schedule: 'Schedule a bounded meeting with named participants, agenda, and expected outcome. Calendars prevent overlapping invitations.',
@@ -50,7 +54,8 @@ export const toolDescriptions: Record<ToolName, string> = {
 export class CollectiveService {
   private capabilityLocks = new Set<string>();
   readonly tasks: TaskCommands;
-  constructor(readonly store: Store, readonly config: Config) { this.tasks = new TaskCommands(store); }
+  readonly knowledge: KnowledgeRepository;
+  constructor(readonly store: Store, readonly config: Config) { this.knowledge = new KnowledgeRepository(store); this.tasks = new TaskCommands(store, this.knowledge); }
   workspace(agentId: string) { this.store.require('agents', agentId); const path = resolve(this.config.dataDir, 'workspaces', agentId); mkdirSync(path, { recursive: true, mode: 0o700 }); return path; }
   activeMission() { return this.store.all('missions').find(m => m.status === 'active'); }
   outbox(kind: 'message' | 'request' | 'artifact' | 'notice', entityId: string, roomId: string) {
@@ -62,8 +67,7 @@ export class CollectiveService {
     const agent = this.store.require('agents', agentId);
     const mission = this.activeMission();
     const agents = this.store.all('agents');
-    const knowledge = this.store.all('knowledge');
-    const superseded = new Set(knowledge.map(entry => entry.previousId).filter(Boolean));
+    const knowledge = this.knowledge.packet(agentId);
     return {
       you: agent,
       mission: mission ?? this.store.all('missions').at(-1),
@@ -77,10 +81,13 @@ export class CollectiveService {
       recentTaskCommands: this.store.db.prepare(`
         SELECT command_id AS commandId, command_name AS name,
           json_extract(result_json,'$.id') AS taskId, created_at AS createdAt
-        FROM command_receipts WHERE principal_id=? AND mission_id=?
+        FROM command_receipts WHERE principal_id=? AND mission_id=? AND command_name LIKE 'task_%'
         ORDER BY created_at DESC, rowid DESC LIMIT 20
       `).all(agentId, mission?.id ?? ''),
-      knowledge: knowledge.filter(entry => !superseded.has(entry.id)).slice(-30),
+      knowledge: knowledge.entries,
+      knowledgeRetrieval: { moreAvailable: knowledge.moreAvailable, instructions: knowledge.retrieval, manifest: knowledge.manifest },
+      recentKnowledgeCommands: this.store.db.prepare(`SELECT command_id AS commandId, json_extract(result_json,'$.id') AS revisionId
+        FROM command_receipts WHERE principal_id=? AND mission_id=? AND command_name='knowledge_write' ORDER BY rowid DESC LIMIT 10`).all(agentId, mission?.id ?? ''),
       artifacts: this.store.all('artifacts').slice(-30).map(({ path: _path, ...artifact }) => artifact),
       calendar: this.store.all('meetings').filter(meeting => meeting.participants.includes(agentId)),
       requests: this.store.all('requests').filter(request => request.agentId === agentId),
@@ -146,6 +153,10 @@ export class CollectiveService {
       return this.tasks.execute(agentId, name, raw, commandId);
     });
     if (job) this.assertJob(agentId, job);
+    if (name === 'knowledge_write') return this.knowledge.write(agentId, raw, commandId);
+    if (name === 'knowledge_search') return this.knowledge.search({ kind: 'agent', id: agentId }, raw);
+    if (name === 'knowledge_get') return this.knowledge.inspect(agentId, raw);
+    if (name === 'knowledge_history') return this.knowledge.history({ kind: 'agent', id: agentId }, raw);
     const agent = this.store.require('agents', agentId);
     const args = toolSchemas[name].parse(raw) as any;
     // External work never holds a SQLite transaction open.
@@ -163,10 +174,6 @@ export class CollectiveService {
         return this.context(agentId);
       }
       case 'room_say': return this.say(agentId, args.content, args.toAgentIds, Number(job?.payload.depth ?? 0));
-      case 'knowledge_write': {
-        let revision = 1; if (args.previousId) revision = this.store.require('knowledge', args.previousId).revision + 1;
-        const entry = this.store.put('knowledge', { id: id('know'), ...args, authorId: agentId, revision, createdAt: nowIso() }); this.store.event('knowledge.published', agentId, entry.id, { title: entry.title }); return entry;
-      }
       case 'artifact_publish': {
         const workspace = realpathSync(this.workspace(agentId)); const path = realpathSync(resolve(workspace, args.path));
         if (!path.startsWith(workspace + sep) || path.includes(`${sep}.claude${sep}`)) throw new Error('Artifact must be a regular file inside your workspace.');

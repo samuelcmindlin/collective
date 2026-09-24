@@ -1,0 +1,58 @@
+{
+  "recordedAt": "2026-09-24T02:42:11.154Z",
+  "method": "In-memory domain probes; no models, credentials, app databases, or network",
+  "sourceHashes": {
+    "src/service.ts": "3843aa7d6fc8fce9e0dde493afdc8f5f6d41824efbf728ef9ccb8e3a9399c383",
+    "src/store.ts": "40d085d36065dd72e3ecf71e1f74efa1f764bdc14c3c668de0164b3754e9ce29",
+    "src/scheduler.ts": "5b53faba0cc1735a7f7ac7a6b3510e9fb274c01c2f6464a99fbd23f0d4ec17ac",
+    "src/discord.ts": "c0c3ef7b2e985a68f690318f95192c982e725efa6c73c5b51285dbe4432fb4dc",
+    "src/claude.ts": "0f3342867148cb17e14281182781f9e6a9f5176ed1caabbed63acafc915aa5b5",
+    "src/application/tasks.ts": "dccf3208d5bb583473f9201cec96fc74c93d8ae24cd2adc2b8cf7dfa69d6e691",
+    "src/application/commands.ts": "6666cf9a05b72a69f559f4ee9a98e4b7b1a94fcac490de40c9983a78b211fb1c",
+    "src/storage/migrations.ts": "1c2d552522d4972b941ad44345a28cd8acb40d417136f02148d7203a51dc38ac",
+    "src/knowledge/repository.ts": "a49b5c2fa04d6c374d0f591dc1fe8ab7092a9b2223a416d09d82511e55d6f6c7",
+    "src/knowledge/import.ts": "de71c26cd021acab6ea59d214d8df63d3d31a78e12b063f47e1c6280c699f760",
+    "src/knowledge/search.ts": "1ad049c52cd2d4670b1f58a9d8fc477b320ad57129b12c748b9ec6fe6709644b"
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "probe": "Failure between task creation and job enqueue",
+      "commandRejected": true,
+      "tasksPersisted": 0,
+      "jobsAdded": 0
+    },
+    {
+      "id": "R2",
+      "probe": "Mutation of a task after its mission is replaced",
+      "taskInActiveMission": false,
+      "oldTaskStatus": "todo",
+      "submissionRejected": true,
+      "reviewRejected": true
+    },
+    {
+      "id": "R4",
+      "probe": "Acceptance of current-mission work with unrelated evidence",
+      "taskInActiveMission": true,
+      "taskStatus": "done",
+      "evidenceTitle": "Unrelated note",
+      "reviewNote": "Looks fine"
+    },
+    {
+      "id": "R3a",
+      "probe": "Retrieval after 30 newer records",
+      "storedRecords": 31,
+      "recordsInContext": 10,
+      "importantDecisionPresent": false,
+      "searchableBeyondContext": true
+    },
+    {
+      "id": "R3b",
+      "probe": "Competing revisions from the same parent",
+      "competingRevisionRejected": true,
+      "currentRevision": "know_d740e37b-e1e8-460b-b753-bf1500e9b765",
+      "originalCitationStillReadable": true,
+      "acceptedRevision": "know_d740e37b-e1e8-460b-b753-bf1500e9b765"
+    }
+  ]
+}

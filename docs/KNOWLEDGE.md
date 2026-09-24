@@ -1,7 +1,9 @@
 # Knowledge, memory, and evidence
 
-Status: proposed. The current app has notes with revision links and immutable
-artifacts, but no indexed retrieval service or platform-document importer.
+Status: target architecture, partially implemented. The current
+[knowledge increment](KNOWLEDGE-IMPLEMENTATION.md) adds immutable revisions, keyword
+retrieval, protected Git-source import and access rules. Broader graphs, semantic
+retrieval, durable context manifests and criterion-bound evaluation remain proposed.
 See [assessment R3](ASSESSMENT.md) for the reproduced retrieval and revision gaps.
 
 ## One library, several kinds of memory
@@ -68,9 +70,9 @@ There must be one editable source for each document:
   be rebuilt; they never replace the cited original.
 
 The [documentation catalog](catalog.json) establishes stable identities now.
-It is a manifest of source documents, not an implemented runtime import pipeline.
-The future importer will accept only maintainer-configured roots and approved
-revisions, reject escaping paths, compute content hashes, and preserve ownership.
+It is a manifest of sources consumed by the implemented Git-snapshot importer.
+The importer reads the configured platform repository at its committed HEAD,
+rejects escaping paths/symlinks, computes content hashes and preserves ownership.
 Proposed design documents remain labelled proposed when imported. Catalog
 metadata cannot install an execution policy.
 

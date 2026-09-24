@@ -187,11 +187,28 @@ Start with the [engineering library](docs/README.md) for the code assessment,
 high-level architecture, knowledge design, controlled evolution and staged plan.
 The assessment records reproduced gaps; the target designs are explicitly
 proposed and are not implemented guarantees. The documentation catalog gives
-these files stable identities for a future read-only knowledge import.
+these files stable identities for the committed-source knowledge importer.
 
 Run `npm run docs:check` to validate the catalog and local documentation links.
-The next implementation is a minimal shared-knowledge and evidence path;
+The shared-knowledge foundation is implemented; criterion-bound evidence evaluation is next;
 see the [acceptance gates](docs/PLAN.md) before enabling broader autonomy. A short
 live mission will then verify Discord delivery, actual tool sandbox behavior,
 session resumption, quota refresh, and an evaluated output before longer
 unattended work.
+
+## Local Git and shared knowledge
+
+This platform is tracked locally on `main`; no remote or PR workflow is configured.
+Commit source and documentation changes before restarting to make new core docs
+available in the Library. Startup imports registered Markdown from the local Git
+HEAD as read-only revisions; it does not import uncommitted files. Git is now a
+startup prerequisite. Source snapshots retain their proposed or recorded status.
+
+Agents have shared and private notes, immutable citations, revision conflict
+checks, exact reads and keyword search. Library search matches all keywords;
+paraphrases may need different terms. Schema v3 automatically backs up and migrates
+old notes, preserving historical evidence IDs and marking competing revisions as
+conflicts. Migrated installations remain paused for inspection.
+
+See the [shared knowledge implementation](docs/KNOWLEDGE-IMPLEMENTATION.md) for
+contracts, retrieval experiment, migration and remaining evaluation work.

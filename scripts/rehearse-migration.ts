@@ -11,6 +11,10 @@ function snapshot(db: DatabaseSync) {
     version: (db.prepare('PRAGMA user_version').get() as { user_version: number }).user_version,
     entities: db.prepare('SELECT collection,id,data FROM entities ORDER BY collection,id').all() as { collection: string; id: string; data: string }[],
     events: db.prepare('SELECT * FROM events ORDER BY id').all(),
+    receipts: db.prepare("SELECT name FROM sqlite_master WHERE name='command_receipts'").get()
+      ? db.prepare('SELECT * FROM command_receipts ORDER BY principal_id,command_id').all() : [],
+    knowledge: ['knowledge_documents', 'knowledge_revisions', 'knowledge_generation'].map(table => ({ table,
+      rows: db.prepare('SELECT name FROM sqlite_master WHERE name=?').get(table) ? db.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all() : [] })),
   };
 }
 const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -40,8 +44,17 @@ for (const sourcePath of sources) {
         const unchanged = (rows: typeof before.entities) => rows.filter(row => !['jobs', 'settings'].includes(row.collection));
         assert.deepEqual(unchanged(after.entities), unchanged(before.entities), 'non-runtime entities retain their exact content');
         assert.deepEqual(after.events, before.events, 'historical events are preserved');
+        assert.deepEqual(after.receipts, before.receipts, 'command receipts are preserved');
         assert.equal(after.entities.length, before.entities.length, 'no entity was removed');
         assert.equal((migrated.db.prepare('PRAGMA integrity_check').get() as { integrity_check: string }).integrity_check, 'ok');
+        for (const row of before.entities.filter(row => row.collection === 'knowledge')) {
+          const legacy = JSON.parse(row.data);
+          const revision = migrated.db.prepare('SELECT data FROM knowledge_revisions WHERE id=?').get(row.id) as { data: string } | undefined;
+          assert.ok(revision, 'legacy evidence ID resolves');
+          const current = JSON.parse(revision.data);
+          assert.equal(current.content, legacy.content);
+          assert.equal(current.sha256, createHash('sha256').update(legacy.content).digest('hex'));
+        }
         migrated.recover();
         recoveryJobs = migrated.all('jobs').filter(job => job.status === 'pending').length;
       } finally { migrated.close(); }

@@ -2,7 +2,10 @@
 
 Status: implemented first increment, 2026-09-23. This records the changes to the
 prototype after the [assessment](ASSESSMENT.md). It does not mark every gate in
-the four subsystem designs complete.
+the four subsystem designs complete. The subsequent
+[knowledge increment](KNOWLEDGE-IMPLEMENTATION.md) supersedes the knowledge-write
+limitations and schema-v2-only description below; this remains the first-increment
+verification record.
 
 ## Priority and scope
 

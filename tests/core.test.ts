@@ -74,7 +74,7 @@ test('human message duplicates do not reawaken agents and observers remain untru
 test('task completion requires published evidence and an independent reviewer', async () => {
   const s = setup(); s.service.setMission('Create a game', 'Choose and build a game.', [], 'operator');
   const task = await s.service.tool('nova', 'task_create', { title: 'Specify rules', description: 'Define the rules', ownerId: 'atlas', acceptance: 'Rules are explicit' }) as any;
-  await assert.rejects(s.service.tool('atlas', 'task_submit', { taskId: task.id, evidenceIds: ['invented'], note: 'Done' }), /not a published/);
+  await assert.rejects(s.service.tool('atlas', 'task_submit', { taskId: task.id, evidenceIds: ['invented'], note: 'Done' }), /not found or unavailable/);
   const knowledge = await s.service.tool('atlas', 'knowledge_write', { title: 'Rules', content: 'Match four pairs.', kind: 'decision' }) as any;
   await s.service.tool('atlas', 'task_submit', { taskId: task.id, evidenceIds: [knowledge.id], note: 'Ready' });
   await assert.rejects(s.service.tool('atlas', 'task_review', { taskId: task.id, accepted: true, note: 'I approve' }), /cannot approve your own/);

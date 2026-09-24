@@ -1,8 +1,9 @@
 # Design 2: Knowledge contracts and reusable retrieval
 
-Status: proposed implementation design. Refines [knowledge architecture](../KNOWLEDGE.md)
-and plan slices 2–3. No external knowledge engine has been installed. The prior
-direct-FTS implementation choice becomes a baseline candidate pending the spike.
+Status: partially implemented; see the [knowledge increment](../KNOWLEDGE-IMPLEMENTATION.md). Refines [knowledge architecture](../KNOWLEDGE.md)
+and plan slices 2–3. QMD 2.8.3 was screened in a temporary directory against FTS5. Both lexical
+paths missed the quality target. The runtime uses a provisional keyword baseline;
+no external engine dependency was added and the full reuse experiment remains open.
 
 ## Decision to test
 

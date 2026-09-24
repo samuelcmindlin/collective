@@ -1,0 +1,393 @@
+{
+  "sourceCommit": "dfd605bd4c12d3bf2eb986524c6d206851e59c32",
+  "fixtureHash": "58bc0172a777bdb940ed7fe33ad19d195194cb82652b26252ceff9a23ac329c0",
+  "documents": 1020,
+  "node": "v22.21.0",
+  "sqlite": "3.50.4",
+  "platform": "darwin-arm64",
+  "modelCalls": 0,
+  "retrievalNetworkCalls": "No network APIs invoked by this script; packet traffic not instrumented",
+  "note": "Lexical screening only. Access/citations/update/handoff gates belong to the integration suite. No semantic accuracy or production latency claim.",
+  "metrics": {
+    "sqlite-fts5": {
+      "indexMs": 7.322957999999971,
+      "meanRecallAt5": 0.75,
+      "meanReciprocalRank": 0.625,
+      "queries": [
+        {
+          "query": "offline network",
+          "relevant": [
+            "constraint"
+          ],
+          "hits": [
+            "constraint",
+            "platform.prototype-decisions"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 2.138874999999871
+        },
+        {
+          "query": "pending timers",
+          "relevant": [
+            "reset"
+          ],
+          "hits": [
+            "reset"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 0.14166599999998652
+        },
+        {
+          "query": "disputed hypothesis",
+          "relevant": [
+            "conflict"
+          ],
+          "hits": [
+            "conflict",
+            "platform.knowledge"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 0.124416999999994
+        },
+        {
+          "query": "rollback",
+          "relevant": [
+            "platform.foundation-implementation"
+          ],
+          "hits": [
+            "platform.adr-003",
+            "platform.foundation-implementation",
+            "platform.evolution",
+            "platform.plan",
+            "platform.design-execution"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 0.5,
+          "latencyMs": 1.4469589999998789
+        },
+        {
+          "query": "quota",
+          "relevant": [
+            "operator.setup",
+            "platform.plan"
+          ],
+          "hits": [
+            "platform.prototype-decisions",
+            "platform.design-progress",
+            "platform.assessment",
+            "operator.setup",
+            "platform.plan"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 0.25,
+          "latencyMs": 0.06612499999982901
+        },
+        {
+          "query": "immutable revision",
+          "relevant": [
+            "platform.knowledge",
+            "platform.design-knowledge"
+          ],
+          "hits": [
+            "platform.knowledge",
+            "platform.design-knowledge",
+            "platform.design-progress",
+            "platform.design-execution",
+            "platform.docs-index"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 0.052667000000155895
+        },
+        {
+          "query": "protected ownership",
+          "relevant": [
+            "platform.knowledge",
+            "platform.design-knowledge"
+          ],
+          "hits": [
+            "platform.adr-003",
+            "platform.evolution",
+            "platform.docs-index",
+            "platform.knowledge",
+            "platform.foundation-research"
+          ],
+          "recallAt5": 0.5,
+          "reciprocalRank": 0.25,
+          "latencyMs": 0.03749999999990905
+        },
+        {
+          "query": "independent review",
+          "relevant": [
+            "platform.design-progress",
+            "platform.prototype-decisions"
+          ],
+          "hits": [
+            "platform.design-progress",
+            "platform.docs-index",
+            "platform.assessment",
+            "platform.foundation-implementation",
+            "platform.plan"
+          ],
+          "recallAt5": 0.5,
+          "reciprocalRank": 1,
+          "latencyMs": 0.039916999999832115
+        },
+        {
+          "query": "Discord",
+          "relevant": [
+            "operator.setup"
+          ],
+          "hits": [
+            "platform.prototype-decisions",
+            "operator.setup",
+            "platform.hla",
+            "platform.adr-001",
+            "platform.assessment"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 0.5,
+          "latencyMs": 0.037374999999883585
+        },
+        {
+          "query": "private draft",
+          "relevant": [
+            "platform.plan",
+            "platform.design-workspaces-prs"
+          ],
+          "hits": [
+            "platform.design-workspaces-prs",
+            "platform.foundation-research",
+            "platform.design-progress",
+            "platform.plan",
+            "platform.evolution"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 0.04308400000013535
+        },
+        {
+          "query": "works without internet",
+          "relevant": [
+            "constraint"
+          ],
+          "hits": [],
+          "recallAt5": 0,
+          "reciprocalRank": 0,
+          "latencyMs": 0.021999999999934516
+        },
+        {
+          "query": "clear delayed callbacks",
+          "relevant": [
+            "reset"
+          ],
+          "hits": [],
+          "recallAt5": 0,
+          "reciprocalRank": 0,
+          "latencyMs": 0.03933299999994233
+        },
+        {
+          "query": "zxqv nonexistent aeroponics",
+          "relevant": [],
+          "hits": [],
+          "recallAt5": null,
+          "reciprocalRank": null,
+          "latencyMs": 0.02087500000016007
+        }
+      ]
+    },
+    "qmd-2.8.3-lexical": {
+      "indexMs": 714.5292919999999,
+      "meanRecallAt5": 0.75,
+      "meanReciprocalRank": 0.5902777777777778,
+      "queries": [
+        {
+          "query": "offline network",
+          "relevant": [
+            "constraint"
+          ],
+          "hits": [
+            "constraint",
+            "platform.prototype-decisions"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 3.73695900000007
+        },
+        {
+          "query": "pending timers",
+          "relevant": [
+            "reset"
+          ],
+          "hits": [
+            "reset"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 0.27149999999983265
+        },
+        {
+          "query": "disputed hypothesis",
+          "relevant": [
+            "conflict"
+          ],
+          "hits": [
+            "conflict",
+            "platform.knowledge"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 0.41658299999994597
+        },
+        {
+          "query": "rollback",
+          "relevant": [
+            "platform.foundation-implementation"
+          ],
+          "hits": [
+            "platform.adr-003",
+            "platform.foundation-implementation",
+            "platform.evolution",
+            "platform.plan",
+            "platform.design-execution"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 0.5,
+          "latencyMs": 0.6536659999999301
+        },
+        {
+          "query": "quota",
+          "relevant": [
+            "operator.setup",
+            "platform.plan"
+          ],
+          "hits": [
+            "platform.prototype-decisions",
+            "platform.design-progress",
+            "platform.assessment",
+            "operator.setup",
+            "platform.plan"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 0.25,
+          "latencyMs": 2.5095420000000104
+        },
+        {
+          "query": "immutable revision",
+          "relevant": [
+            "platform.knowledge",
+            "platform.design-knowledge"
+          ],
+          "hits": [
+            "platform.knowledge",
+            "platform.design-knowledge",
+            "platform.adr-003",
+            "platform.adr-002",
+            "platform.design-progress"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 0.5494589999998425
+        },
+        {
+          "query": "protected ownership",
+          "relevant": [
+            "platform.knowledge",
+            "platform.design-knowledge"
+          ],
+          "hits": [
+            "platform.adr-003",
+            "platform.evolution",
+            "platform.knowledge",
+            "platform.docs-index",
+            "platform.foundation-research"
+          ],
+          "recallAt5": 0.5,
+          "reciprocalRank": 0.3333333333333333,
+          "latencyMs": 0.5262089999998807
+        },
+        {
+          "query": "independent review",
+          "relevant": [
+            "platform.design-progress",
+            "platform.prototype-decisions"
+          ],
+          "hits": [
+            "platform.assessment",
+            "platform.design-progress",
+            "platform.docs-index",
+            "platform.plan",
+            "platform.foundation-implementation"
+          ],
+          "recallAt5": 0.5,
+          "reciprocalRank": 0.5,
+          "latencyMs": 0.44987500000002
+        },
+        {
+          "query": "Discord",
+          "relevant": [
+            "operator.setup"
+          ],
+          "hits": [
+            "platform.prototype-decisions",
+            "operator.setup",
+            "platform.hla",
+            "platform.assessment",
+            "platform.adr-001"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 0.5,
+          "latencyMs": 0.6683330000000751
+        },
+        {
+          "query": "private draft",
+          "relevant": [
+            "platform.plan",
+            "platform.design-workspaces-prs"
+          ],
+          "hits": [
+            "platform.design-workspaces-prs",
+            "platform.foundation-research",
+            "platform.design-progress",
+            "platform.plan",
+            "platform.evolution"
+          ],
+          "recallAt5": 1,
+          "reciprocalRank": 1,
+          "latencyMs": 0.41904199999999037
+        },
+        {
+          "query": "works without internet",
+          "relevant": [
+            "constraint"
+          ],
+          "hits": [],
+          "recallAt5": 0,
+          "reciprocalRank": 0,
+          "latencyMs": 0.14574999999990723
+        },
+        {
+          "query": "clear delayed callbacks",
+          "relevant": [
+            "reset"
+          ],
+          "hits": [],
+          "recallAt5": 0,
+          "reciprocalRank": 0,
+          "latencyMs": 0.08483400000000074
+        },
+        {
+          "query": "zxqv nonexistent aeroponics",
+          "relevant": [],
+          "hits": [],
+          "recallAt5": null,
+          "reciprocalRank": null,
+          "latencyMs": 0.07504200000016681
+        }
+      ]
+    }
+  }
+}

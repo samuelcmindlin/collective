@@ -1,7 +1,7 @@
 # Foundation and rollout plan
 
-Status: proposed, except the assessment/documentation baseline explicitly marked
-complete below. This is an ordered set of reviewable changes, not a claim that
+Status: ordered plan with the execution and knowledge increments explicitly
+marked implemented below. This is an ordered set of reviewable changes, not a claim that
 the runtime already implements the target architecture.
 
 ## Recommendation
@@ -56,6 +56,11 @@ Acceptance:
 
 ## Slice 2 — Storage contracts and knowledge versioning
 
+Implemented for knowledge in [KNOWLEDGE-IMPLEMENTATION.md](KNOWLEDGE-IMPLEMENTATION.md):
+schema v3, document/revision repository, migration preserving legacy IDs and
+conflicts, atomic revision commands and optimistic revision checks. Other generic
+entity repositories and relational links remain future work.
+
 Add actual numbered migrations and concrete repositories for documents, tasks,
 jobs, messages and delivery operations. Migrate the generic JSON records in a
 bounded, transactional conversion with an explicit backup/restore path. Keep
@@ -76,6 +81,12 @@ Acceptance:
 - Query plans use the intended indexes; list operations have enforced limits.
 
 ## Slice 3 — Searchable knowledge and core-document import
+
+The bounded knowledge path is implemented: protected committed-source import,
+exact reads, keyword search, source-aware Library and deterministic fresh-session
+retrieval tests. The lexical comparison scored 0.75 recall for both candidates;
+semantic retrieval and the full 0.9 gate remain open. A real model handoff and
+a durable complete context manifest are still pending.
 
 First run the reuse experiment in [design 2](designs/02-knowledge.md): compare QMD
 with a minimal FTS5 baseline, and consider Basic Memory's fuller workflow against

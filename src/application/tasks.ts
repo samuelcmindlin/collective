@@ -2,6 +2,7 @@ import { z } from 'zod/v3';
 import { Store, id, nowIso } from '../store.js';
 import type { Mission, Task } from '../types.js';
 import { executeCommand } from './commands.js';
+import type { KnowledgeRepository } from '../knowledge/repository.js';
 
 const text = (max = 4000) => z.string().trim().min(1).max(max);
 const ids = z.array(text(100)).max(20);
@@ -28,7 +29,7 @@ function parseCommand(name: TaskToolName, raw: unknown) {
 
 /** Task transitions own their transaction, including jobs, counters and receipts. */
 export class TaskCommands {
-  constructor(private store: Store) {}
+  constructor(private store: Store, private knowledge: KnowledgeRepository) {}
 
   execute(agentId: string, name: TaskToolName, raw: unknown, invocationId?: string): Task {
     const command = parseCommand(name, raw);
@@ -103,8 +104,9 @@ export class TaskCommands {
     if (task.status === 'done' || task.status === 'review') throw new Error('Task already submitted.');
     if (!this.dependenciesComplete(task)) throw new Error('Dependencies are not complete.');
     for (const evidenceId of args.evidenceIds) {
-      if (!this.store.get('artifacts', evidenceId) && !this.store.get('knowledge', evidenceId)) {
-        throw new Error(`Evidence ${evidenceId} is not a published artifact or knowledge entry.`);
+      if (!this.store.get('artifacts', evidenceId)) {
+        const entry = this.knowledge.get({ kind: 'agent', id: agentId }, { revisionId: evidenceId });
+        if (entry.namespace === 'agent') throw new Error('Task evidence must be shared knowledge, not a private note.');
       }
     }
     const agents = this.store.all('agents');
@@ -122,6 +124,10 @@ export class TaskCommands {
     const task = this.currentTask(args.taskId, mission, args.expectedVersion);
     if (task.ownerId === agentId) throw new Error('Independent review required: you cannot approve your own task.');
     if (task.status !== 'review' || !task.evidence.length) throw new Error('Task must be submitted with evidence first.');
+    // A removed source cannot retain authority merely because an earlier submission cited it.
+    if (args.accepted) for (const evidenceId of task.evidence) {
+      if (!this.store.get('artifacts', evidenceId)) this.knowledge.get({ kind: 'agent', id: agentId }, { revisionId: evidenceId });
+    }
     const updated = this.patch(task, {
       status: args.accepted ? 'done' : 'todo',
       review: { reviewerId: agentId, accepted: args.accepted, note: args.note, at: nowIso() },

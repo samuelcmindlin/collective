@@ -14,7 +14,7 @@ import { callAgentTool } from '../src/agent-client.js';
 import type { Config } from '../src/config.js';
 import type { Harness, RunResult } from '../src/claude.js';
 import type { Task, Job, Run } from '../src/types.js';
-import { migrate } from '../src/storage/migrations.js';
+import { migrate, schemaVersion } from '../src/storage/migrations.js';
 import { backupBeforeMigration } from '../src/storage/backup.js';
 
 const flush = () => new Promise<void>(resolve => queueMicrotask(resolve));
@@ -397,7 +397,7 @@ test('schema migration preserves legacy task identities and cancels unverifiable
   const taskBefore = db.prepare("SELECT data FROM entities WHERE collection='tasks'").get();
   try {
     migrate(db);
-    assert.equal((db.prepare('PRAGMA user_version').get() as { user_version: number }).user_version, 2);
+    assert.equal((db.prepare('PRAGMA user_version').get() as { user_version: number }).user_version, schemaVersion);
     assert.deepEqual(db.prepare("SELECT data FROM entities WHERE collection='tasks'").get(), taskBefore);
     const jobs = (db.prepare("SELECT data FROM entities WHERE collection='jobs' ORDER BY id").all() as { data: string }[]).map(r => JSON.parse(r.data));
     assert.equal(jobs[0].missionId, 'mission-old'); assert.equal(jobs[0].missionRevision, 4);

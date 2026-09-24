@@ -7,6 +7,7 @@ import type { Config } from './config.js';
 import type { CollectiveService, ToolName } from './service.js';
 import { toolSchemas } from './service.js';
 import { isTaskTool } from './application/tasks.js';
+import { isKnowledgeWrite } from './knowledge/repository.js';
 import type { Scheduler } from './scheduler.js';
 import type { DiscordBridge } from './discord.js';
 import { id, nowIso } from './store.js';
@@ -45,8 +46,8 @@ export function createHttpServer(service: CollectiveService, scheduler: Schedule
         auth = scheduler.authenticateRun(runToken);
         if (!auth) return json(res, 401, { error: 'Run ended or was paused while receiving the request.' });
         if (!Object.hasOwn(toolSchemas, input.name)) return json(res, 400, { error: 'Unknown collective tool.' });
-        if (isTaskTool(input.name) && !input.commandId && !(input.arguments && typeof input.arguments === 'object' && 'commandId' in input.arguments && input.arguments.commandId)) {
-          return json(res, 400, { error: 'Task commands require a stable commandId.' });
+        if ((isTaskTool(input.name) || isKnowledgeWrite(input.name)) && !input.commandId && !(input.arguments && typeof input.arguments === 'object' && 'commandId' in input.arguments && input.arguments.commandId)) {
+          return json(res, 400, { error: 'Task and knowledge commands require a stable commandId.' });
         }
         const result = await service.tool(auth.agent.id, input.name as ToolName, input.arguments, auth.job, input.commandId);
         return json(res, 200, result);
@@ -55,9 +56,16 @@ export function createHttpServer(service: CollectiveService, scheduler: Schedule
       if (url.pathname.startsWith('/api/')) {
         if (!equal(cookie, operatorToken) || !validOrigin(req.headers.origin, config.port) || req.headers['sec-fetch-site'] === 'cross-site') return json(res, 403, { error: 'Open the local Collective app to access this endpoint.' });
         if (req.method !== 'GET' && req.headers['x-collective-local'] !== '1') return json(res, 403, { error: 'Local operator header required.' });
+        if (url.pathname === '/api/knowledge/search' && req.method === 'GET') {
+          const query = url.searchParams.get('query') ?? '';
+          const offset = z.coerce.number().int().min(0).max(100000).parse(url.searchParams.get('offset') ?? 0);
+          return json(res, 200, query ? service.knowledge.search({ kind: 'operator' }, { query, limit: 20 }) : service.knowledge.list({ kind: 'operator' }, 20, offset));
+        }
+        if (url.pathname === '/api/knowledge/get' && req.method === 'GET') return json(res, 200, service.knowledge.get({ kind: 'operator' }, Object.fromEntries(url.searchParams)));
+        if (url.pathname === '/api/knowledge/history' && req.method === 'GET') return json(res, 200, service.knowledge.history({ kind: 'operator' }, { documentId: url.searchParams.get('documentId'), offset: Number(url.searchParams.get('offset') ?? 0), limit: 20 }));
         if (url.pathname === '/api/state' && req.method === 'GET') {
           const store = service.store;
-          return json(res, 200, { mode: config.mode, status: scheduler.snapshotStatus(), settings: store.settings(), agents: store.all('agents'), rooms: store.all('rooms'), missions: store.all('missions'), tasks: store.all('tasks'), messages: store.all('messages').slice(-200), knowledge: store.all('knowledge'), artifacts: store.all('artifacts').map(({ path: _path, ...a }) => a), meetings: store.all('meetings'), requests: store.all('requests'), runs: store.all('runs').slice(-100), jobs: store.all('jobs').filter(j => j.status !== 'done').slice(-100), events: store.events(0, 60), quota: store.all('quotas').at(-1) ?? null, connections: { discordConfigured: !!(config.discordToken && config.discordGuildId), guildId: config.discordGuildId, operatorsConfigured: config.operatorIds.length > 0, githubConfigured: !!(config.githubToken && config.githubOwner), githubOwner: config.githubOwner } });
+          return json(res, 200, { mode: config.mode, status: scheduler.snapshotStatus(), settings: store.settings(), agents: store.all('agents'), rooms: store.all('rooms'), missions: store.all('missions'), tasks: store.all('tasks'), messages: store.all('messages').slice(-200), knowledge: service.knowledge.list({ kind: 'operator' }, 20).entries, artifacts: store.all('artifacts').map(({ path: _path, ...a }) => a), meetings: store.all('meetings'), requests: store.all('requests'), runs: store.all('runs').slice(-100), jobs: store.all('jobs').filter(j => j.status !== 'done').slice(-100), events: store.events(0, 60), quota: store.all('quotas').at(-1) ?? null, connections: { discordConfigured: !!(config.discordToken && config.discordGuildId), guildId: config.discordGuildId, operatorsConfigured: config.operatorIds.length > 0, githubConfigured: !!(config.githubToken && config.githubOwner), githubOwner: config.githubOwner } });
         }
         if (url.pathname === '/api/events' && req.method === 'GET') { res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' }); res.write(': connected\n\n'); sse.add(res); req.on('close', () => sse.delete(res)); return; }
         const artifactMatch = url.pathname.match(/^\/api\/artifacts\/([^/]+)\/content$/);

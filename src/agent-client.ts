@@ -1,9 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import { isTaskTool } from './application/tasks.js';
+import { isKnowledgeWrite } from './knowledge/repository.js';
 
 /** A lost HTTP reply may follow a successful commit. Task retries retain the ID. */
 export async function callAgentTool(endpoint: string, token: string, name: string, args: Record<string, unknown>) {
-  const retryable = isTaskTool(name);
+  const retryable = isTaskTool(name) || isKnowledgeWrite(name);
   const commandId = retryable ? (typeof args.commandId === 'string' ? args.commandId.trim() : randomUUID()) : undefined;
   const body = JSON.stringify({ name, arguments: args, commandId });
   for (let attempt = 0; ; attempt++) {
