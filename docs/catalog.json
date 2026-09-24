@@ -2,15 +2,42 @@
   "version": 1,
   "documents": [
     {
+      "id": "platform.review-2026-09-23",
+      "path": "docs/REVIEW-2026-09-23.md",
+      "namespace": "platform",
+      "kind": "assessment",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
+      "importMode": "read-only",
+      "tags": [
+        "review",
+        "knowledge",
+        "evidence"
+      ]
+    },
+    {
       "id": "platform.knowledge-implementation",
       "path": "docs/KNOWLEDGE-IMPLEMENTATION.md",
       "namespace": "platform",
       "kind": "description",
       "owner": "maintainer",
       "status": "recorded",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["implementation", "knowledge", "retrieval"]
+      "tags": [
+        "implementation",
+        "knowledge",
+        "retrieval"
+      ]
     },
     {
       "id": "platform.foundation-implementation",
@@ -19,9 +46,17 @@
       "kind": "description",
       "owner": "maintainer",
       "status": "recorded",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["implementation", "reliability", "migration"]
+      "tags": [
+        "implementation",
+        "reliability",
+        "migration"
+      ]
     },
     {
       "id": "platform.foundation-research",
@@ -30,9 +65,18 @@
       "kind": "research",
       "owner": "maintainer",
       "status": "recorded",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["research", "reuse", "knowledge", "isolation"]
+      "tags": [
+        "research",
+        "reuse",
+        "knowledge",
+        "isolation"
+      ]
     },
     {
       "id": "platform.design-execution",
@@ -41,9 +85,17 @@
       "kind": "design",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["transactions", "recovery", "execution"]
+      "tags": [
+        "transactions",
+        "recovery",
+        "execution"
+      ]
     },
     {
       "id": "platform.design-knowledge",
@@ -52,9 +104,17 @@
       "kind": "design",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["knowledge", "retrieval", "integration"]
+      "tags": [
+        "knowledge",
+        "retrieval",
+        "integration"
+      ]
     },
     {
       "id": "platform.design-workspaces-prs",
@@ -63,9 +123,17 @@
       "kind": "design",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["isolation", "github", "candidates"]
+      "tags": [
+        "isolation",
+        "github",
+        "candidates"
+      ]
     },
     {
       "id": "platform.design-progress",
@@ -74,9 +142,17 @@
       "kind": "design",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["evaluation", "progress", "pilot"]
+      "tags": [
+        "evaluation",
+        "progress",
+        "pilot"
+      ]
     },
     {
       "id": "platform.docs-index",
@@ -85,9 +161,16 @@
       "kind": "index",
       "owner": "maintainer",
       "status": "recorded",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["documentation", "knowledge"]
+      "tags": [
+        "documentation",
+        "knowledge"
+      ]
     },
     {
       "id": "platform.assessment",
@@ -96,9 +179,17 @@
       "kind": "assessment",
       "owner": "maintainer",
       "status": "recorded",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["review", "reliability", "scalability"]
+      "tags": [
+        "review",
+        "reliability",
+        "scalability"
+      ]
     },
     {
       "id": "platform.hla",
@@ -107,9 +198,16 @@
       "kind": "design",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["architecture", "contracts"]
+      "tags": [
+        "architecture",
+        "contracts"
+      ]
     },
     {
       "id": "platform.knowledge",
@@ -118,9 +216,18 @@
       "kind": "design",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["knowledge", "retrieval", "evidence", "provenance"]
+      "tags": [
+        "knowledge",
+        "retrieval",
+        "evidence",
+        "provenance"
+      ]
     },
     {
       "id": "platform.evolution",
@@ -129,9 +236,17 @@
       "kind": "design",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["extensions", "authority", "releases"]
+      "tags": [
+        "extensions",
+        "authority",
+        "releases"
+      ]
     },
     {
       "id": "platform.plan",
@@ -140,9 +255,16 @@
       "kind": "plan",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["roadmap", "acceptance-gates"]
+      "tags": [
+        "roadmap",
+        "acceptance-gates"
+      ]
     },
     {
       "id": "platform.prototype-decisions",
@@ -151,9 +273,16 @@
       "kind": "description",
       "owner": "maintainer",
       "status": "recorded",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["prototype", "architecture"]
+      "tags": [
+        "prototype",
+        "architecture"
+      ]
     },
     {
       "id": "operator.setup",
@@ -162,9 +291,17 @@
       "kind": "runbook",
       "owner": "maintainer",
       "status": "recorded",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["setup", "operations", "limits"]
+      "tags": [
+        "setup",
+        "operations",
+        "limits"
+      ]
     },
     {
       "id": "platform.adr-001",
@@ -173,9 +310,16 @@
       "kind": "decision-record",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["architecture", "modularity"]
+      "tags": [
+        "architecture",
+        "modularity"
+      ]
     },
     {
       "id": "platform.adr-002",
@@ -184,9 +328,16 @@
       "kind": "decision-record",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["knowledge", "authority"]
+      "tags": [
+        "knowledge",
+        "authority"
+      ]
     },
     {
       "id": "platform.adr-003",
@@ -195,9 +346,17 @@
       "kind": "decision-record",
       "owner": "maintainer",
       "status": "proposed",
-      "audience": ["operator", "developer", "agent"],
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
       "importMode": "read-only",
-      "tags": ["extensions", "releases", "authority"]
+      "tags": [
+        "extensions",
+        "releases",
+        "authority"
+      ]
     }
   ]
 }

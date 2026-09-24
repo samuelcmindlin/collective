@@ -138,9 +138,12 @@ If indexing fails, search reports `unavailable`; accepted writes and exact reads
 remain available. The next query retries reconstruction. There is no asynchronous
 index worker or distributed indexing-intent queue in this increment.
 
-Agent context includes ten recent summaries and their exact citation manifest,
+Agent context includes ten summaries ordered by the latest appended revision and their exact citation manifest,
 with an explicit indication that more records exist. Search has no newest-30
 cutoff. Full reads are paged; history and Library browsing are bounded. The
+Catalog browsing accepts offsets; history separately pages revision rows and
+conflict heads. The [follow-up review](REVIEW-2026-09-23.md) records these bounds
+and the remaining large-conflict recovery limit. The
 manifest is returned in context and individual inspections are audited, but a
 complete durable per-run context manifest is still pending. The rest of the
 prototype context (tasks, calendars, etc.) does not yet have a global token budget.
@@ -165,8 +168,10 @@ to check isolated copies: unchanged entities/events/receipts, exact legacy conte
 hashes, evidence-ID resolution, SQLite integrity, recovery and original-schema
 restoration. The [foundation record](FOUNDATION.md) describes rollback precautions.
 
-All 79 checks pass, including 21 added knowledge checks. Build and documentation
-validation pass. The live and demo v2→v3 rehearsals preserved 11/44 entities and
+The initial increment passed 79 checks, including 21 added knowledge checks.
+The [follow-up review](REVIEW-2026-09-23.md) adds seven regression checks and fixes
+four reproduced gaps; all 86 checks, build and documentation validation pass.
+The live and demo v2→v3 rehearsals preserved 11/44 entities and
 6/72 events respectively, verified legacy citation hashes, passed SQLite integrity
 and restored the exact original snapshots without modifying source databases.
 [Current probes](knowledge-review-results.json) verify the R3 retrieval/conflict

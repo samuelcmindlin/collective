@@ -88,6 +88,11 @@ retrieval tests. The lexical comparison scored 0.75 recall for both candidates;
 semantic retrieval and the full 0.9 gate remain open. A real model handoff and
 a durable complete context manifest are still pending.
 
+The [follow-up review](REVIEW-2026-09-23.md) corrected revision recency, catalog
+pagination, conflict metadata bounds and artifact integrity checks. Its 86 passing
+checks support proceeding to the smallest measured handoff, while live-pilot and
+larger scale gates remain open.
+
 First run the reuse experiment in [design 2](designs/02-knowledge.md): compare QMD
 with a minimal FTS5 baseline, and consider Basic Memory's fuller workflow against
 the canonical-write and permission gates. The earlier direct-FTS proposal is

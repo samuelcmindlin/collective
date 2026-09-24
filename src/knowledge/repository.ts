@@ -6,6 +6,8 @@ import { KeywordSearch, type KnowledgeSearchAdapter } from './search.js';
 import type { KnowledgeDocument, KnowledgeRevision, KnowledgePrincipal, KnowledgeView } from './types.js';
 
 const text = (max: number) => z.string().trim().min(1).max(max);
+const pageOffset = z.number().int().min(0).max(100000).default(0);
+const pageLimit = z.number().int().min(1).max(20).default(10);
 export const knowledgeSchemas = {
   knowledge_write: z.object({
     commandId: text(128).optional(), title: text(200), content: text(12000),
@@ -17,8 +19,8 @@ export const knowledgeSchemas = {
     changeSummary: text(1000).default('Recorded shared knowledge.'),
   }).strict(),
   knowledge_get: z.object({ documentId: text(150).optional(), revisionId: text(150).optional(), offset: z.number().int().min(0).max(500000).default(0), maxChars: z.number().int().min(1).max(12000).default(8000) }).strict(),
-  knowledge_search: z.object({ query: z.string().trim().max(500).default(''), limit: z.number().int().min(1).max(20).default(10) }).strict(),
-  knowledge_history: z.object({ documentId: text(150), offset: z.number().int().min(0).max(100000).default(0), limit: z.number().int().min(1).max(20).default(10) }).strict(),
+  knowledge_search: z.object({ query: z.string().trim().max(500).default(''), limit: pageLimit, offset: pageOffset }).strict(),
+  knowledge_history: z.object({ documentId: text(150), offset: pageOffset, limit: pageLimit, headOffset: pageOffset }).strict(),
 };
 export const isKnowledgeWrite = (name: string) => name === 'knowledge_write';
 export const hashContent = (content: string) => createHash('sha256').update(content).digest('hex');
@@ -87,8 +89,16 @@ export class KnowledgeRepository {
     const doc = this.requireDocument(p, args.documentId);
     const rows = this.store.db.prepare('SELECT data FROM knowledge_revisions WHERE document_id=? ORDER BY rowid DESC LIMIT ? OFFSET ?')
       .all(doc.id, args.limit + 1, args.offset) as { data: string }[];
-    return { document: doc, revisions: rows.slice(0, args.limit).map(row => this.summary(this.view(p, doc, JSON.parse(row.data)))),
-      nextOffset: rows.length > args.limit ? args.offset + args.limit : null };
+    const heads = new Set(doc.heads);
+    return {
+      document: { ...doc, heads: doc.heads.slice(args.headOffset, args.headOffset + 20), headCount: doc.heads.length },
+      revisions: rows.slice(0, args.limit).map(row => {
+        const revision = JSON.parse(row.data) as KnowledgeRevision;
+        return { ...this.summary(this.view(p, doc, revision)), isHead: heads.has(revision.id) };
+      }),
+      nextOffset: rows.length > args.limit ? args.offset + args.limit : null,
+      nextHeadOffset: args.headOffset + 20 < doc.heads.length ? args.headOffset + 20 : null,
+    };
   }
   private access(p: KnowledgePrincipal) {
     if (p.kind === 'operator') return { sql: '1', args: [] as string[] };
@@ -97,21 +107,24 @@ export class KnowledgeRepository {
   }
   private summary(entry: KnowledgeView) { const { content, sources: _sources, ...metadata } = entry; return { ...metadata, snippet: content.slice(0, 240) }; }
   list(p: KnowledgePrincipal, limit = 20, offset = 0) {
+    pageLimit.parse(limit); pageOffset.parse(offset);
     const access = this.access(p);
     const rows = this.store.db.prepare(`SELECT d.data AS document,r.data AS revision FROM knowledge_documents d
       LEFT JOIN knowledge_revisions r ON r.id=d.current_revision_id WHERE ${access.sql}
-      ORDER BY d.rowid DESC LIMIT ? OFFSET ?`).all(...access.args, limit + 1, offset) as { document: string; revision?: string }[];
+      ORDER BY (SELECT MAX(rowid) FROM knowledge_revisions WHERE document_id=d.id) DESC, d.id
+      LIMIT ? OFFSET ?`).all(...access.args, limit + 1, offset) as { document: string; revision?: string }[];
     const entries = rows.slice(0, limit).map(row => {
       const doc = JSON.parse(row.document) as KnowledgeDocument;
       if (row.revision) return this.summary(this.view(p, doc, JSON.parse(row.revision)));
       return { id: doc.id, documentId: doc.id, title: 'Conflicting legacy knowledge', namespace: doc.namespace,
-        documentStatus: doc.status, heads: doc.heads, snippet: 'Choose a revision from history and explicitly reconcile the competing heads.', createdAt: doc.createdAt };
+        documentStatus: doc.status, headCount: doc.heads.length, snippet: 'Choose a revision from history and explicitly reconcile the competing heads.', createdAt: doc.createdAt };
     });
     return { entries, nextOffset: rows.length > limit ? offset + limit : null };
   }
   search(p: KnowledgePrincipal, raw: unknown) {
-    const { query, limit } = knowledgeSchemas.knowledge_search.parse(raw);
-    if (!query) return { ...this.list(p, limit), engine: 'catalog', freshness: 'current' as const };
+    const { query, limit, offset } = knowledgeSchemas.knowledge_search.parse(raw);
+    if (!query) return { ...this.list(p, limit, offset), engine: 'catalog', freshness: 'current' as const };
+    if (offset !== 0) throw new Error('Offset is supported only for an empty catalog query. Refine keywords to narrow search results.');
     const key = p.kind === 'agent' ? `agent:${p.id}` : 'operator';
     const access = this.access(p), generation = this.generation();
     // Never retain a projection of uncommitted records across rollback.

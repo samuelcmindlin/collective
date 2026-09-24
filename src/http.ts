@@ -8,6 +8,7 @@ import type { CollectiveService, ToolName } from './service.js';
 import { toolSchemas } from './service.js';
 import { isTaskTool } from './application/tasks.js';
 import { isKnowledgeWrite } from './knowledge/repository.js';
+import { readArtifactSnapshot } from './storage/artifacts.js';
 import type { Scheduler } from './scheduler.js';
 import type { DiscordBridge } from './discord.js';
 import { id, nowIso } from './store.js';
@@ -59,10 +60,10 @@ export function createHttpServer(service: CollectiveService, scheduler: Schedule
         if (url.pathname === '/api/knowledge/search' && req.method === 'GET') {
           const query = url.searchParams.get('query') ?? '';
           const offset = z.coerce.number().int().min(0).max(100000).parse(url.searchParams.get('offset') ?? 0);
-          return json(res, 200, query ? service.knowledge.search({ kind: 'operator' }, { query, limit: 20 }) : service.knowledge.list({ kind: 'operator' }, 20, offset));
+          return json(res, 200, service.knowledge.search({ kind: 'operator' }, { query, limit: 20, offset }));
         }
         if (url.pathname === '/api/knowledge/get' && req.method === 'GET') return json(res, 200, service.knowledge.get({ kind: 'operator' }, Object.fromEntries(url.searchParams)));
-        if (url.pathname === '/api/knowledge/history' && req.method === 'GET') return json(res, 200, service.knowledge.history({ kind: 'operator' }, { documentId: url.searchParams.get('documentId'), offset: Number(url.searchParams.get('offset') ?? 0), limit: 20 }));
+        if (url.pathname === '/api/knowledge/history' && req.method === 'GET') return json(res, 200, service.knowledge.history({ kind: 'operator' }, { documentId: url.searchParams.get('documentId'), offset: Number(url.searchParams.get('offset') ?? 0), headOffset: Number(url.searchParams.get('headOffset') ?? 0), limit: 20 }));
         if (url.pathname === '/api/state' && req.method === 'GET') {
           const store = service.store;
           return json(res, 200, { mode: config.mode, status: scheduler.snapshotStatus(), settings: store.settings(), agents: store.all('agents'), rooms: store.all('rooms'), missions: store.all('missions'), tasks: store.all('tasks'), messages: store.all('messages').slice(-200), knowledge: service.knowledge.list({ kind: 'operator' }, 20).entries, artifacts: store.all('artifacts').map(({ path: _path, ...a }) => a), meetings: store.all('meetings'), requests: store.all('requests'), runs: store.all('runs').slice(-100), jobs: store.all('jobs').filter(j => j.status !== 'done').slice(-100), events: store.events(0, 60), quota: store.all('quotas').at(-1) ?? null, connections: { discordConfigured: !!(config.discordToken && config.discordGuildId), guildId: config.discordGuildId, operatorsConfigured: config.operatorIds.length > 0, githubConfigured: !!(config.githubToken && config.githubOwner), githubOwner: config.githubOwner } });
@@ -71,10 +72,11 @@ export function createHttpServer(service: CollectiveService, scheduler: Schedule
         const artifactMatch = url.pathname.match(/^\/api\/artifacts\/([^/]+)\/content$/);
         if (artifactMatch && req.method === 'GET') {
           const artifact = service.store.require('artifacts', artifactMatch[1]!);
+          const bytes = readArtifactSnapshot(config.dataDir, artifact);
           res.setHeader('Content-Security-Policy', "sandbox allow-scripts; default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; media-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'self'");
           res.setHeader('Content-Type', `${artifact.mime}; charset=utf-8`); res.setHeader('Cache-Control', 'no-store');
           if (url.searchParams.has('download')) res.setHeader('Content-Disposition', `attachment; filename="${artifact.id}${extname(artifact.path)}"`);
-          res.end(readFileSync(resolve(config.dataDir, artifact.path))); return;
+          res.end(bytes); return;
         }
         if (req.method !== 'POST') return json(res, 404, { error: 'Unknown endpoint.' });
         const input = await body(req);

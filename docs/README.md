@@ -8,6 +8,7 @@ document is not a claim that its interfaces or safeguards already exist.
 
 | Document | Purpose | Status |
 | --- | --- | --- |
+| [Knowledge and evidence review](REVIEW-2026-09-23.md) | Reproduced defects, corrections, verification and remaining boundaries | Completed review |
 | [Shared knowledge implementation](KNOWLEDGE-IMPLEMENTATION.md) | Versioned records, source import, keyword retrieval and remaining gates | Implemented bounded increment |
 | [Core foundation implementation](FOUNDATION.md) | Shipped guarantees, retry limits, migration and verification | Implemented first increment |
 | [Architecture assessment](ASSESSMENT.md) | What is sound, reproduced gaps, and limits of the tests | Recorded baseline |

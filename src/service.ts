@@ -8,6 +8,7 @@ import type { Config } from './config.js';
 import { TaskCommands, taskSchemas, isTaskTool } from './application/tasks.js';
 import { stable } from './application/commands.js';
 import { KnowledgeRepository, knowledgeSchemas } from './knowledge/repository.js';
+import { MAX_ARTIFACT_BYTES, readArtifactSnapshot } from './storage/artifacts.js';
 export { stable } from './application/commands.js';
 
 const text = (max = 4000) => z.string().trim().min(1).max(max);
@@ -38,11 +39,11 @@ export const toolDescriptions: Record<ToolName, string> = {
   task_submit: 'Submit your active-mission task with published evidence for independent review. Include commandId and expectedVersion. Reuse the ID only for an identical retry; submission is not completion.',
   task_review: 'Independently review an active-mission task. Inspect evidence, explain the verdict, and include commandId and expectedVersion. Reuse the ID for an identical retry.',
   knowledge_write: 'Create a shared or private agent note, or revise using documentId and the exact current previousId. Include stable commandId for retries. Stale revisions conflict; resolveHeads explicitly merges every conflicting legacy head. Protected docs are read-only.',
-  knowledge_search: 'Search all authorized current knowledge using literal keywords (all terms must occur). No recency cutoff. Returns bounded snippets and exact citations, not verified answers. Empty query browses the catalog. Try alternate terms for paraphrases.',
+  knowledge_search: 'Search all authorized current knowledge using literal keywords (all terms must occur). No recency cutoff. Returns bounded snippets and exact citations, not verified answers. Empty query browses the catalog; pass nextOffset as offset for subsequent pages. Nonempty queries return at most 20 hits; refine keywords to narrow results. Try alternate terms for paraphrases.',
   knowledge_get: 'Read exact knowledge by documentId (current revision) or revisionId (immutable citation). Inspect evidence with this tool; summaries are incomplete. Conflicts require an exact revision.',
-  knowledge_history: 'List bounded immutable revision history and any conflicting heads for one authorized document.',
+  knowledge_history: 'List immutable revision history for one authorized document. Follow nextOffset as offset for revisions and nextHeadOffset as headOffset for heads. Each revision includes isHead; document.heads is only one page. Conflicts with more than 100 heads require a maintainer recovery request.',
   artifact_publish: 'Copy a file from your workspace into immutable shared artifact storage. Returns its evidence ID. HTML can be previewed by the user.',
-  artifact_read: 'Read a published text artifact by ID so you can independently inspect evidence. Binary artifacts return metadata only.',
+  artifact_read: 'Verify published bytes against their stored size and hash, then read text evidence by ID. Binary artifacts return metadata only. Text may be truncated; this integrity check does not assess correctness.',
   meeting_schedule: 'Schedule a bounded meeting with named participants, agenda, and expected outcome. Calendars prevent overlapping invitations.',
   meeting_finish: 'Record the outcome of a meeting you attended and finish it.',
   permission_request: 'Create a durable scoped request for authority, resources, or user input. A pending request grants no access. Continue independent work while waiting.',
@@ -55,7 +56,10 @@ export class CollectiveService {
   private capabilityLocks = new Set<string>();
   readonly tasks: TaskCommands;
   readonly knowledge: KnowledgeRepository;
-  constructor(readonly store: Store, readonly config: Config) { this.knowledge = new KnowledgeRepository(store); this.tasks = new TaskCommands(store, this.knowledge); }
+  constructor(readonly store: Store, readonly config: Config) {
+    this.knowledge = new KnowledgeRepository(store);
+    this.tasks = new TaskCommands(store, this.knowledge, artifact => readArtifactSnapshot(config.dataDir, artifact));
+  }
   workspace(agentId: string) { this.store.require('agents', agentId); const path = resolve(this.config.dataDir, 'workspaces', agentId); mkdirSync(path, { recursive: true, mode: 0o700 }); return path; }
   activeMission() { return this.store.all('missions').find(m => m.status === 'active'); }
   outbox(kind: 'message' | 'request' | 'artifact' | 'notice', entityId: string, roomId: string) {
@@ -177,7 +181,7 @@ export class CollectiveService {
       case 'artifact_publish': {
         const workspace = realpathSync(this.workspace(agentId)); const path = realpathSync(resolve(workspace, args.path));
         if (!path.startsWith(workspace + sep) || path.includes(`${sep}.claude${sep}`)) throw new Error('Artifact must be a regular file inside your workspace.');
-        const stat = statSync(path); if (!stat.isFile() || stat.size > 5_000_000) throw new Error('Artifact must be a file smaller than 5 MB.');
+        const stat = statSync(path); if (!stat.isFile() || stat.size > MAX_ARTIFACT_BYTES) throw new Error('Artifact must be a file smaller than 5 MB.');
         if (args.taskId) {
           const task = this.store.require('tasks', args.taskId);
           if (task.ownerId !== agentId) throw new Error('You do not own this task.');
@@ -192,9 +196,11 @@ export class CollectiveService {
       }
       case 'artifact_read': {
         const artifact = this.store.require('artifacts', args.artifactId);
-        const content = /^(text\/|application\/json|image\/svg)/.test(artifact.mime) ? readFileSync(resolve(this.config.dataDir, artifact.path), 'utf8').slice(0, 100000) : undefined;
-        this.store.event('artifact.inspected', agentId, artifact.id);
-        return { ...artifact, path: undefined, content, untrusted: true };
+        const bytes = readArtifactSnapshot(this.config.dataDir, artifact);
+        const text = /^(text\/|application\/json|image\/svg)/.test(artifact.mime) ? bytes.toString('utf8') : undefined;
+        const content = text?.slice(0, 100000);
+        this.store.event('artifact.inspected', agentId, artifact.id, { sha256: artifact.sha256, size: artifact.size, returnedChars: content?.length ?? 0 });
+        return { ...artifact, path: undefined, content, totalChars: text?.length, truncated: text !== undefined && text.length > 100000, untrusted: true };
       }
       case 'meeting_schedule': {
         this.store.require('rooms', args.roomId); for (const participant of args.participants) this.store.require('agents', participant);
