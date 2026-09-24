@@ -1,0 +1,55 @@
+{
+  "recordedAt": "2026-09-24T02:00:41.831Z",
+  "method": "In-memory domain probes; no models, credentials, app databases, or network",
+  "sourceHashes": {
+    "src/service.ts": "8e745a26bdf27f57bd32d7417171c13bba0bd2f737d3874f7fe2419e9be786ba",
+    "src/store.ts": "40d085d36065dd72e3ecf71e1f74efa1f764bdc14c3c668de0164b3754e9ce29",
+    "src/scheduler.ts": "5b53faba0cc1735a7f7ac7a6b3510e9fb274c01c2f6464a99fbd23f0d4ec17ac",
+    "src/discord.ts": "c0c3ef7b2e985a68f690318f95192c982e725efa6c73c5b51285dbe4432fb4dc",
+    "src/claude.ts": "56e96d1ab781b74db69219f1025965a809afc6a3783e2e00cccac4551cb50696",
+    "src/application/tasks.ts": "1854328191bad612b47338828df37389ac34fa1af33ecb71e2030ed941ea5c54",
+    "src/application/commands.ts": "6666cf9a05b72a69f559f4ee9a98e4b7b1a94fcac490de40c9983a78b211fb1c",
+    "src/storage/migrations.ts": "46f3ee2d360c0f1192a2e90bd192d3fa37f9c539672794996061425617d24991"
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "probe": "Failure between task creation and job enqueue",
+      "commandRejected": true,
+      "tasksPersisted": 0,
+      "jobsAdded": 0
+    },
+    {
+      "id": "R2",
+      "probe": "Mutation of a task after its mission is replaced",
+      "taskInActiveMission": false,
+      "oldTaskStatus": "todo",
+      "submissionRejected": true,
+      "reviewRejected": true
+    },
+    {
+      "id": "R4",
+      "probe": "Acceptance of current-mission work with unrelated evidence",
+      "taskInActiveMission": true,
+      "taskStatus": "done",
+      "evidenceTitle": "Unrelated note",
+      "reviewNote": "Looks fine"
+    },
+    {
+      "id": "R3a",
+      "probe": "Retrieval after 30 newer records",
+      "storedRecords": 31,
+      "recordsInContext": 30,
+      "importantDecisionPresent": false
+    },
+    {
+      "id": "R3b",
+      "probe": "Competing revisions from the same parent",
+      "revisions": [
+        2,
+        2
+      ],
+      "bothPresentedAsCurrent": true
+    }
+  ]
+}

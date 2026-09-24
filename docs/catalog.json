@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "documents": [
+    {
+      "id": "platform.foundation-implementation",
+      "path": "docs/FOUNDATION.md",
+      "namespace": "platform",
+      "kind": "description",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["implementation", "reliability", "migration"]
+    },
+    {
+      "id": "platform.foundation-research",
+      "path": "docs/RESEARCH.md",
+      "namespace": "platform",
+      "kind": "research",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["research", "reuse", "knowledge", "isolation"]
+    },
+    {
+      "id": "platform.design-execution",
+      "path": "docs/designs/01-execution.md",
+      "namespace": "platform",
+      "kind": "design",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["transactions", "recovery", "execution"]
+    },
+    {
+      "id": "platform.design-knowledge",
+      "path": "docs/designs/02-knowledge.md",
+      "namespace": "platform",
+      "kind": "design",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["knowledge", "retrieval", "integration"]
+    },
+    {
+      "id": "platform.design-workspaces-prs",
+      "path": "docs/designs/03-workspaces-prs.md",
+      "namespace": "platform",
+      "kind": "design",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["isolation", "github", "candidates"]
+    },
+    {
+      "id": "platform.design-progress",
+      "path": "docs/designs/04-progress.md",
+      "namespace": "platform",
+      "kind": "design",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["evaluation", "progress", "pilot"]
+    },
+    {
+      "id": "platform.docs-index",
+      "path": "docs/README.md",
+      "namespace": "platform",
+      "kind": "index",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["documentation", "knowledge"]
+    },
+    {
+      "id": "platform.assessment",
+      "path": "docs/ASSESSMENT.md",
+      "namespace": "platform",
+      "kind": "assessment",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["review", "reliability", "scalability"]
+    },
+    {
+      "id": "platform.hla",
+      "path": "docs/HLA.md",
+      "namespace": "platform",
+      "kind": "design",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["architecture", "contracts"]
+    },
+    {
+      "id": "platform.knowledge",
+      "path": "docs/KNOWLEDGE.md",
+      "namespace": "platform",
+      "kind": "design",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["knowledge", "retrieval", "evidence", "provenance"]
+    },
+    {
+      "id": "platform.evolution",
+      "path": "docs/EVOLUTION.md",
+      "namespace": "platform",
+      "kind": "design",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["extensions", "authority", "releases"]
+    },
+    {
+      "id": "platform.plan",
+      "path": "docs/PLAN.md",
+      "namespace": "platform",
+      "kind": "plan",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["roadmap", "acceptance-gates"]
+    },
+    {
+      "id": "platform.prototype-decisions",
+      "path": "docs/ARCHITECTURE.md",
+      "namespace": "platform",
+      "kind": "description",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["prototype", "architecture"]
+    },
+    {
+      "id": "operator.setup",
+      "path": "README.md",
+      "namespace": "operator",
+      "kind": "runbook",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["setup", "operations", "limits"]
+    },
+    {
+      "id": "platform.adr-001",
+      "path": "docs/decisions/001-modular-application.md",
+      "namespace": "platform",
+      "kind": "decision-record",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["architecture", "modularity"]
+    },
+    {
+      "id": "platform.adr-002",
+      "path": "docs/decisions/002-knowledge-authority.md",
+      "namespace": "platform",
+      "kind": "decision-record",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["knowledge", "authority"]
+    },
+    {
+      "id": "platform.adr-003",
+      "path": "docs/decisions/003-controlled-evolution.md",
+      "namespace": "platform",
+      "kind": "decision-record",
+      "owner": "maintainer",
+      "status": "proposed",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["extensions", "releases", "authority"]
+    }
+  ]
+}

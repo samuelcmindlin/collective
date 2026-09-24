@@ -1,0 +1,50 @@
+{
+  "recordedAt": "2026-09-24T01:05:06.117Z",
+  "method": "In-memory domain probes; no models, credentials, app databases, or network",
+  "sourceHashes": {
+    "src/service.ts": "69392208fa6166a7e5bcad9609dde9fadfaba5dcb9c86fa7c71b3f087627d609",
+    "src/store.ts": "d801b81383dd41dc5a5e3614d33803991425eb4a6dd2c667d7babc5c8e95f122",
+    "src/scheduler.ts": "d91e41c2a37f1a389c9d6f4ee65abd9b061c2c67046b344c2ebda7e4e106cb24",
+    "src/discord.ts": "c0c3ef7b2e985a68f690318f95192c982e725efa6c73c5b51285dbe4432fb4dc",
+    "src/claude.ts": "9730ac003417f6579229fc30b6370b998a4b78d0f237ca8f3872de18cc9fc063"
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "probe": "Failure between task creation and job enqueue",
+      "commandRejected": true,
+      "tasksPersisted": 1,
+      "jobsAdded": 0
+    },
+    {
+      "id": "R2",
+      "probe": "Mutation of a task after its mission is replaced",
+      "taskInActiveMission": false,
+      "oldTaskStatus": "done"
+    },
+    {
+      "id": "R4",
+      "probe": "Acceptance of current-mission work with unrelated evidence",
+      "taskInActiveMission": true,
+      "taskStatus": "done",
+      "evidenceTitle": "Unrelated note",
+      "reviewNote": "Looks fine"
+    },
+    {
+      "id": "R3a",
+      "probe": "Retrieval after 30 newer records",
+      "storedRecords": 31,
+      "recordsInContext": 30,
+      "importantDecisionPresent": false
+    },
+    {
+      "id": "R3b",
+      "probe": "Competing revisions from the same parent",
+      "revisions": [
+        2,
+        2
+      ],
+      "bothPresentedAsCurrent": true
+    }
+  ]
+}
