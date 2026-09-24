@@ -43,7 +43,7 @@ const server = createHttpServer(service, scheduler, discord, config, quota);
 server.on('error', error => { console.error(error.message); try { unlinkSync(lock); } catch {} process.exitCode = 1; });
 server.listen(config.port, '127.0.0.1', () => {
   console.log(`Collective is ready at http://127.0.0.1:${config.port} (${config.mode})`);
-  console.log(config.mode === 'simulation' ? 'Rehearsal mode: no model calls or external actions. Press Run in the app.' : 'Live mode: paused until you start it. Open Settings to connect Discord and record quota.');
+  console.log(config.mode === 'simulation' ? 'Rehearsal mode: no model calls or external actions. Press Run in the app.' : 'Live setup: Claude launches are disabled pending whole-worker isolation verification. See docs/ISOLATION-REHEARSAL.md.');
   scheduler.start(); quota.start(); void discord.connect();
   void checkClaude(config.claudeBin).then(result => { if (!closing) { scheduler.status.claude = result.available ? result.subscriptionLogin ? 'available' : 'unauthenticated' : 'missing'; store.event('claude.checked', 'system', undefined, result); } });
 });

@@ -1,9 +1,43 @@
 import { createHash } from 'node:crypto';
 import { closeSync, constants, fstatSync, openSync, readSync, realpathSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { basename, dirname, resolve } from 'node:path';
 import type { Artifact } from '../types.js';
 
 export const MAX_ARTIFACT_BYTES = 5_000_000;
+
+/**
+ * Publication deliberately accepts one top-level file. The supervisor owns the
+ * workspace's parent directories; worker-controlled intermediate paths are not
+ * traversed. This is not a boundary against an uncontained same-user process.
+ */
+export function readWorkspaceArtifact(workspace: string, requestedPath: string): Buffer {
+  let fd: number | undefined;
+  try {
+    const nominal = resolve(workspace), requested = resolve(nominal, requestedPath);
+    const root = resolve(realpathSync(dirname(nominal)), basename(nominal));
+    if (realpathSync(nominal) !== root || dirname(requested) !== nominal ||
+        requestedPath.includes('\0') || basename(requested) === '.mcp.json') throw new Error('Invalid source path.');
+    const path = resolve(root, basename(requested));
+    fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+    const before = fstatSync(fd);
+    if (!before.isFile() || before.nlink !== 1 || before.size > MAX_ARTIFACT_BYTES) throw new Error('Invalid source file.');
+    const buffer = Buffer.alloc(before.size + 1);
+    let length = 0;
+    while (length < buffer.length) {
+      const count = readSync(fd, buffer, length, buffer.length - length, null);
+      if (!count) break;
+      length += count;
+    }
+    const after = fstatSync(fd);
+    if (length !== before.size || after.size !== before.size || after.nlink !== 1 ||
+        after.mtimeMs !== before.mtimeMs || after.ctimeMs !== before.ctimeMs) throw new Error('Source changed during publication.');
+    return buffer.subarray(0, length);
+  } catch (cause) {
+    throw new Error('Artifact must be a single-link regular file of at most 5 MB directly inside your workspace. Copy nested outputs to the workspace root before publishing; symlinks and changing files are rejected.', { cause });
+  } finally {
+    if (fd !== undefined) closeSync(fd);
+  }
+}
 
 /** Return only bytes matching the published snapshot. This does not isolate workers. */
 export function readArtifactSnapshot(dataDir: string, artifact: Artifact): Buffer {

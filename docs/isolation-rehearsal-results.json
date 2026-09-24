@@ -1,0 +1,548 @@
+{
+  "createdAt": "2026-09-24T04:01:17.023Z",
+  "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+  "policyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+  "authority": "controlled-fixture-rehearsal",
+  "wholeWorkerGate": "not-verified",
+  "productionExecutionEnabled": false,
+  "evaluatorCodeHash": "afa90c0696fd8516eb8a3e4b4901c0d2a8d3f24c6cb4d12a2ae0541a69e2e464",
+  "runtime": {
+    "version": "23.0.5",
+    "os": "linux",
+    "arch": "arm64",
+    "components": [
+      {
+        "Name": "Engine",
+        "Version": "23.0.5",
+        "Details": {
+          "ApiVersion": "1.42",
+          "Arch": "arm64",
+          "BuildTime": "Wed Apr 26 16:17:14 2023",
+          "Experimental": "false",
+          "GitCommit": "94d3ad6",
+          "GoVersion": "go1.19.8",
+          "KernelVersion": "5.15.49-linuxkit",
+          "MinAPIVersion": "1.12",
+          "Os": "linux"
+        }
+      },
+      {
+        "Name": "containerd",
+        "Version": "1.6.20",
+        "Details": {
+          "GitCommit": "2806fc1057397dbaeefbea0e4e17bddfbd388f38"
+        }
+      },
+      {
+        "Name": "runc",
+        "Version": "1.1.5",
+        "Details": {
+          "GitCommit": "v1.1.5-0-gf19387a"
+        }
+      },
+      {
+        "Name": "docker-init",
+        "Version": "0.19.0",
+        "Details": {
+          "GitCommit": "de40ad0"
+        }
+      }
+    ]
+  },
+  "containment": {
+    "execution": {
+      "container": "collective-eval-de7089a7-1d3d-48a9-a6a4-f56e16281463",
+      "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+      "policyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+      "code": 0,
+      "stdout": "{\"scratchWorks\":true,\"rootWriteDenied\":true,\"hostReadDenied\":true,\"hostWriteDenied\":true,\"otherWorkerDenied\":true,\"symlinkReadDenied\":true,\"symlinkWriteDenied\":true,\"hostOperatorDenied\":true,\"publicNetworkDenied\":true,\"dnsDenied\":true,\"noRoutableInterface\":true,\"hostGatewayDenied\":true,\"sshSocketDenied\":true,\"dockerSocketAbsent\":true,\"credentialsAbsent\":true,\"nonRoot\":true,\"noCapabilities\":true,\"noNewPrivileges\":true,\"seccompActive\":true,\"memoryLimit\":true,\"pidsLimit\":true,\"cpuLimit\":true,\"cgroupWriteDenied\":true,\"processLimitEnforced\":true}\n",
+      "stderr": "{\"interfaceFlags\":{\"ip6tnl0\":128,\"lo\":9,\"tunl0\":128},\"addressedInterfaces\":[\"lo\"]}\n",
+      "cleanupVerified": true,
+      "state": {
+        "exitCode": 0,
+        "oomKilled": false
+      }
+    },
+    "observations": {
+      "scratchWorks": true,
+      "rootWriteDenied": true,
+      "hostReadDenied": true,
+      "hostWriteDenied": true,
+      "otherWorkerDenied": true,
+      "symlinkReadDenied": true,
+      "symlinkWriteDenied": true,
+      "hostOperatorDenied": true,
+      "publicNetworkDenied": true,
+      "dnsDenied": true,
+      "noRoutableInterface": true,
+      "hostGatewayDenied": true,
+      "sshSocketDenied": true,
+      "dockerSocketAbsent": true,
+      "credentialsAbsent": true,
+      "nonRoot": true,
+      "noCapabilities": true,
+      "noNewPrivileges": true,
+      "seccompActive": true,
+      "memoryLimit": true,
+      "pidsLimit": true,
+      "cpuLimit": true,
+      "cgroupWriteDenied": true,
+      "processLimitEnforced": true
+    }
+  },
+  "timeout": {
+    "container": "collective-eval-732d12f1-64c8-4744-a58e-5394a17c528c",
+    "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+    "policyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+    "code": null,
+    "stdout": "",
+    "stderr": "",
+    "cleanupVerified": true,
+    "stopped": "timeout",
+    "state": {
+      "exitCode": 0,
+      "oomKilled": false
+    }
+  },
+  "outputLimit": {
+    "container": "collective-eval-bbad756d-e76b-4498-b7fd-14b73d03eee0",
+    "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+    "policyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+    "code": null,
+    "cleanupVerified": true,
+    "stopped": "output-limit",
+    "state": {
+      "exitCode": 0,
+      "oomKilled": false
+    }
+  },
+  "memoryLimit": {
+    "container": "collective-eval-1db8dad6-e600-4e48-9d9f-0e1e332ede8a",
+    "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+    "policyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+    "code": 137,
+    "stdout": "",
+    "stderr": "",
+    "cleanupVerified": true,
+    "state": {
+      "exitCode": 137,
+      "oomKilled": true
+    },
+    "error": "Container failed or exhausted memory."
+  },
+  "cancellation": {
+    "container": "collective-eval-5d629d46-7697-43fb-acba-d656af8fd3d9",
+    "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+    "policyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+    "code": null,
+    "stdout": "ready\n",
+    "stderr": "",
+    "cleanupVerified": true,
+    "stopped": "aborted",
+    "state": {
+      "exitCode": 0,
+      "oomKilled": false
+    }
+  },
+  "leaderExit": {
+    "container": "collective-eval-102258e2-f4e7-48b5-8b1d-6daeb1d34634",
+    "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+    "policyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+    "code": 0,
+    "stdout": "{}\n",
+    "stderr": "",
+    "cleanupVerified": true,
+    "state": {
+      "exitCode": 0,
+      "oomKilled": false
+    }
+  },
+  "failedCandidate": {
+    "version": 1,
+    "authority": "maintainer-rehearsal",
+    "createdAt": "2026-09-24T04:01:33.265Z",
+    "taskId": "task_5d656eac-b1e8-4e9b-bc85-ffac1e5142ee",
+    "submissionId": "submission_6ec5fc2d-f887-475f-9c95-2d4a0981bdfb",
+    "criteriaHash": "5d36fefb385f7bbd5906027123574bcf5153adc9327aa5bed474e088c2878986",
+    "artifact": {
+      "kind": "artifact",
+      "id": "art_08769c7d-d2c0-48bb-9d9f-0cff4bf2bbe2",
+      "sha256": "022430a7eae6cd285bf9c3492830c88f00565aecc7c9ffa2f52ad9d34c7568c9",
+      "size": 860,
+      "mime": "application/octet-stream"
+    },
+    "checkId": "matching-game.examples.v1",
+    "criterionId": "acceptance",
+    "policyHash": "879cad1e6360e3b92decaeae8a2e4952cf33686f6f20ab7f8078d18b13f66d95",
+    "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+    "containerPolicyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+    "status": "fail",
+    "results": [
+      {
+        "caseId": "initial",
+        "inputHash": "7d357b0ef1f85ba71c5ccebb6671b0c34f4b3950f5b21d2af7b4a3d4e9dcd570",
+        "expectedHash": "7a07241e1083a2dc033183d73d984990ff3694959df6cf885a5f2f85bcadcdc4",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-917d8055-ed3c-4b18-9fe4-62bef61074a9",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "e5ecf577f6dda050e76c7efedeb9bf2035af6c5ec4a88a6c987d32572c8fa6e6",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "mismatch",
+        "inputHash": "5683a5a2c6dff1affa0ecc564c199057e9a1670440ba5872644555703fef3817",
+        "expectedHash": "54759869293e8ea65d891a4ae085131b1394bf1f7c853d11ba1377cfb179260f",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-f87f02dc-47bc-4128-8c74-af67d669386d",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "d55d214350c8e36e4d684487adcbd5ff8121066cf6b7603aaeed54b8806ac6e7",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "match",
+        "inputHash": "fc6056ce4547cd2abf522b3b63c6cc1651662f68dcb864b7849dd3f1e11a3551",
+        "expectedHash": "73e2a8f36fcfe7f1056fa77b01a103c9cf797e8ec8c5409860f500b4076a0390",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-ec0efdce-f84e-4e7b-99e4-90f030906fcf",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "41f276aa57ed8fd3b99c4219cdd0aefa8ec9b0cbf43d4c7b4769d2ca7fa201af",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "complete",
+        "inputHash": "ce35b59aaba1502241d97f2c7ae87d125a30e8181f3ca5689b435257a930719a",
+        "expectedHash": "5ea75b6c6fe1f53d2f56eab4f2f09a5351cddc7922391d8d41a8bce8f3790270",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-70b80721-56c6-4750-857c-2a345bf5c1e4",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "a59f044dc7ded193e045421518a8d1bc12f32747439c1c0827cca6171f8766b8",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "invalid-repeat",
+        "inputHash": "6efeb0b3cef47f2e311e0089d8aaa0a9a94581495a54ab8bfbd80e150ffd21ec",
+        "expectedHash": "73e2a8f36fcfe7f1056fa77b01a103c9cf797e8ec8c5409860f500b4076a0390",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-74d4b8bb-a18c-4e8a-b213-a401b08c0328",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "41f276aa57ed8fd3b99c4219cdd0aefa8ec9b0cbf43d4c7b4769d2ca7fa201af",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "restart",
+        "inputHash": "d480ef04ba90a044169337dfdb0418829609fb3354f1c891a2bb32cc46430b92",
+        "expectedHash": "7a07241e1083a2dc033183d73d984990ff3694959df6cf885a5f2f85bcadcdc4",
+        "status": "fail",
+        "reason": "Output differs from the protected example.",
+        "execution": {
+          "container": "collective-eval-bb3ca314-e4a0-4eb1-ba36-eca0a1326d58",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "9ad17beed414c53862b2657e3ba1fd5a64a3f5d3320b20cb3bbea14eb9e4f4dc",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "limitations": [
+      "Fixed maintainer examples; no hidden-test, real-model, UI, general correctness or enjoyment claim.",
+      "The production criterion remains judgment. This external rehearsal report is not a required protected submission check.",
+      "Old Docker runtime used only for these controlled fixtures; whole Claude worker containment remains unverified."
+    ],
+    "sha256": "b4d50033205cba138b9c9c350f5e4b1a443ebf579d12ca309cd2d0a78d4d88f6"
+  },
+  "correctedCandidate": {
+    "version": 1,
+    "authority": "maintainer-rehearsal",
+    "createdAt": "2026-09-24T04:01:38.209Z",
+    "taskId": "task_5d656eac-b1e8-4e9b-bc85-ffac1e5142ee",
+    "submissionId": "submission_c41b1494-b002-470f-bc7f-5e678f49ae23",
+    "criteriaHash": "5d36fefb385f7bbd5906027123574bcf5153adc9327aa5bed474e088c2878986",
+    "artifact": {
+      "kind": "artifact",
+      "id": "art_44c796e7-8ff9-4491-82bd-279d72eb49c0",
+      "sha256": "5727fb9a51e179256093acb426db2fdbe6fde5a840d7687fc88358aed13257af",
+      "size": 860,
+      "mime": "application/octet-stream"
+    },
+    "checkId": "matching-game.examples.v1",
+    "criterionId": "acceptance",
+    "policyHash": "879cad1e6360e3b92decaeae8a2e4952cf33686f6f20ab7f8078d18b13f66d95",
+    "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+    "containerPolicyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+    "status": "pass",
+    "results": [
+      {
+        "caseId": "initial",
+        "inputHash": "7d357b0ef1f85ba71c5ccebb6671b0c34f4b3950f5b21d2af7b4a3d4e9dcd570",
+        "expectedHash": "7a07241e1083a2dc033183d73d984990ff3694959df6cf885a5f2f85bcadcdc4",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-1001b9dc-cea6-4442-b0bd-1b487b64b81d",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "e5ecf577f6dda050e76c7efedeb9bf2035af6c5ec4a88a6c987d32572c8fa6e6",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "mismatch",
+        "inputHash": "5683a5a2c6dff1affa0ecc564c199057e9a1670440ba5872644555703fef3817",
+        "expectedHash": "54759869293e8ea65d891a4ae085131b1394bf1f7c853d11ba1377cfb179260f",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-3220c4bd-075c-45c8-aca0-5be29c24798b",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "d55d214350c8e36e4d684487adcbd5ff8121066cf6b7603aaeed54b8806ac6e7",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "match",
+        "inputHash": "fc6056ce4547cd2abf522b3b63c6cc1651662f68dcb864b7849dd3f1e11a3551",
+        "expectedHash": "73e2a8f36fcfe7f1056fa77b01a103c9cf797e8ec8c5409860f500b4076a0390",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-9c8ea71e-5457-4788-b1e2-23d765d29fd8",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "41f276aa57ed8fd3b99c4219cdd0aefa8ec9b0cbf43d4c7b4769d2ca7fa201af",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "complete",
+        "inputHash": "ce35b59aaba1502241d97f2c7ae87d125a30e8181f3ca5689b435257a930719a",
+        "expectedHash": "5ea75b6c6fe1f53d2f56eab4f2f09a5351cddc7922391d8d41a8bce8f3790270",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-444e1daa-2695-45c6-8af7-751571587ef2",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "a59f044dc7ded193e045421518a8d1bc12f32747439c1c0827cca6171f8766b8",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "invalid-repeat",
+        "inputHash": "6efeb0b3cef47f2e311e0089d8aaa0a9a94581495a54ab8bfbd80e150ffd21ec",
+        "expectedHash": "73e2a8f36fcfe7f1056fa77b01a103c9cf797e8ec8c5409860f500b4076a0390",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-a6767493-012d-4f72-8d6a-4af7705ba10f",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "41f276aa57ed8fd3b99c4219cdd0aefa8ec9b0cbf43d4c7b4769d2ca7fa201af",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "caseId": "restart",
+        "inputHash": "d480ef04ba90a044169337dfdb0418829609fb3354f1c891a2bb32cc46430b92",
+        "expectedHash": "7a07241e1083a2dc033183d73d984990ff3694959df6cf885a5f2f85bcadcdc4",
+        "status": "pass",
+        "reason": "Output matched the protected example.",
+        "execution": {
+          "container": "collective-eval-acde6008-9edc-43ac-8d97-df423ed5d745",
+          "code": 0,
+          "state": {
+            "exitCode": 0,
+            "oomKilled": false
+          },
+          "cleanupVerified": true,
+          "stdoutHash": "e5ecf577f6dda050e76c7efedeb9bf2035af6c5ec4a88a6c987d32572c8fa6e6",
+          "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "limitations": [
+      "Fixed maintainer examples; no hidden-test, real-model, UI, general correctness or enjoyment claim.",
+      "The production criterion remains judgment. This external rehearsal report is not a required protected submission check.",
+      "Old Docker runtime used only for these controlled fixtures; whole Claude worker containment remains unverified."
+    ],
+    "sha256": "19aab79f6e9d594006009b0da3ccffd84960109acaad85de5496504663d24a22"
+  },
+  "fixtureLedger": {
+    "criteria": {
+      "id": "criteria_80c1a1b0-48ba-42fc-9093-722085a62e14",
+      "taskId": "task_5d656eac-b1e8-4e9b-bc85-ffac1e5142ee",
+      "missionId": "mission_96188b27-6087-494d-954e-00a5b53e8281",
+      "missionRevision": 2,
+      "version": 1,
+      "authorId": "nova",
+      "authority": "agent-proposed",
+      "criteria": [
+        {
+          "id": "acceptance",
+          "description": "The game obeys the specified state transitions.",
+          "method": "judgment",
+          "evidenceKind": "either"
+        }
+      ],
+      "createdAt": "2026-09-24T04:01:27.610Z",
+      "sha256": "5d36fefb385f7bbd5906027123574bcf5153adc9327aa5bed474e088c2878986"
+    },
+    "failedSubmission": {
+      "id": "submission_6ec5fc2d-f887-475f-9c95-2d4a0981bdfb",
+      "taskId": "task_5d656eac-b1e8-4e9b-bc85-ffac1e5142ee",
+      "missionId": "mission_96188b27-6087-494d-954e-00a5b53e8281",
+      "missionRevision": 2,
+      "criteriaId": "criteria_80c1a1b0-48ba-42fc-9093-722085a62e14",
+      "criteriaHash": "5d36fefb385f7bbd5906027123574bcf5153adc9327aa5bed474e088c2878986",
+      "authorId": "ember",
+      "round": 1,
+      "bindings": [
+        {
+          "criterionId": "acceptance",
+          "evidenceIds": [
+            "art_08769c7d-d2c0-48bb-9d9f-0cff4bf2bbe2"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "artifact",
+          "id": "art_08769c7d-d2c0-48bb-9d9f-0cff4bf2bbe2",
+          "sha256": "022430a7eae6cd285bf9c3492830c88f00565aecc7c9ffa2f52ad9d34c7568c9",
+          "size": 860,
+          "mime": "application/octet-stream"
+        }
+      ],
+      "checks": [],
+      "note": "Frozen fixture for external rehearsal.",
+      "limitations": [
+        "Fixed maintainer examples; no hidden-test, real-model, UI, general correctness or enjoyment claim.",
+        "The production criterion remains judgment. This external rehearsal report is not a required protected submission check.",
+        "Old Docker runtime used only for these controlled fixtures; whole Claude worker containment remains unverified."
+      ],
+      "createdAt": "2026-09-24T04:01:27.616Z"
+    },
+    "failedReview": {
+      "id": "evaluation_eff9d124-0837-4378-bc18-7a7812dbf862",
+      "taskId": "task_5d656eac-b1e8-4e9b-bc85-ffac1e5142ee",
+      "submissionId": "submission_6ec5fc2d-f887-475f-9c95-2d4a0981bdfb",
+      "criteriaHash": "5d36fefb385f7bbd5906027123574bcf5153adc9327aa5bed474e088c2878986",
+      "reviewerId": "iris",
+      "accepted": false,
+      "verdicts": [
+        {
+          "criterionId": "acceptance",
+          "verdict": "fail",
+          "evidenceIds": [
+            "art_08769c7d-d2c0-48bb-9d9f-0cff4bf2bbe2"
+          ],
+          "rationale": "Maintainer fixture found a restart defect. Rehearsal b4d50033205cba138b9c9c350f5e4b1a443ebf579d12ca309cd2d0a78d4d88f6."
+        }
+      ],
+      "inspectionIds": [],
+      "note": "Rehearsal rejected; correct restart.",
+      "createdAt": "2026-09-24T04:01:33.267Z"
+    },
+    "correctedSubmission": {
+      "id": "submission_c41b1494-b002-470f-bc7f-5e678f49ae23",
+      "taskId": "task_5d656eac-b1e8-4e9b-bc85-ffac1e5142ee",
+      "missionId": "mission_96188b27-6087-494d-954e-00a5b53e8281",
+      "missionRevision": 2,
+      "criteriaId": "criteria_80c1a1b0-48ba-42fc-9093-722085a62e14",
+      "criteriaHash": "5d36fefb385f7bbd5906027123574bcf5153adc9327aa5bed474e088c2878986",
+      "authorId": "ember",
+      "round": 2,
+      "bindings": [
+        {
+          "criterionId": "acceptance",
+          "evidenceIds": [
+            "art_44c796e7-8ff9-4491-82bd-279d72eb49c0"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "artifact",
+          "id": "art_44c796e7-8ff9-4491-82bd-279d72eb49c0",
+          "sha256": "5727fb9a51e179256093acb426db2fdbe6fde5a840d7687fc88358aed13257af",
+          "size": 860,
+          "mime": "application/octet-stream"
+        }
+      ],
+      "checks": [],
+      "note": "Frozen fixture for external rehearsal.",
+      "limitations": [
+        "Fixed maintainer examples; no hidden-test, real-model, UI, general correctness or enjoyment claim.",
+        "The production criterion remains judgment. This external rehearsal report is not a required protected submission check.",
+        "Old Docker runtime used only for these controlled fixtures; whole Claude worker containment remains unverified."
+      ],
+      "createdAt": "2026-09-24T04:01:33.270Z"
+    },
+    "finalTaskStatus": "review"
+  },
+  "result": "pass"
+}

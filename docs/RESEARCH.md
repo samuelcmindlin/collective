@@ -11,6 +11,11 @@ QMD was installed temporarily for that experiment; no application dependency was
 added. The repository is now tracked in local Git without a remote. The entries
 below preserve the original research recommendations.
 
+The [isolation follow-up](ISOLATION-REHEARSAL.md) records the subsequent runtime
+inventory, current `sbx` installation/subscription sources, candidate experiment,
+and lifecycle defects found using real disposable containers. The ordinary Docker
+container experiment does not establish Docker Sandboxes or Claude compatibility.
+
 ## What changed after research
 
 The previous plan committed too early to building retrieval directly on SQLite.

@@ -147,6 +147,14 @@ independent structured reviews, and exposes provenance. Its protected evaluator
 checks bounded JSON data only. Outcome observations, policy ratification, behavioral
 code evaluation, containment and a real-model pilot remain open.
 
+The subsequent [candidate isolation rehearsal](ISOLATION-REHEARSAL.md) verifies
+controlled code fixtures, external behavioral judgments and disposable container
+cleanup. It narrows artifact publication and corrects process-group cleanup.
+The installed Docker runtime is old, the whole Claude worker remains unverified,
+and native live launch is now blocked explicitly. Executable criteria must await
+the documented durable evaluation-intent/result integration; rehearsal passes do
+not count as production acceptance checks.
+
 Bind submissions and reviews to criterion versions and immutable evidence.
 Require evaluators to record what they checked; retain failed experiments and
 limitations. Add a deterministic check where the criterion is executable. Keep

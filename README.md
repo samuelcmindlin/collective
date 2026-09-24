@@ -4,15 +4,17 @@ A local, persistent team with a shared mission, a Discord home, and an office yo
 can watch. Claude Code provides each live agent's execution harness. Collective
 owns the durable work, room routing, calendars, evidence, and permission boundary.
 
-This is a working first prototype. The local workflow and interfaces are tested;
-live model execution and Discord delivery need your local credentials before they
-can be verified. No model calls were made during the initial build.
+This is a working first prototype. The local workflow and interfaces are tested.
+**Live Claude launches are currently disabled pending whole-worker isolation
+verification.** The [isolation rehearsal](docs/ISOLATION-REHEARSAL.md) tests frozen
+code candidates in disposable containers; it does not yet contain the complete
+Claude harness. No model calls have been made during development.
 
 ## Try it
 
-Requires Node.js 22.13+ and npm. Live mode requires a recent Claude Code CLI
-(developed against 2.1.281) and a platform supporting its mandatory Bash sandbox
-(macOS or Linux with the sandbox prerequisites).
+Requires Node.js 22.13+ and npm. The native Claude adapter was developed against
+CLI 2.1.281. Its Bash settings are not a verified whole-worker boundary; connecting
+accounts or entering quota readings cannot bypass the current launch gate.
 
 ```sh
 npm install
@@ -79,8 +81,8 @@ app. Never paste a bot token into a Discord channel or this chat.
 ## Give them a mission
 
 Use **Edit mission** for a broad goal, optional boundaries, and any completion
-criteria you already know. The starter example is “Create a game.” Press **Run
-collective** after setup. Work runs weekdays 09:00–17:00 in `America/New_York`,
+criteria you already know. The starter example is “Create a game.” In simulation,
+press **Run collective**. The configured live schedule is weekdays 09:00–17:00 in `America/New_York`,
 including daylight saving changes, while this application and computer are awake.
 The schedule is part of the supervisor; no OS background service is installed.
 
@@ -122,11 +124,11 @@ returns incomplete data, launches stop. A manual current reading plus an explici
 overage-disabled confirmation works temporarily; readings expire after ten
 minutes by default. `npm run quota` performs the same read-only diagnostic.
 
-Agent shell commands have mandatory filesystem/network sandboxing, with no
-unsandboxed fallback. Built-in file tools are restricted to their workspace.
-Only the Collective MCP server is configured. Shell network access and inherited
-API/GitHub/Discord credentials are unavailable; public HTTPS reads use a broker
-that rejects private network destinations. See the
+The native adapter configures mandatory Bash sandboxing, workspace file-tool
+permissions and only the Collective MCP server. Its child environment excludes
+API/GitHub/Discord credentials. Those settings alone do not verify containment of
+the Claude process, subscription credentials or MCP access, so live launch remains
+disabled. Public HTTPS reads use a broker that rejects private destinations. See the
 [Claude permission documentation](https://code.claude.com/docs/en/permissions)
 and [sandbox documentation](https://code.claude.com/docs/en/sandboxing).
 
@@ -137,8 +139,8 @@ unimplemented integrations remain recorded but do not execute anything.
 | Capability | Current implementation |
 | --- | --- |
 | Public web research | Fetch public HTTPS pages through `web_read`; no logged-in browsing or full browser automation yet |
-| Code and tests | Each agent's own local files and sandboxed CLI tools; network dependency installs need a resource request |
-| Shared output | Immutable publication, text inspection by other agents, isolated local HTML preview |
+| Code and tests | Per-agent workspace and native adapter; live launch gated. Maintainer-only disposable candidate evaluator rehearsal |
+| Shared output | Immutable publication of top-level, single-link files up to 5 MB; copy nested outputs to the workspace root first. Text inspection and isolated local HTML preview |
 | Team and rooms | Approved additions within configured caps; rooms provision in Discord when used |
 | GitHub | Approved private repository creation and draft PR creation from an existing remote head branch |
 | External deployment | Request and approval lifecycle; a hosting executor and designated destination are still needed |

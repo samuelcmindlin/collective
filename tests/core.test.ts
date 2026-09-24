@@ -169,6 +169,25 @@ test('CLI execution cannot inherit paid API credentials or enable unrestricted t
   s.close();
 });
 
+test('native live workers remain disabled even with valid quota and connected integrations', async () => {
+  const s = setup('live');
+  try {
+    s.service.setMission('Isolation gate', 'Wait for a verified whole-worker backend', [], 'operator');
+    s.store.patch('settings', 'settings', { paused: false });
+    s.scheduler.status.discord = 'connected'; s.scheduler.status.claude = 'available';
+    const harness = new ClaudeHarness(s.service, s.config, () => { throw new Error('No run token should be issued.'); });
+    s.scheduler.harness = harness;
+    const at = new Date('2026-09-23T14:00:00Z');
+    s.store.put('quotas', { id: 'quota', fiveHourUsed: 0, weeklyUsed: 0, observedAt: at.toISOString(), extraUsageEnabled: false, source: 'operator' });
+    assert.match(s.scheduler.blockReason(at)!, /whole-worker isolation/);
+    await s.scheduler.tick(at); assert.equal(s.store.all('runs').length, 0);
+    const job = s.store.all('jobs')[0]!;
+    const run = { id: 'blocked', jobId: job.id, agentId: job.agentId, status: 'running' as const,
+      inputTokens: 0, outputTokens: 0, estimatedCost: 0, turns: 0, startedAt: nowIso() };
+    await assert.rejects(harness.execute(s.store.require('agents', job.agentId), job, run, new AbortController().signal, () => {}), /whole-worker isolation/);
+  } finally { s.close(); }
+});
+
 test('public web reader rejects private, link-local, IPv6 loopback, and unsafe protocols', async () => {
   for (const address of ['127.0.0.1','10.0.0.1','169.254.169.254','172.16.1.1','192.168.1.1','::1','fe80::1','::ffff:127.0.0.1']) assert.equal(isPublicAddress(address), false, address);
   assert.equal(isPublicAddress('8.8.8.8'), true);
@@ -243,6 +262,25 @@ test('CLI timeouts fail an episode and aborts preserve resumability', async () =
     const result = await harness.execute(s.store.require('agents', 'nova'), job, run, controller.signal, () => controller.abort());
     assert.equal(result.interrupted, true); assert.equal(result.sessionId, 'kept-session');
   } finally { s.close(); }
+});
+
+test('CLI leader exit cleans up a descendant that ignores graceful cancellation and closes its output', { skip: process.platform === 'win32' }, async () => {
+  const s = setup(), script = join(s.dir, 'descendant-cli.cjs');
+  writeFileSync(script, `#!${process.execPath}\nconst {spawn}=require('node:child_process');const fs=require('node:fs');
+    const child=spawn(process.execPath,['-e',"process.on('SIGINT',()=>{});process.on('SIGTERM',()=>{});process.send('ready');setInterval(()=>{},1000);"],{stdio:['ignore','ignore','ignore','ipc']});
+    process.on('SIGINT',()=>process.exit(0));process.stdin.resume();
+    child.once('message',()=>{fs.writeFileSync('descendant.pid',String(child.pid));process.stdout.write(JSON.stringify({type:'system',session_id:'descendant-fixture'})+'\\n');});`);
+  chmodSync(script, 0o700); s.config.claudeBin = script;
+  const job = s.store.enqueue('nova', 'feedback', {}, 'descendant');
+  const run = s.store.put('runs', { id: 'descendant-run', agentId: 'nova', jobId: job.id, status: 'running', inputTokens: 0, outputTokens: 0, estimatedCost: 0, turns: 0, startedAt: nowIso() });
+  const controller = new AbortController(); let pid: number | undefined;
+  try {
+    const result = await new ClaudeHarness(s.service, s.config, () => 'fixture-token').execute(s.store.require('agents', 'nova'), job, run, controller.signal, () => controller.abort());
+    pid = Number(readFileSync(join(s.service.workspace('nova'), 'descendant.pid'), 'utf8'));
+    const alive = () => { try { process.kill(pid!, 0); return true; } catch { return false; } };
+    for (let i = 0; i < 20 && alive(); i++) await new Promise(done => setTimeout(done, 50));
+    assert.equal(result.interrupted, true); assert.equal(alive(), false, 'A closed leader must not skip process-group cleanup');
+  } finally { if (pid) { try { process.kill(pid, 'SIGKILL'); } catch {} } s.close(); }
 });
 
 test('MCP subprocess reaches domain tools through a live run token and loses authority on pause', async () => {

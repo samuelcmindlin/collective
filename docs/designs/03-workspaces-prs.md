@@ -4,6 +4,12 @@ Status: proposed implementation design. Covers the execution and publication
 parts of [controlled evolution](../EVOLUTION.md). Current adapter limits and
 research sources are recorded in [research](../RESEARCH.md).
 
+Implementation update: the [candidate rehearsal](../ISOLATION-REHEARSAL.md)
+records controlled container probes, protected behavior examples and the exact
+remaining whole-worker and evaluator-ledger gates. The native live harness is
+disabled until those worker boundaries are verified. No GitHub remote or PR was
+created by that rehearsal.
+
 ## What needs isolation now
 
 | Activity | Boundary needed for the next stage |

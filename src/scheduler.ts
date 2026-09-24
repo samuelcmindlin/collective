@@ -39,6 +39,7 @@ export class Scheduler {
     if (this.store.all('outbox').some(o => o.status === 'failed')) return 'Discord delivery failed; inspect Activity and retry delivery';
     if (this.status.claude === 'unauthenticated') return 'Sign into Claude Code locally, then check the installation in Settings';
     if (this.status.claude !== 'available') return 'Claude Code is not available';
+    if (this.harness.launchBlockReason) return this.harness.launchBlockReason;
     const quota = this.store.all('quotas').at(-1);
     if (!quota || at.getTime() - Date.parse(quota.observedAt) > settings.quotaMaxAgeMinutes * 60000) return 'Quota data is missing or stale; refresh usage in Settings';
     if (quota.fiveHourUsed === undefined || quota.weeklyUsed === undefined) return 'Both five-hour and weekly quota readings are required';

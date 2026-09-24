@@ -1,0 +1,95 @@
+{
+  "createdAt": "2026-09-24T03:53:44.349Z",
+  "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+  "policyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+  "authority": "controlled-fixture-rehearsal",
+  "wholeWorkerGate": "not-verified",
+  "productionExecutionEnabled": false,
+  "evaluatorCodeHash": "3a2f12dda65ee92353c70a047288400d70708be029b30882983a383ebdd8e75f",
+  "runtime": {
+    "version": "23.0.5",
+    "os": "linux",
+    "arch": "arm64",
+    "components": [
+      {
+        "Name": "Engine",
+        "Version": "23.0.5",
+        "Details": {
+          "ApiVersion": "1.42",
+          "Arch": "arm64",
+          "BuildTime": "Wed Apr 26 16:17:14 2023",
+          "Experimental": "false",
+          "GitCommit": "94d3ad6",
+          "GoVersion": "go1.19.8",
+          "KernelVersion": "5.15.49-linuxkit",
+          "MinAPIVersion": "1.12",
+          "Os": "linux"
+        }
+      },
+      {
+        "Name": "containerd",
+        "Version": "1.6.20",
+        "Details": {
+          "GitCommit": "2806fc1057397dbaeefbea0e4e17bddfbd388f38"
+        }
+      },
+      {
+        "Name": "runc",
+        "Version": "1.1.5",
+        "Details": {
+          "GitCommit": "v1.1.5-0-gf19387a"
+        }
+      },
+      {
+        "Name": "docker-init",
+        "Version": "0.19.0",
+        "Details": {
+          "GitCommit": "de40ad0"
+        }
+      }
+    ]
+  },
+  "containment": {
+    "execution": {
+      "container": "collective-eval-95797772-e947-4c4e-bc70-2433e97a2241",
+      "image": "sha256:78175922b1739c305f3832562c569a07cbc0005b39db6b97a4a3ac328b9fae94",
+      "policyHash": "d97386f4fd77afd25319febbf50d932d38510bdd6c75ac9ec9ef416d358e4f92",
+      "code": 0,
+      "stdout": "{\"scratchWorks\":true,\"rootWriteDenied\":true,\"hostReadDenied\":true,\"hostWriteDenied\":true,\"otherWorkerDenied\":true,\"symlinkReadDenied\":true,\"symlinkWriteDenied\":true,\"hostOperatorDenied\":true,\"publicNetworkDenied\":true,\"dnsDenied\":true,\"onlyLoopbackInterface\":false,\"hostGatewayDenied\":true,\"sshSocketDenied\":true,\"dockerSocketAbsent\":true,\"credentialsAbsent\":true,\"nonRoot\":true,\"noCapabilities\":true,\"noNewPrivileges\":true,\"seccompActive\":true,\"memoryLimit\":true,\"pidsLimit\":true,\"cpuLimit\":true,\"cgroupWriteDenied\":true,\"processLimitEnforced\":true}\n",
+      "stderr": "{\"sysfsInterfaces\":[\"ip6tnl0\",\"lo\",\"tunl0\"],\"processInterfaces\":[\"lo\"],\"procNetDev\":\"Inter-|   Receive                                                |  Transmit\\n face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed\\n    lo:     100       2    0    0    0     0          0         0      100       2    0    0    0     0       0          0\\n tunl0:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0\\nip6tnl0:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0\\n\"}\n",
+      "cleanupVerified": true,
+      "state": {
+        "exitCode": 0,
+        "oomKilled": false
+      }
+    },
+    "observations": {
+      "scratchWorks": true,
+      "rootWriteDenied": true,
+      "hostReadDenied": true,
+      "hostWriteDenied": true,
+      "otherWorkerDenied": true,
+      "symlinkReadDenied": true,
+      "symlinkWriteDenied": true,
+      "hostOperatorDenied": true,
+      "publicNetworkDenied": true,
+      "dnsDenied": true,
+      "onlyLoopbackInterface": false,
+      "hostGatewayDenied": true,
+      "sshSocketDenied": true,
+      "dockerSocketAbsent": true,
+      "credentialsAbsent": true,
+      "nonRoot": true,
+      "noCapabilities": true,
+      "noNewPrivileges": true,
+      "seccompActive": true,
+      "memoryLimit": true,
+      "pidsLimit": true,
+      "cpuLimit": true,
+      "cgroupWriteDenied": true,
+      "processLimitEnforced": true
+    }
+  },
+  "result": "fail",
+  "error": "All allowed operations and expected denials must be observed"
+}

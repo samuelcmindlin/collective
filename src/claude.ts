@@ -9,7 +9,7 @@ import type { Config } from './config.js';
 import type { CollectiveService } from './service.js';
 
 export interface RunResult { sessionId?: string; summary: string; inputTokens: number; outputTokens: number; estimatedCost: number; turns: number; interrupted?: boolean; }
-export interface Harness { execute(agent: Agent, job: Job, run: Run, signal: AbortSignal, onEvent: (event: any) => void): Promise<RunResult>; }
+export interface Harness { readonly launchBlockReason?: string; execute(agent: Agent, job: Job, run: Run, signal: AbortSignal, onEvent: (event: any) => void): Promise<RunResult>; }
 
 export function claudeSettings(workspace: string, dataDir: string) {
   const pathRule = (path: string) => '/' + resolve(path).replaceAll('\\', '/');
@@ -37,7 +37,11 @@ export function claudeArgs(agent: Agent, settingsPath: string, mcpPath: string, 
 
 export class ClaudeHarness implements Harness {
   constructor(private service: CollectiveService, private config: Config, private grantRun: (runId: string) => string) {}
+  get launchBlockReason() {
+    return this.config.mode === 'live' ? 'Live Claude workers are disabled until whole-worker isolation is verified. The candidate evaluator rehearsal does not satisfy this gate.' : undefined;
+  }
   async execute(agent: Agent, job: Job, run: Run, signal: AbortSignal, onEvent: (event: any) => void): Promise<RunResult> {
+    if (this.launchBlockReason) throw new Error(this.launchBlockReason);
     const workspace = this.service.workspace(agent.id);
     const settings = this.service.store.settings();
     const control = resolve(this.config.dataDir, 'control', run.id); mkdirSync(control, { recursive: true, mode: 0o700 });
@@ -67,6 +71,10 @@ export class ClaudeHarness implements Harness {
       };
       child.stdout.on('data', (chunk: Buffer) => { totalBytes += chunk.length; if (totalBytes > 20_000_000) { failure = 'Claude exceeded the output size limit.'; stop(); return; } buffer += chunk.toString(); let pos: number; while ((pos = buffer.indexOf('\n')) >= 0) { parse(buffer.slice(0, pos)); buffer = buffer.slice(pos + 1); } });
       child.stderr.on('data', (chunk: Buffer) => { stderr = (stderr + chunk.toString()).slice(-4000); });
+      // The leader can exit while descendants keep pipes open, or detach their
+      // stdio and outlive `close`. Finish the group even after the leader exits.
+      // A descendant that creates a new process group still needs a worker VM.
+      child.once('exit', () => kill('SIGKILL'));
       child.on('error', error => { settled = true; clearTimeout(timer); signal.removeEventListener('abort', stop); reject(error); });
       child.on('close', code => {
         if (settled) return; settled = true; clearTimeout(timer); signal.removeEventListener('abort', stop); parse(buffer);

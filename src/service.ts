@@ -1,14 +1,14 @@
 import { z } from 'zod/v3';
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs';
-import { resolve, relative, extname, sep } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { resolve, relative, extname } from 'node:path';
 import { Store, id, nowIso } from './store.js';
 import type { Agent, Capability, Job, Message, PermissionRequest } from './types.js';
 import type { Config } from './config.js';
 import { TaskCommands, taskSchemas, isTaskTool } from './application/tasks.js';
 import { stable } from './application/commands.js';
 import { KnowledgeRepository, knowledgeSchemas } from './knowledge/repository.js';
-import { MAX_ARTIFACT_BYTES, readArtifactSnapshot } from './storage/artifacts.js';
+import { readWorkspaceArtifact, readArtifactSnapshot } from './storage/artifacts.js';
 import { ProgressRepository } from './progress/repository.js';
 import { progressSchemas } from './progress/schemas.js';
 export { stable } from './application/commands.js';
@@ -47,7 +47,7 @@ export const toolDescriptions: Record<ToolName, string> = {
   knowledge_search: 'Search all authorized current knowledge using literal keywords (all terms must occur). No recency cutoff. Returns bounded snippets and exact citations, not verified answers. Empty query browses the catalog; pass nextOffset as offset for subsequent pages. Nonempty queries return at most 20 hits; refine keywords to narrow results. Try alternate terms for paraphrases.',
   knowledge_get: 'Read exact knowledge by documentId (current revision) or revisionId (immutable citation). Inspect evidence with this tool; summaries are incomplete. Conflicts require an exact revision.',
   knowledge_history: 'List immutable revision history for one authorized document. Follow nextOffset as offset for revisions and nextHeadOffset as headOffset for heads. Each revision includes isHead; document.heads is only one page. Conflicts with more than 100 heads require a maintainer recovery request.',
-  artifact_publish: 'Copy a file from your workspace into immutable shared artifact storage. Returns its evidence ID. HTML can be previewed by the user.',
+  artifact_publish: 'Publish a regular file directly in your workspace root as an immutable artifact. Copy nested outputs to the root first. Symlinks, hard links, changing files and files above 5 MB are rejected. Returns its evidence ID. HTML can be previewed by the user.',
   artifact_read: 'Verify published bytes against their stored size and hash, then read text evidence by ID. Binary artifacts return metadata only. Text may be truncated; this integrity check does not assess correctness.',
   meeting_schedule: 'Schedule a bounded meeting with named participants, agenda, and expected outcome. Calendars prevent overlapping invitations.',
   meeting_finish: 'Record the outcome of a meeting you attended and finish it.',
@@ -188,15 +188,13 @@ export class CollectiveService {
       }
       case 'room_say': return this.say(agentId, args.content, args.toAgentIds, Number(job?.payload.depth ?? 0));
       case 'artifact_publish': {
-        const workspace = realpathSync(this.workspace(agentId)); const path = realpathSync(resolve(workspace, args.path));
-        if (!path.startsWith(workspace + sep) || path.includes(`${sep}.claude${sep}`)) throw new Error('Artifact must be a regular file inside your workspace.');
-        const stat = statSync(path); if (!stat.isFile() || stat.size > MAX_ARTIFACT_BYTES) throw new Error('Artifact must be a file smaller than 5 MB.');
         if (args.taskId) {
           const task = this.store.require('tasks', args.taskId);
           if (task.ownerId !== agentId) throw new Error('You do not own this task.');
           if (task.missionId !== this.activeMission()?.id) throw new Error('Task belongs to an inactive mission.');
         }
-        const body = readFileSync(path); const artifactId = id('art');
+        const body = readWorkspaceArtifact(this.workspace(agentId), args.path); const artifactId = id('art');
+        const path = args.path;
         const dir = resolve(this.config.dataDir, 'artifacts'); mkdirSync(dir, { recursive: true, mode: 0o700 });
         const destination = resolve(dir, artifactId + extname(path)); writeFileSync(destination, body, { mode: 0o400, flag: 'wx' });
         const mime = ({ '.html': 'text/html', '.md': 'text/markdown', '.txt': 'text/plain', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.csv': 'text/csv' } as Record<string, string>)[extname(path)] ?? 'application/octet-stream';

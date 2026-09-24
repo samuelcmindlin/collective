@@ -159,12 +159,15 @@ ratification, outcome observations, meaningful artifact-specific checks and
 comparison against a single-agent baseline. There are no agent overrides for
 failed checks, automatic rubric revisions, or operator exception records yet.
 
-The next infrastructure gate is worker containment and candidate execution: prove
-separation from supervisor policy/state, close artifact publication races, and run
-one protected behavioral check on a frozen candidate in that environment. Then
-close Discord recovery/quota prerequisites and run a small supervised two-agent
-pilot. Semantic retrieval remains justified by measured misses, but broad UI or
-autonomous tool expansion is lower priority than validating this work cycle.
+The [isolation rehearsal](ISOLATION-REHEARSAL.md) now exercises a frozen candidate
+against a protected external behavior oracle in disposable containers. Publication
+accepts only top-level, single-link files through a bounded no-follow descriptor
+read. The rehearsal report binds to exact fixture submissions but is deliberately
+not a required production check. Whole-worker containment and durable evaluator
+dispatch/reconciliation remain gates; native live launches are explicitly disabled.
+Then close Discord recovery/quota prerequisites and run a small supervised
+two-agent pilot. Semantic retrieval remains justified by measured misses, but broad
+UI or autonomous tool expansion is lower priority than validating this work cycle.
 
 These paths are bounded for a small personal installation. A submission can still
 read up to 100 MB synchronously across 20 artifact snapshots; context and other

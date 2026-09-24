@@ -2,6 +2,25 @@
   "version": 1,
   "documents": [
     {
+      "id": "platform.isolation-rehearsal",
+      "path": "docs/ISOLATION-REHEARSAL.md",
+      "namespace": "platform",
+      "kind": "assessment",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
+      "importMode": "read-only",
+      "tags": [
+        "isolation",
+        "evaluation",
+        "rehearsal"
+      ]
+    },
+    {
       "id": "platform.progress-implementation",
       "path": "docs/PROGRESS-IMPLEMENTATION.md",
       "namespace": "platform",
