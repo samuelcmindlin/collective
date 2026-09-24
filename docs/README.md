@@ -8,8 +8,9 @@ document is not a claim that its interfaces or safeguards already exist.
 
 | Document | Purpose | Status |
 | --- | --- | --- |
+| [Worker review](REVIEW-2026-09-24.md) | Rehearsal defects, fixes and stricter containment evidence | 123 tests and 67 VM checks passed |
 | [Isolation architecture](ISOLATION.md) | Trust boundaries, containers versus microVMs, threat model and explicit limits | Architecture and acceptance contract |
-| [Worker VM rehearsal](WORKER-REHEARSAL.md) | Two-VM containment/lifecycle evidence, remaining host integrations and bounded episode design | 60 synthetic checks passed; live gate closed |
+| [Worker VM rehearsal](WORKER-REHEARSAL.md) | Initial evidence, remaining host integrations and bounded episode design | Initial report superseded by worker review; live gate closed |
 | [Isolation and behavioral rehearsal](ISOLATION-REHEARSAL.md) | Candidate containment evidence, lifecycle fixes and the remaining whole-worker gate | Controlled fixture rehearsal |
 | [Criterion-bound evaluation](PROGRESS-IMPLEMENTATION.md) | Frozen criteria, immutable attempts, protected data checks and independent judgments | Implemented first increment |
 | [Knowledge and evidence review](REVIEW-2026-09-23.md) | Reproduced defects, corrections, verification and remaining boundaries | Completed review |

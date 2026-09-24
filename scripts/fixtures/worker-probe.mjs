@@ -9,7 +9,9 @@ for await (const chunk of process.stdin) input += chunk;
 const request = JSON.parse(input);
 const workspace = '/home/agent/workspace';
 const marker = `${workspace}/collective-probe-marker`;
+const sessionMarker = '/home/agent/.claude/projects/.collective-probe-session';
 const heartbeat = `${workspace}/collective-probe-heartbeat`;
+const emit = value => console.log('COLLECTIVE_WORKER_PROBE_V2 ' + JSON.stringify(value));
 const read = path => { try { return fs.readFileSync(path, 'utf8'); } catch { return null; } };
 const command = (file, args) => {
   try { return { code: 0, output: execFileSync(file, args, { timeout: 6000, maxBuffer: 16000, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim() }; }
@@ -20,11 +22,12 @@ const boot = () => read('/proc/sys/kernel/random/boot_id')?.trim();
 if (request.mode === 'inspect') {
   const before = read(heartbeat);
   await new Promise(resolve => setTimeout(resolve, 350));
-  console.log(JSON.stringify({ marker: read(marker), boot: boot(), heartbeatBefore: before,
-    heartbeatAfter: read(heartbeat), dockerId: command('docker', ['info', '--format', '{{.ID}}']).output }));
+  emit({ marker: read(marker), sessionMarker: read(sessionMarker), boot: boot(), heartbeatBefore: before,
+    heartbeatAfter: read(heartbeat), dockerId: command('docker', ['info', '--format', '{{.ID}}']).output });
 } else {
   fs.mkdirSync(workspace, { recursive: true });
   fs.writeFileSync(marker, request.marker);
+  fs.writeFileSync(sessionMarker, request.marker);
   const observations = {};
   observations.hostSentinelUnreadable = read(request.hostSentinel) === null;
   observations.peerHostSentinelUnreadable = read(request.peerHostSentinel) === null;
@@ -45,10 +48,10 @@ if (request.mode === 'inspect') {
   observations.rootAvailableInsideVM = command('sudo', ['-n', 'id', '-u']).output === '0';
   const mounts = fs.readFileSync('/proc/self/mountinfo', 'utf8').trim().split('\n').map(line => {
     const [left, right] = line.split(' - ');
-    return { path: left.split(' ')[4], type: right.split(' ')[0] };
+    return { path: left.split(' ')[4], type: right.split(' ')[0], options: left.split(' ')[5] };
   });
   // /etc/resolv.conf is a deliberate runtime-owned read-only DNS configuration share.
-  observations.noUnexpectedVirtioShares = mounts.filter(m => m.type === 'virtiofs').every(m => m.path === '/etc/resolv.conf');
+  observations.noUnexpectedVirtioShares = mounts.filter(m => m.type === 'virtiofs').every(m => m.path === '/etc/resolv.conf' && m.options.split(',').includes('ro'));
   const networks = [];
   for (const [name, url] of [
     ['public-web', 'https://example.com'], ['provider', 'https://api.anthropic.com'],
@@ -75,15 +78,15 @@ if (request.mode === 'inspect') {
   const auth = command('claude', ['auth', 'status']);
   let loggedIn = null; try { loggedIn = JSON.parse(auth.output).loggedIn; } catch {}
   observations.claudeUnauthenticated = loggedIn === false;
-  const child = spawn(process.execPath, ['-e', `const fs=require('node:fs'); setInterval(()=>fs.writeFileSync(${JSON.stringify(heartbeat)},String(Date.now())),100);`], { detached: true, stdio: 'ignore' });
+  const child = spawn(process.execPath, ['-e', `const fs=require('node:fs'); const target=${JSON.stringify(heartbeat)}; setInterval(()=>{fs.writeFileSync(target+'.next',String(Date.now()));fs.renameSync(target+'.next',target);},100);`], { detached: true, stdio: 'ignore' });
   child.unref();
   await new Promise(resolve => setTimeout(resolve, 350));
   observations.detachedProcessStarted = read(heartbeat) !== null;
-  console.log(JSON.stringify({ observations, networks, direct, directHttp, directTls, mounts, boot: boot(),
-    marker: read(marker), heartbeat: read(heartbeat), childPid: child.pid,
+  emit({ observations, networks, direct, directHttp, directTls, mounts, boot: boot(),
+    marker: read(marker), sessionMarker: read(sessionMarker), heartbeat: read(heartbeat), childPid: child.pid,
     runtime: { node: process.version, kernel: os.release(), cpus: os.cpus().length, memoryBytes: os.totalmem(),
       claude: command('claude', ['--version']).output, docker: command('docker', ['version', '--format', '{{.Server.Version}}']).output,
       dockerId: command('docker', ['info', '--format', '{{.ID}}']).output },
     integrations: { ghTokenVariablePresent: Boolean(process.env.GH_TOKEN), mcpGatewayVariablePresent: Boolean(process.env.MCP_GATEWAY_URL),
-      secretFileCount: fs.readdirSync('/run/secrets').length, loggedIn } }));
+      secretFileCount: fs.readdirSync('/run/secrets').length, loggedIn } });
 }

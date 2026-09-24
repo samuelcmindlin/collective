@@ -1,0 +1,652 @@
+{
+  "createdAt": "2026-09-24T14:03:34.462Z",
+  "authority": "synthetic-worker-rehearsal",
+  "protocol": 2,
+  "image": "docker/sandbox-templates:claude-code-docker",
+  "names": [
+    "collective-probe-e341a7b7-fd6e-4122-a94d-3aca3cfdf990-a",
+    "collective-probe-a23bc39b-8574-492a-9d03-8fa9fc2a2951-b"
+  ],
+  "sourceSha256": "de8a3aea703473f85acf76b5bb1801471f450830b5241dcb0ddb034d68ee1bfe",
+  "fixtureSha256": "72e4129ce012390aa216dc56270efd57979b031da528cfef3adbba10b0733ff2",
+  "settings": {
+    "ssh.agentForwardingEnabled": "false",
+    "skills.defaultMode": "off",
+    "mcp.forceLocalGateway": "true",
+    "clipboard.imagePaste": "false"
+  },
+  "productionExecutionEnabled": false,
+  "modelInvoked": false,
+  "result": "pass",
+  "checks": {
+    "sshForwardingDisabled": true,
+    "sharedSkillsDisabled": true,
+    "hostLocalMcpRequired": true,
+    "clipboardImageReadDisabled": true,
+    "noRegisteredMcpServers": true,
+    "hostCanReachDirectTlsDestination": true,
+    "hostOperatorPositiveControl": true,
+    "worker0:policiesDeny": true,
+    "worker0:hostSentinelUnreadable": true,
+    "worker0:peerHostSentinelUnreadable": true,
+    "worker0:hostSentinelUnwritable": true,
+    "worker0:rootCannotReadHostSentinel": true,
+    "worker0:symlinkDoesNotCrossVM": true,
+    "worker0:platformCheckoutAbsent": true,
+    "worker0:hostHomeAbsent": true,
+    "worker0:hostDockerSocketAbsent": true,
+    "worker0:hostSshSocketAbsent": true,
+    "worker0:noSshAgentSocket": true,
+    "worker0:sshSigningUnavailable": true,
+    "worker0:ownWorkspaceWritable": true,
+    "worker0:rootAvailableInsideVM": true,
+    "worker0:noUnexpectedVirtioShares": true,
+    "worker0:proxyDenies:public-web": true,
+    "worker0:proxyDenies:provider": true,
+    "worker0:proxyDenies:github": true,
+    "worker0:proxyDenies:host-service": true,
+    "worker0:directHttpExchangeDenied": true,
+    "worker0:directTlsExchangeDenied": true,
+    "worker0:vmLoopbackDoesNotReachHost": true,
+    "worker0:claudeUnauthenticated": true,
+    "worker0:detachedProcessStarted": true,
+    "worker0:completeValidatedRecord": true,
+    "worker1:policiesDeny": true,
+    "worker1:hostSentinelUnreadable": true,
+    "worker1:peerHostSentinelUnreadable": true,
+    "worker1:hostSentinelUnwritable": true,
+    "worker1:rootCannotReadHostSentinel": true,
+    "worker1:symlinkDoesNotCrossVM": true,
+    "worker1:platformCheckoutAbsent": true,
+    "worker1:hostHomeAbsent": true,
+    "worker1:hostDockerSocketAbsent": true,
+    "worker1:hostSshSocketAbsent": true,
+    "worker1:noSshAgentSocket": true,
+    "worker1:sshSigningUnavailable": true,
+    "worker1:ownWorkspaceWritable": true,
+    "worker1:rootAvailableInsideVM": true,
+    "worker1:noUnexpectedVirtioShares": true,
+    "worker1:proxyDenies:public-web": true,
+    "worker1:proxyDenies:provider": true,
+    "worker1:proxyDenies:github": true,
+    "worker1:proxyDenies:host-service": true,
+    "worker1:directHttpExchangeDenied": true,
+    "worker1:directTlsExchangeDenied": true,
+    "worker1:vmLoopbackDoesNotReachHost": true,
+    "worker1:claudeUnauthenticated": true,
+    "worker1:detachedProcessStarted": true,
+    "worker1:completeValidatedRecord": true,
+    "distinctKernels": true,
+    "distinctDockerEngines": true,
+    "peerCannotOverwritePrivateWorkspace": true,
+    "peerCannotOverwritePrivateSessionVolume": true,
+    "workerReportedStopped": true,
+    "restartEvidenceComplete": true,
+    "hostSentinelUnchanged": true,
+    "peerHostSentinelUnchanged": true,
+    "hostOperatorNeverReached": true,
+    "hostSshNeverReached": true
+  },
+  "cleanup": [
+    {
+      "name": "collective-probe-e341a7b7-fd6e-4122-a94d-3aca3cfdf990-a",
+      "absent": true
+    },
+    {
+      "name": "collective-probe-a23bc39b-8574-492a-9d03-8fa9fc2a2951-b",
+      "absent": true
+    }
+  ],
+  "attempted": [
+    "collective-probe-e341a7b7-fd6e-4122-a94d-3aca3cfdf990-a",
+    "collective-probe-a23bc39b-8574-492a-9d03-8fa9fc2a2951-b"
+  ],
+  "sbx": "sbx version: v0.45.1 9d79d90ee4c5d297fb3d36b75384e8cea7a4fbcb",
+  "hostNetworkControl": {
+    "code": 0,
+    "stdout": "301",
+    "stderr": ""
+  },
+  "worker0Policies": [
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-e341a7b7-fd6e-4122-a94d-3aca3cfdf990-a",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "api.anthropic.com:443",
+      "rule": "local:21851005-f64f-4dca-9ec3-1ae3aa7e83cc",
+      "target": "api.anthropic.com:443",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-e341a7b7-fd6e-4122-a94d-3aca3cfdf990-a",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "api.github.com:443",
+      "rule": "local:21851005-f64f-4dca-9ec3-1ae3aa7e83cc",
+      "target": "api.github.com:443",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-e341a7b7-fd6e-4122-a94d-3aca3cfdf990-a",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "example.com:443",
+      "rule": "local:21851005-f64f-4dca-9ec3-1ae3aa7e83cc",
+      "target": "example.com:443",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-e341a7b7-fd6e-4122-a94d-3aca3cfdf990-a",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "1.1.1.1:80",
+      "rule": "local:21851005-f64f-4dca-9ec3-1ae3aa7e83cc",
+      "target": "1.1.1.1:80",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-e341a7b7-fd6e-4122-a94d-3aca3cfdf990-a",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "1.1.1.1:443",
+      "rule": "local:21851005-f64f-4dca-9ec3-1ae3aa7e83cc",
+      "target": "1.1.1.1:443",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-e341a7b7-fd6e-4122-a94d-3aca3cfdf990-a",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "host.docker.internal:50425",
+      "rule": "local:21851005-f64f-4dca-9ec3-1ae3aa7e83cc",
+      "target": "host.docker.internal:50425",
+      "type": "network"
+    }
+  ],
+  "worker0": {
+    "observations": {
+      "hostSentinelUnreadable": true,
+      "peerHostSentinelUnreadable": true,
+      "hostSentinelUnwritable": true,
+      "rootCannotReadHostSentinel": true,
+      "symlinkDoesNotCrossVM": true,
+      "platformCheckoutAbsent": true,
+      "hostHomeAbsent": true,
+      "hostDockerSocketAbsent": true,
+      "hostSshSocketAbsent": true,
+      "noSshAgentSocket": true,
+      "sshSigningUnavailable": true,
+      "ownWorkspaceWritable": true,
+      "rootAvailableInsideVM": true,
+      "noUnexpectedVirtioShares": true,
+      "proxyDenies:public-web": true,
+      "proxyDenies:provider": true,
+      "proxyDenies:github": true,
+      "proxyDenies:host-service": true,
+      "directHttpExchangeDenied": true,
+      "directTlsExchangeDenied": true,
+      "vmLoopbackDoesNotReachHost": true,
+      "claudeUnauthenticated": true,
+      "detachedProcessStarted": true
+    },
+    "networks": [
+      {
+        "code": 0,
+        "output": "403",
+        "name": "public-web"
+      },
+      {
+        "code": 0,
+        "output": "403",
+        "name": "provider"
+      },
+      {
+        "code": 0,
+        "output": "403",
+        "name": "github"
+      },
+      {
+        "code": 0,
+        "output": "403",
+        "name": "host-service"
+      }
+    ],
+    "direct": "connected",
+    "directHttp": {
+      "code": 52,
+      "output": "000"
+    },
+    "directTls": {
+      "code": 35,
+      "output": "000"
+    },
+    "mounts": [
+      {
+        "path": "/",
+        "type": "overlay",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/proc",
+        "type": "proc",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/dev",
+        "type": "tmpfs",
+        "options": "rw,nosuid"
+      },
+      {
+        "path": "/dev/pts",
+        "type": "devpts",
+        "options": "rw,nosuid,noexec,relatime"
+      },
+      {
+        "path": "/dev/shm",
+        "type": "tmpfs",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/dev/mqueue",
+        "type": "mqueue",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/sys",
+        "type": "sysfs",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/run",
+        "type": "tmpfs",
+        "options": "rw,nosuid"
+      },
+      {
+        "path": "/sys/fs/cgroup",
+        "type": "cgroup2",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/run/secrets",
+        "type": "tmpfs",
+        "options": "rw,nosuid,noexec,relatime"
+      },
+      {
+        "path": "/var/lib/docker",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/projects",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/sessions",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/todos",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/shell-snapshots",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/statsig",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/etc/resolv.conf",
+        "type": "virtiofs",
+        "options": "ro,relatime"
+      }
+    ],
+    "boot": "fc12bdcc-b97c-4a3e-a717-d843463c951e",
+    "marker": "4e5d298f-1710-4f9a-bfb6-46f8e2118299",
+    "sessionMarker": "4e5d298f-1710-4f9a-bfb6-46f8e2118299",
+    "heartbeat": "1790258625363",
+    "childPid": 413,
+    "runtime": {
+      "node": "v22.22.1",
+      "kernel": "7.0.12",
+      "cpus": 2,
+      "memoryBytes": 2114682880,
+      "claude": "2.1.280 (Claude Code)",
+      "docker": "29.8.1",
+      "dockerId": "472f2209-a3f8-466b-a55c-58b75638cf60"
+    },
+    "integrations": {
+      "ghTokenVariablePresent": true,
+      "mcpGatewayVariablePresent": true,
+      "secretFileCount": 0,
+      "loggedIn": false
+    }
+  },
+  "worker1Policies": [
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-a23bc39b-8574-492a-9d03-8fa9fc2a2951-b",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "api.anthropic.com:443",
+      "rule": "local:3f28580b-c310-46d7-91b5-4ccd95205bbf",
+      "target": "api.anthropic.com:443",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-a23bc39b-8574-492a-9d03-8fa9fc2a2951-b",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "api.github.com:443",
+      "rule": "local:3f28580b-c310-46d7-91b5-4ccd95205bbf",
+      "target": "api.github.com:443",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-a23bc39b-8574-492a-9d03-8fa9fc2a2951-b",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "example.com:443",
+      "rule": "local:3f28580b-c310-46d7-91b5-4ccd95205bbf",
+      "target": "example.com:443",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-a23bc39b-8574-492a-9d03-8fa9fc2a2951-b",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "1.1.1.1:80",
+      "rule": "local:3f28580b-c310-46d7-91b5-4ccd95205bbf",
+      "target": "1.1.1.1:80",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-a23bc39b-8574-492a-9d03-8fa9fc2a2951-b",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "1.1.1.1:443",
+      "rule": "local:3f28580b-c310-46d7-91b5-4ccd95205bbf",
+      "target": "1.1.1.1:443",
+      "type": "network"
+    },
+    {
+      "allowed": false,
+      "action": "net:connect:tcp",
+      "context": "sandbox:collective-probe-a23bc39b-8574-492a-9d03-8fa9fc2a2951-b",
+      "deny_kind": "explicit",
+      "governance": {
+        "active": false
+      },
+      "origin": "local",
+      "reason": "Denied by local rule",
+      "resource_type": "net:domain",
+      "resource_value": "host.docker.internal:50425",
+      "rule": "local:3f28580b-c310-46d7-91b5-4ccd95205bbf",
+      "target": "host.docker.internal:50425",
+      "type": "network"
+    }
+  ],
+  "worker1": {
+    "observations": {
+      "hostSentinelUnreadable": true,
+      "peerHostSentinelUnreadable": true,
+      "hostSentinelUnwritable": true,
+      "rootCannotReadHostSentinel": true,
+      "symlinkDoesNotCrossVM": true,
+      "platformCheckoutAbsent": true,
+      "hostHomeAbsent": true,
+      "hostDockerSocketAbsent": true,
+      "hostSshSocketAbsent": true,
+      "noSshAgentSocket": true,
+      "sshSigningUnavailable": true,
+      "ownWorkspaceWritable": true,
+      "rootAvailableInsideVM": true,
+      "noUnexpectedVirtioShares": true,
+      "proxyDenies:public-web": true,
+      "proxyDenies:provider": true,
+      "proxyDenies:github": true,
+      "proxyDenies:host-service": true,
+      "directHttpExchangeDenied": true,
+      "directTlsExchangeDenied": true,
+      "vmLoopbackDoesNotReachHost": true,
+      "claudeUnauthenticated": true,
+      "detachedProcessStarted": true
+    },
+    "networks": [
+      {
+        "code": 0,
+        "output": "403",
+        "name": "public-web"
+      },
+      {
+        "code": 0,
+        "output": "403",
+        "name": "provider"
+      },
+      {
+        "code": 0,
+        "output": "403",
+        "name": "github"
+      },
+      {
+        "code": 0,
+        "output": "403",
+        "name": "host-service"
+      }
+    ],
+    "direct": "connected",
+    "directHttp": {
+      "code": 52,
+      "output": "000"
+    },
+    "directTls": {
+      "code": 35,
+      "output": "000"
+    },
+    "mounts": [
+      {
+        "path": "/",
+        "type": "overlay",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/proc",
+        "type": "proc",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/dev",
+        "type": "tmpfs",
+        "options": "rw,nosuid"
+      },
+      {
+        "path": "/dev/pts",
+        "type": "devpts",
+        "options": "rw,nosuid,noexec,relatime"
+      },
+      {
+        "path": "/dev/shm",
+        "type": "tmpfs",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/dev/mqueue",
+        "type": "mqueue",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/sys",
+        "type": "sysfs",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/run",
+        "type": "tmpfs",
+        "options": "rw,nosuid"
+      },
+      {
+        "path": "/sys/fs/cgroup",
+        "type": "cgroup2",
+        "options": "rw,nosuid,nodev,noexec,relatime"
+      },
+      {
+        "path": "/run/secrets",
+        "type": "tmpfs",
+        "options": "rw,nosuid,noexec,relatime"
+      },
+      {
+        "path": "/var/lib/docker",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/projects",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/sessions",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/todos",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/shell-snapshots",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/home/agent/.claude/statsig",
+        "type": "ext4",
+        "options": "rw,relatime"
+      },
+      {
+        "path": "/etc/resolv.conf",
+        "type": "virtiofs",
+        "options": "ro,relatime"
+      }
+    ],
+    "boot": "9f6ab6a6-c4c6-48d9-91a1-baaaf47cc321",
+    "marker": "3b0463ec-7892-4e32-b852-9a2ba5562664",
+    "sessionMarker": "3b0463ec-7892-4e32-b852-9a2ba5562664",
+    "heartbeat": "1790258632991",
+    "childPid": 411,
+    "runtime": {
+      "node": "v22.22.1",
+      "kernel": "7.0.12",
+      "cpus": 2,
+      "memoryBytes": 2114682880,
+      "claude": "2.1.280 (Claude Code)",
+      "docker": "29.8.1",
+      "dockerId": "26466ed9-09ef-4400-a84d-ed2a93e9b460"
+    },
+    "integrations": {
+      "ghTokenVariablePresent": true,
+      "mcpGatewayVariablePresent": true,
+      "secretFileCount": 0,
+      "loggedIn": false
+    }
+  },
+  "beforeStop": {
+    "marker": "4e5d298f-1710-4f9a-bfb6-46f8e2118299",
+    "sessionMarker": "4e5d298f-1710-4f9a-bfb6-46f8e2118299",
+    "boot": "fc12bdcc-b97c-4a3e-a717-d843463c951e",
+    "heartbeatBefore": "1790258633675",
+    "heartbeatAfter": "1790258634082",
+    "dockerId": "472f2209-a3f8-466b-a55c-58b75638cf60"
+  },
+  "afterRestart": {
+    "marker": "4e5d298f-1710-4f9a-bfb6-46f8e2118299",
+    "sessionMarker": "4e5d298f-1710-4f9a-bfb6-46f8e2118299",
+    "boot": "a914730c-1d55-414e-a531-fda9802d60b5",
+    "heartbeatBefore": "1790258639553",
+    "heartbeatAfter": "1790258639553",
+    "dockerId": "472f2209-a3f8-466b-a55c-58b75638cf60"
+  }
+}

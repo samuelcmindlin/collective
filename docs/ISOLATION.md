@@ -5,6 +5,8 @@ Status: architecture and explicit acceptance contract, 2026-09-24. The
 [worker VM rehearsal](WORKER-REHEARSAL.md) record measured results; authenticated
 whole-worker integration remains open. This document explains what isolation means for
 Collective and which safeguards exist independently of the sandbox product.
+The [worker review](REVIEW-2026-09-24.md) corrects the original lifecycle evidence
+and records the current, stricter acceptance results.
 
 ## Definition
 

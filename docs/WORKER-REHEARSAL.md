@@ -5,6 +5,11 @@ disabled. This is a continuation of the [isolation architecture](ISOLATION.md)
 and [candidate evaluation rehearsal](ISOLATION-REHEARSAL.md), not a completed
 Claude integration or a general sandbox security certification.
 
+The subsequent [review](REVIEW-2026-09-24.md) found an empty heartbeat read in the
+original result and tightened the host's acceptance rules. Its new
+[67-check report](worker-review-results.json) supersedes the original lifecycle
+validation. Keep the older report as diagnostic history, not the current gate.
+
 ## Recorded experiment
 
 The [final machine-readable report](worker-rehearsal-results.json) contains 60
