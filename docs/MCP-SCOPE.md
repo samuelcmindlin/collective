@@ -4,6 +4,12 @@ Status: synthetic integration passed after the [worker review](REVIEW-2026-09-24
 2026-09-24. This checks a Docker MCP gateway boundary, not the complete Collective
 worker adapter. No model, real account credential or application mutation was used.
 
+The subsequent [domain bridge](WORK-CYCLE-IMPLEMENTATION.md) now verifies scoped
+application commands from a VM and denial after pause/restart. It also verifies
+the fully qualified cached image reference with its digest. The open items below
+describe the state at this earlier fixed-scope experiment; production lifecycle,
+clipboard-write denial and provider admission remain unfinished.
+
 ## Experiment and result
 
 The host registered a maintainer-written server exposing only `allowed_add`, a

@@ -13,6 +13,11 @@ lifecycle checks; authenticated Claude execution is not yet integrated. The
 [isolation architecture](docs/ISOLATION.md) defines the boundaries and remaining
 gates. No model calls have been made during development.
 
+The [work-cycle scenario](docs/WORK-CYCLE-IMPLEMENTATION.md) now exercises the real
+scheduler and authenticated tools with a scripted worker. `npm run scenario:run -- correct`
+produces a report without model calls; `wrong` deliberately fails independent
+semantic evaluation. The same document records the actual VM domain-bridge checks.
+
 ## Try it
 
 Requires Node.js 22.13+ and npm. The native Claude adapter was developed against

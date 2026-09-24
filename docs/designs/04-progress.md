@@ -57,6 +57,12 @@ checks, and two agents using the same model can share failure modes.
 
 ## Reuse
 
+The later [evaluation research](../EVALUATION-RESEARCH.md) and
+[work-cycle design](05-work-cycle.md) refine the runner choice toward a separate
+Python package using Inspect, behind a narrow versioned platform contract. They
+preserve the TS acceptance ledger and existing checks; no wholesale rewrite is
+required before testing a bounded real worker.
+
 Use the existing test runner and narrowly scoped artifact-specific checks first.
 Browser interaction checks can use an established browser-test runner inside the
 evaluator environment when a game needs them. Evaluate Promptfoo for repeated

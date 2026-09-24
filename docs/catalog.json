@@ -447,6 +447,63 @@
         "releases",
         "authority"
       ]
+    },
+    {
+      "id": "platform.evaluation-research",
+      "path": "docs/EVALUATION-RESEARCH.md",
+      "namespace": "platform",
+      "kind": "research",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
+      "importMode": "read-only",
+      "tags": [
+        "evaluation",
+        "research",
+        "multi-agent"
+      ]
+    },
+    {
+      "id": "platform.design-work-cycle",
+      "path": "docs/designs/05-work-cycle.md",
+      "namespace": "platform",
+      "kind": "design",
+      "owner": "maintainer",
+      "status": "accepted",
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
+      "importMode": "read-only",
+      "tags": [
+        "evaluation",
+        "execution",
+        "scenarios"
+      ]
+    },
+    {
+      "id": "platform.work-cycle-implementation",
+      "path": "docs/WORK-CYCLE-IMPLEMENTATION.md",
+      "namespace": "platform",
+      "kind": "assessment",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
+      "importMode": "read-only",
+      "tags": [
+        "evaluation",
+        "execution",
+        "rehearsal"
+      ]
     }
   ]
 }

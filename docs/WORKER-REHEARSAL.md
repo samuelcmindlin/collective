@@ -5,6 +5,11 @@ disabled. This is a continuation of the [isolation architecture](ISOLATION.md)
 and [candidate evaluation rehearsal](ISOLATION-REHEARSAL.md), not a completed
 Claude integration or a general sandbox security certification.
 
+The later [domain integration](WORK-CYCLE-IMPLEMENTATION.md) verifies authenticated
+run-scoped tools, revocation across restart and the fully qualified image pin.
+Production VM lifecycle, clipboard-write denial and real provider/session checks
+are still open; the design below is not an enabled worker adapter.
+
 The subsequent [review](REVIEW-2026-09-24.md) found an empty heartbeat read in the
 original result and tightened the host's acceptance rules. Its new
 [67-check report](worker-review-results.json) supersedes the original lifecycle

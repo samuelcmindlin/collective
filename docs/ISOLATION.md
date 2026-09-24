@@ -8,6 +8,10 @@ Collective and which safeguards exist independently of the sandbox product.
 The [worker review](REVIEW-2026-09-24.md) corrects the original lifecycle evidence
 and records the current, stricter acceptance results.
 
+The subsequent [work-cycle/bridge increment](WORK-CYCLE-IMPLEMENTATION.md) adds
+actual authenticated domain-tool evidence and a verified image pin. It leaves
+whole-worker live admission closed.
+
 ## Definition
 
 Isolation means an agent and the code it executes can affect only explicitly

@@ -8,6 +8,9 @@ document is not a claim that its interfaces or safeguards already exist.
 
 | Document | Purpose | Status |
 | --- | --- | --- |
+| [Work cycle and domain bridge](WORK-CYCLE-IMPLEMENTATION.md) | Reproducible scenario, actual run-scoped VM tools, image pin and limitations | Deterministic/synthetic integration passed; live gate closed |
+| [Evaluation and organization research](EVALUATION-RESEARCH.md) | Python boundary, reusable tools, teams/rooms literature, RL relationship and deferred experiments | Recorded evidence and hypotheses |
+| [Reproducible work cycle](designs/05-work-cycle.md) | Next milestone, scenario contract and worker/evaluator integration sequence | Accepted direction; implementation in progress |
 | [Fixed MCP scope](MCP-SCOPE.md) | Real gateway tool-scope checks before/after VM restart and the remaining bridge requirements | Synthetic integration passed |
 | [Worker review](REVIEW-2026-09-24.md) | Rehearsal defects, fixes and stricter containment evidence | 123 tests and 67 VM checks passed |
 | [Isolation architecture](ISOLATION.md) | Trust boundaries, containers versus microVMs, threat model and explicit limits | Architecture and acceptance contract |
@@ -37,8 +40,9 @@ the [lexical screening](KNOWLEDGE-IMPLEMENTATION.md#retrieval-experiment-and-pro
 | [2. Knowledge integration](designs/02-knowledge.md) | Canonical writes, replaceable search, source authority and reuse evaluation |
 | [3. Isolated workspaces and PRs](designs/03-workspaces-prs.md) | When isolation is needed, worker compatibility, immutable candidates and publication |
 | [4. Progress and live validation](designs/04-progress.md) | Criteria, protected checks, independent review, comparison trials and stopping rules |
+| [5. Reproducible work cycle](designs/05-work-cycle.md) | Actual scheduler/tool path, Python boundary, isolated scenarios and phased live admission |
 
-The four designs are targets with implementation tracked in the
+The designs are targets with implementation tracked in the
 [foundation record](FOUNDATION.md) and [knowledge record](KNOWLEDGE-IMPLEMENTATION.md).
 The suite covers fault injection, knowledge boundaries and six offline GitHub
 protocol tests. The maintainer repository is connected to GitHub; the agent GitHub

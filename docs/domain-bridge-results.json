@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "authority": "maintainer-domain-bridge-rehearsal",
+  "modelInvoked": false,
+  "productionExecutionEnabled": false,
+  "createdAt": "2026-09-24T16:43:03.351Z",
+  "image": "docker.io/docker/sandbox-templates:claude-code-docker@sha256:549730947ed8a43182547bb5628245fe6d6c089564dd73d2194e899f791d970f",
+  "name": "collective-domain-cc243a2c-a604-4d30-aafa-399945044772",
+  "registration": "collective-domain-cc243a2c-a604-4d30-aafa-399945044772-tools",
+  "result": "pass",
+  "sourceHash": "3771921fad919a4725a19a735b903ab434e409920bbc550ccfefa34b63131fe6",
+  "run": {
+    "id": "run_ceaf6238-d339-4c54-a671-0cd654789cc3",
+    "jobId": "job_b87c36fc-5206-49b8-9798-7cd2eb2df23d",
+    "attempt": 1,
+    "agentId": "atlas",
+    "missionRevision": 2
+  },
+  "bundleHash": "8ed248f04cfe6ac2a5bc08d51f2074e419ba0ec490a422a1a608eea8f449b539",
+  "registrationAttempted": true,
+  "creationAttempted": true,
+  "runtime": {
+    "image": "docker.io/docker/sandbox-templates:claude-code-docker@sha256:549730947ed8a43182547bb5628245fe6d6c089564dd73d2194e899f791d970f",
+    "imageDigest": "sha256:549730947ed8a43182547bb5628245fe6d6c089564dd73d2194e899f791d970f",
+    "mounts": []
+  },
+  "active": {
+    "authenticatedAs": "atlas",
+    "retrievedRevision": "know_95c1c88d-48d3-4434-9308-ede5c4d08dde",
+    "ownedMutation": true,
+    "retrySameReceipt": true,
+    "foreignMutationDenied": true
+  },
+  "paused": {
+    "readDenied": true,
+    "writeDenied": true
+  },
+  "restarted": {
+    "operatorPaused": false,
+    "revokedAuthorityStillDenied": true
+  },
+  "cleanup": [
+    {
+      "resource": "intent checkpoint",
+      "removed": true
+    },
+    {
+      "resource": "collective-domain-cc243a2c-a604-4d30-aafa-399945044772",
+      "removed": true
+    },
+    {
+      "resource": "collective-domain-cc243a2c-a604-4d30-aafa-399945044772-tools",
+      "removed": true
+    },
+    {
+      "resource": "host MCP subprocess",
+      "removed": true
+    },
+    {
+      "resource": "scheduler",
+      "removed": true
+    },
+    {
+      "resource": "HTTP server",
+      "removed": true
+    },
+    {
+      "resource": "knowledge index",
+      "removed": true
+    },
+    {
+      "resource": "database",
+      "removed": true
+    },
+    {
+      "resource": "private fixture",
+      "removed": true
+    }
+  ]
+}

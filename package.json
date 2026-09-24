@@ -21,7 +21,9 @@
     "quota": "tsx scripts/quota.ts",
     "isolation:rehearse": "tsx scripts/rehearse-isolation.ts",
     "worker:rehearse": "tsx scripts/rehearse-worker.ts",
-    "mcp:rehearse": "tsx scripts/rehearse-mcp-scope.ts"
+    "mcp:rehearse": "tsx scripts/rehearse-mcp-scope.ts",
+    "scenario:run": "tsx scripts/run-scenario.ts",
+    "bridge:rehearse": "tsx scripts/rehearse-domain-bridge.ts"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "0.3.281",

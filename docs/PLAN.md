@@ -6,6 +6,13 @@ the runtime already implements the target architecture.
 
 ## Recommendation
 
+The current next milestone is the [reproducible work cycle](designs/05-work-cycle.md):
+scenario boundary, authenticated worker bridge, bounded real episode, then a thin
+Python/Inspect adapter and team comparisons. The [research record](EVALUATION-RESEARCH.md)
+preserves the evaluation-tool survey, organization/rooms evidence, RL relationship
+and deferred experiments. This ordering takes precedence over broad feature or
+evaluation-framework expansion below; live-worker admission gates remain binding.
+
 Pause feature expansion for a focused foundation pass. Keep the current stack,
 harness reuse, Discord room model and UI. Move incrementally toward the
 [HLA](HLA.md), introducing knowledge management as a core module during the same
@@ -167,6 +174,12 @@ replaced its lifecycle evidence. The [fixed MCP scope experiment](MCP-SCOPE.md)
 then verified tool restriction through the actual gateway before/after restart.
 Next is the authenticated, run-scoped domain bridge and its cancellation/recovery
 protocol; clipboard and pinned-image admission remain open.
+
+The subsequent [work-cycle increment](WORK-CYCLE-IMPLEMENTATION.md) implements the
+deterministic scenario and synthetic run-scoped domain bridge. Pause/restart
+revocation and a fully qualified image pin now pass. Next is production VM
+lifecycle/reconciliation and the remaining clipboard/provider admission surface,
+followed by the thin Python adapter and measured real-agent work cycle.
 
 Bind submissions and reviews to criterion versions and immutable evidence.
 Require evaluators to record what they checked; retain failed experiments and
