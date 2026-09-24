@@ -48,7 +48,7 @@ const findings = [];
   let reviewRejected = false;
   try { await service.tool('ember', 'task_submit', { taskId: task.id, evidenceIds: [note.id], note: 'Done' }); }
   catch { submissionRejected = true; }
-  try { await service.tool('iris', 'task_review', { taskId: task.id, accepted: true, note: 'Looks fine' }); }
+  try { await service.tool('iris', 'task_review', { taskId: task.id, submissionId: 'not-submitted', verdicts: [{ criterionId: 'acceptance', verdict: 'pass', evidenceIds: [note.id], rationale: 'Old mission probe' }], accepted: true, note: 'Looks fine' }); }
   catch { reviewRejected = true; }
   findings.push({ id: 'R2', probe: 'Mutation of a task after its mission is replaced',
     taskInActiveMission: task.missionId === service.activeMission().id,
@@ -66,10 +66,16 @@ const findings = [];
   });
   const reviewNote = 'Looks fine';
   await service.tool('ember', 'task_submit', { taskId: task.id, evidenceIds: [note.id], note: 'Done' });
-  await service.tool('iris', 'task_review', { taskId: task.id, accepted: true, note: reviewNote });
+  let unstructuredReviewRejected = false;
+  try { await service.tool('iris', 'task_review', { taskId: task.id, accepted: true, note: reviewNote }); }
+  catch { unstructuredReviewRejected = true; }
+  const { submission } = service.progress.get({ taskId: task.id });
+  await service.tool('iris', 'task_evidence_read', { submissionId: submission.id, evidenceId: note.id });
+  await service.tool('iris', 'task_review', { taskId: task.id, submissionId: submission.id, accepted: true,
+    verdicts: submission.bindings.map(binding => ({ ...binding, verdict: 'pass', rationale: 'Intentionally poor subjective judgment in a diagnostic probe.' })), note: reviewNote });
   findings.push({ id: 'R4', probe: 'Acceptance of current-mission work with unrelated evidence',
     taskInActiveMission: task.missionId === service.activeMission().id,
-    taskStatus: store.require('tasks', task.id).status,
+    unstructuredReviewRejected, subjectiveSemanticGapRemains: true, taskStatus: store.require('tasks', task.id).status,
     evidenceTitle: service.knowledge.get({ kind: 'agent', id: 'iris' }, { revisionId: note.id }).title,
     reviewNote });
   service.knowledge.close(); store.close();
@@ -102,6 +108,6 @@ const findings = [];
     acceptedRevision: a.id });
   service.knowledge.close(); store.close();
 }
-const sourceFiles = ['src/service.ts', 'src/store.ts', 'src/scheduler.ts', 'src/discord.ts', 'src/claude.ts', 'src/application/tasks.ts', 'src/application/commands.ts', 'src/storage/migrations.ts', 'src/knowledge/repository.ts', 'src/knowledge/import.ts', 'src/knowledge/search.ts'];
+const sourceFiles = ['src/service.ts', 'src/store.ts', 'src/scheduler.ts', 'src/discord.ts', 'src/claude.ts', 'src/application/tasks.ts', 'src/application/commands.ts', 'src/storage/migrations.ts', 'src/knowledge/repository.ts', 'src/knowledge/import.ts', 'src/knowledge/search.ts', 'src/progress/repository.ts', 'src/progress/checks.ts', 'src/progress/schemas.ts'];
 console.log(JSON.stringify({ recordedAt: new Date().toISOString(), method: 'In-memory domain probes; no models, credentials, app databases, or network',
   sourceHashes: Object.fromEntries(sourceFiles.map(path => [path, createHash('sha256').update(readFileSync(path)).digest('hex')])), findings }, null, 2));

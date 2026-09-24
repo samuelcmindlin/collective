@@ -185,12 +185,11 @@ legacy conflicts and exact-once local effects after a dropped HTTP reply.
 Existing task, scheduler, MCP, GitHub protocol and deterministic rehearsal checks
 remain required. These fixtures use no real agents or external actions.
 
-## Next core increment
+## Evaluation follow-up
 
-The remaining progress defect R4 is still real: a reviewer can accept unrelated
-shared evidence because relevance and fulfillment are not mechanically checked.
-Knowledge identity and access are now foundations for criterion-bound submissions,
-recorded evaluations and protected executable checks; they are not proof of task
-success. Implement that smallest measured handoff next, alongside the worker
-containment and transport gates required before a live coding pilot. Richer UI,
-public deployment, PR publication and automatic extensions remain later work.
+The [criterion-bound evaluation increment](PROGRESS-IMPLEMENTATION.md) now binds
+submissions to exact evidence and frozen task criteria, records protected data
+checks and independent verdicts, and retains failed attempts. A failed required
+check cannot be overridden by an agent. Subjective relevance remains a judgment,
+so R4 is not a general semantic-correctness guarantee. Worker containment and
+transport gates remain required before a live coding pilot or broader autonomy.

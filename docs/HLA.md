@@ -133,6 +133,11 @@ private channel that invited observers cannot see.
 
 ## Work and progress flow
 
+The first task-level implementation is recorded in
+[criterion-bound evaluation](PROGRESS-IMPLEMENTATION.md), including its concrete
+module/data flow and limits. The broader outcome-observation flow below remains
+a target.
+
 Mission revision → proposed approach → experiment or task → immutable evidence →
 evaluation → review → outcome observation → continue, revise, or request acceptance.
 

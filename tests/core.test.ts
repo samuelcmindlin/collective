@@ -1,3 +1,4 @@
+import { reviewFields, inspectSubmission } from './progress-helpers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync, writeFileSync, symlinkSync, readFileSync, chmodSync } from 'node:fs';
@@ -77,8 +78,8 @@ test('task completion requires published evidence and an independent reviewer', 
   await assert.rejects(s.service.tool('atlas', 'task_submit', { taskId: task.id, evidenceIds: ['invented'], note: 'Done' }), /not found or unavailable/);
   const knowledge = await s.service.tool('atlas', 'knowledge_write', { title: 'Rules', content: 'Match four pairs.', kind: 'decision' }) as any;
   await s.service.tool('atlas', 'task_submit', { taskId: task.id, evidenceIds: [knowledge.id], note: 'Ready' });
-  await assert.rejects(s.service.tool('atlas', 'task_review', { taskId: task.id, accepted: true, note: 'I approve' }), /cannot approve your own/);
-  await s.service.tool('iris', 'task_review', { taskId: task.id, accepted: false, note: 'Missing restart behavior.' });
+  await assert.rejects(s.service.tool('atlas', 'task_review', { ...reviewFields(s.service, task.id, true), taskId: task.id, accepted: true, note: 'I approve' }), /cannot approve your own/);
+  await s.service.tool('iris', 'task_review', { ...reviewFields(s.service, task.id, false), taskId: task.id, accepted: false, note: 'Missing restart behavior.' });
   assert.equal(s.store.require('tasks', task.id).status, 'todo');
   assert.equal(s.store.require('agents', 'atlas').completed, 0); s.close();
 });
@@ -90,7 +91,8 @@ test('dependencies prevent premature work and acceptance wakes the next owner', 
   await assert.rejects(s.service.tool('ember', 'task_update', { taskId: second.id, status: 'doing' }), /Dependencies/);
   const knowledge = await s.service.tool('atlas', 'knowledge_write', { title: 'Rules', content: 'Match pairs', kind: 'decision' }) as any;
   await s.service.tool('atlas', 'task_submit', { taskId: first.id, evidenceIds: [knowledge.id], note: 'Ready' });
-  await s.service.tool('iris', 'task_review', { taskId: first.id, accepted: true, note: 'Rules inspected' });
+  await inspectSubmission(s.service, 'iris', first.id);
+  await s.service.tool('iris', 'task_review', { ...reviewFields(s.service, first.id, true), taskId: first.id, accepted: true, note: 'Rules inspected' });
   assert.ok(s.store.all('jobs').some(j => j.agentId === 'ember' && j.payload.taskId === second.id)); s.close();
 });
 
@@ -268,7 +270,7 @@ test('end-to-end rehearsal produces a playable artifact, accepted work, and a du
   for (let i=0;i<70;i++) { await s.bridge.flush(); await s.scheduler.tick(); await new Promise(r=>setTimeout(r,200)); if(s.store.all('tasks').length===2&&s.store.all('tasks').every(t=>t.status==='done')&&!s.scheduler.controllers.size)break; }
   await s.scheduler.stop(); await s.bridge.flush();
   assert.equal(s.store.all('tasks').length,2); assert.ok(s.store.all('tasks').every(t=>t.status==='done'));
-  assert.equal(s.store.all('artifacts').length,1); assert.equal(s.store.all('requests')[0]?.status,'pending');
+  assert.equal(s.store.all('artifacts').length,2); assert.equal(s.store.all('requests')[0]?.status,'pending');
   assert.ok(s.store.all('messages').every(m=>m.delivery==='delivered')); assert.ok(s.store.all('runs').every(r=>r.estimatedCost===0));
   s.close();
 });

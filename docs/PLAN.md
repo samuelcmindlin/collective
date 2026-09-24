@@ -141,6 +141,12 @@ Acceptance:
 
 ## Slice 5 — Measured progress and a bounded live pilot
 
+The task-level [evaluation increment](PROGRESS-IMPLEMENTATION.md) now freezes
+criteria and evidence, preserves check results and rejected attempts, requires
+independent structured reviews, and exposes provenance. Its protected evaluator
+checks bounded JSON data only. Outcome observations, policy ratification, behavioral
+code evaluation, containment and a real-model pilot remain open.
+
 Bind submissions and reviews to criterion versions and immutable evidence.
 Require evaluators to record what they checked; retain failed experiments and
 limitations. Add a deterministic check where the criterion is executable. Keep

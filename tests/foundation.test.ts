@@ -1,3 +1,4 @@
+import { reviewFields, inspectSubmission } from './progress-helpers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
@@ -16,6 +17,7 @@ import type { Harness, RunResult } from '../src/claude.js';
 import type { Task, Job, Run } from '../src/types.js';
 import { migrate, schemaVersion } from '../src/storage/migrations.js';
 import { backupBeforeMigration } from '../src/storage/backup.js';
+import { progressTables } from '../src/storage/progress-migration.js';
 
 const flush = () => new Promise<void>(resolve => queueMicrotask(resolve));
 const result: RunResult = { summary: 'Fixture completed', inputTokens: 1, outputTokens: 1, estimatedCost: 0, turns: 1 };
@@ -37,6 +39,7 @@ function snapshot(store: Store) {
     entities: store.db.prepare('SELECT * FROM entities ORDER BY collection,id').all(),
     events: store.db.prepare('SELECT * FROM events ORDER BY id').all(),
     receipts: store.db.prepare('SELECT * FROM command_receipts ORDER BY principal_id,command_id').all(),
+    progress: progressTables.map(table => store.db.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()),
   };
 }
 
@@ -51,6 +54,7 @@ async function reviewedFixture() {
   const dependent = await s.service.tool('nova', 'task_create', { ...taskInput, ownerId: 'ember', dependencies: [task.id] }) as Task;
   const evidence = await s.service.tool('atlas', 'knowledge_write', { title: 'Rules', content: 'Match pairs', kind: 'decision' }) as { id: string };
   await s.service.tool('atlas', 'task_submit', { taskId: task.id, evidenceIds: [evidence.id], note: 'Ready' });
+  await inspectSubmission(s.service, 'iris', task.id);
   return { ...s, task: s.store.require('tasks', task.id), dependent, evidence };
 }
 
@@ -160,7 +164,7 @@ test('review failure rolls back acceptance, completion counters and all dependen
       const observed: unknown[] = [];
       s.store.changes.on('event', event => observed.push(event));
       failWrite(s.store, table, condition);
-      await assert.rejects(s.service.tool('iris', 'task_review', { taskId: s.task.id, accepted: true, note: 'Checked', commandId: 'review-1' }), /injected/);
+      await assert.rejects(s.service.tool('iris', 'task_review', { ...reviewFields(s.service, s.task.id, true), taskId: s.task.id, accepted: true, note: 'Checked', commandId: 'review-1' }), /injected/);
       await flush();
       assert.deepEqual(snapshot(s.store), before);
       assert.deepEqual(observed, []);
@@ -188,7 +192,7 @@ test('command results survive reopening the database and reject identity reuse w
 test('identical concurrent reviews count completion once and stale task versions reject changes', async () => {
   const s = await reviewedFixture();
   try {
-    const input = { commandId: 'accept-1', taskId: s.task.id, expectedVersion: s.task.version, accepted: true, note: 'Checked' };
+    const input = { ...reviewFields(s.service, s.task.id), commandId: 'accept-1', taskId: s.task.id, expectedVersion: s.task.version, accepted: true, note: 'Checked' };
     const [a, b] = await Promise.all([s.service.tool('iris', 'task_review', input), s.service.tool('iris', 'task_review', input)]);
     assert.deepEqual(a, b);
     assert.equal(s.store.require('agents', 'atlas').completed, 1);
@@ -210,7 +214,7 @@ test('mission replacement rejects old task mutations and task-linked outputs wit
     s.service.setMission('New direction', 'Research something else', [], 'operator');
     await assert.rejects(s.service.tool('atlas', 'task_update', { taskId: oldTask.id, status: 'doing' }), /inactive mission/);
     await assert.rejects(s.service.tool('atlas', 'task_submit', { taskId: oldTask.id, evidenceIds: [s.evidence.id], note: 'Ready' }), /inactive mission/);
-    await assert.rejects(s.service.tool('iris', 'task_review', { taskId: oldTask.id, accepted: true, note: 'Checked' }), /inactive mission/);
+    await assert.rejects(s.service.tool('iris', 'task_review', { ...reviewFields(s.service, oldTask.id, true), taskId: oldTask.id, accepted: true, note: 'Checked' }), /inactive mission/);
     await assert.rejects(s.service.tool('nova', 'task_create', taskInput, priorJob), /Job is inactive/);
     await assert.rejects(s.service.tool('nova', 'profile_update', { bio: 'Late old job' }, priorJob), /Job is inactive/);
     assert.equal(s.store.require('tasks', oldTask.id).status, 'review');

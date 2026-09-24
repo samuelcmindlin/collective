@@ -1,3 +1,4 @@
+import { reviewFields, inspectSubmission } from './progress-helpers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync, writeFileSync, chmodSync, symlinkSync, mkdirSync, renameSync } from 'node:fs';
@@ -136,9 +137,9 @@ test('corrupt artifacts cannot be submitted or accepted, and a rejected review r
     await s.service.tool('atlas', 'task_submit', submit);
     writeFileSync(path, 'Tampered evidence');
     before = effects();
-    await assert.rejects(s.service.tool('iris', 'task_review', { commandId: 'accept-evidence', taskId: task.id, accepted: true, note: 'Ready' }), /integrity/i);
+    await assert.rejects(s.service.tool('iris', 'task_review', { ...reviewFields(s.service, task.id), commandId: 'accept-evidence', taskId: task.id, accepted: true, note: 'Ready' }), /integrity/i);
     assert.equal(effects(), before);
-    await s.service.tool('iris', 'task_review', { taskId: task.id, accepted: false, note: 'Stored evidence is corrupt; publish a fresh snapshot.' });
+    await s.service.tool('iris', 'task_review', { ...reviewFields(s.service, task.id, false), taskId: task.id, accepted: false, note: 'Stored evidence is corrupt; publish a fresh snapshot.' });
     assert.equal(s.store.require('tasks', task.id).status, 'todo');
   } finally { s.close(); }
 });

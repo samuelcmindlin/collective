@@ -1,6 +1,6 @@
 # Design 4: Measured progress and a bounded live pilot
 
-Status: proposed implementation design. Refines [HLA](../HLA.md)'s work loop and
+Status: partially implemented; see the [implementation record](../PROGRESS-IMPLEMENTATION.md). Refines [HLA](../HLA.md)'s work loop and
 plan slice 5. Links to candidate execution in [design 3](03-workspaces-prs.md) and
 durable memory in [design 2](02-knowledge.md). No real-model quality claim is made.
 
@@ -118,3 +118,74 @@ adds cost without improving outcomes, change roles/routing or reduce the team.
 Expand to longer business-hour runs only after recovery and quota reliability are
 observed. Add tools or world features when failed experiments identify a concrete
 benefit, using the existing persistent request and release paths.
+
+## First implementation contract
+
+This increment implements task-level evaluation. Mission criteria and final
+operator acceptance retain their existing authority. Agent-created task criteria
+are explicitly **agent-proposed**, frozen at task creation and never editable
+through candidate tools. A new task is a new proposal, not a revision of the
+user's mission or proof of its completion. Criterion policy editing and operator
+ratification are later work.
+
+The durable records are:
+
+- `progress_criteria`: one immutable version-1 criterion set per task, with author,
+  mission revision, authority and a canonical hash. A plain acceptance string
+  becomes one subjective criterion named `acceptance`.
+- `progress_submissions`: immutable attempts, each binding every criterion to
+  exact artifact IDs/hashes/sizes or knowledge document/revision IDs/hashes.
+  Each carries limitations, the frozen criterion hash, and protected check results.
+- `progress_inspections`: submission-specific evidence read receipts including
+  principal, evidence hash, content range and job/attempt when available.
+- `progress_evaluations`: independent reviews bound to one submission, containing
+  every criterion verdict, rationale, evidence IDs and inspection receipt IDs.
+- `progress_legacy_tasks`: exact pre-migration task records. No evaluations are
+  fabricated for prior accepted work. An old pending review must be resubmitted
+  by its owner under the new contract; historical completion remains labelled.
+
+`task_create` optionally takes up to 12 typed criteria. `task_submit` takes
+criterion/evidence bindings and limitations; the old `evidenceIds` shorthand is
+valid only for a single-criterion task. `task_get` returns the frozen contract,
+selected submission, checks and evaluation, plus bounded attempt summaries.
+`task_evidence_read` verifies the selected submission's exact evidence and returns
+at most 12,000 characters with explicit truncation. Its receipt proves access to
+that range, not comprehension or a complete reading. Binary receipts describe
+metadata access only; they must not be represented as visual inspection.
+
+`task_review` requires `submissionId` and a verdict for every criterion. All
+bound evidence IDs must be cited. Acceptance requires all verdicts to pass, fresh
+integrity/access validation, and a matching evidence-read receipt for the reviewer
+for every bound item. Rejection does not require successful reads, so corrupted
+or withdrawn evidence can still receive a durable failure review. A stale
+submission ID cannot review its replacement even if task version is omitted.
+
+The first protected evaluator is `json.fields.v1`: a bounded UTF-8 JSON artifact
+must be an object containing specified top-level fields with declared primitive,
+array or object types; strings must be nonempty and numbers finite. The configuration
+is frozen with the criterion. The evaluator executes no submitted code, resolves
+no references, loads no plugins and performs no network calls. Input is capped at
+250 KB. Passing establishes this narrow data contract, not usefulness, truth,
+playability or enjoyment. Subjective criteria record judgment without fabricated
+executable results.
+
+Checks run synchronously during submission. A failed/error check still creates a
+submission and wakes review; its failure is durable and cannot be overridden by
+an agent's passing verdict. Reject, revise and resubmit instead. Review acceptance,
+counters, dependency wakeups, ledger records, events and command receipts commit
+atomically. Identical command retries return the original result; changed intent
+needs a new command ID. Reads are audited but need no mutation command identity.
+
+Schema v4 adds the ledgers and pauses migrated collectives. Existing entities,
+knowledge, events and command receipts are preserved; the migration is rehearsed
+on copies before live data is upgraded. Candidate files remain outside SQLite
+transactions. There is no distributed evaluator, general test-execution service,
+automatic rubric revision, semantic correctness guarantee or complete context
+budget in this increment.
+
+Acceptance tests must cover failed checks despite a passing reviewer, missing and
+mismatched criteria/evidence, private or withdrawn sources, corruption after
+submission, owner review, missing inspection, stale submission/mission, duplicate
+commands, rollback at each ledger write, immutable rejected attempts and reopening.
+A deterministic rehearsal exercises the same APIs with explicitly labelled fixture
+judgments; it does not claim to validate a real model's reasoning.

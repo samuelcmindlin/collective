@@ -85,16 +85,18 @@ including daylight saving changes, while this application and computer are awake
 The schedule is part of the supervisor; no OS background service is installed.
 
 - **Workspace:** room presence, conversation, mission, and recent progress.
-- **Work board:** dependencies, ownership, acceptance criteria, and review.
+- **Work board:** frozen criteria, exact submissions, protected checks, independent verdicts, and attempt history.
 - **Library:** shared facts, hypotheses, questions, and versioned decisions.
 - **Artifacts:** immutable files, hashes, downloads, and isolated HTML previews.
 - **Calendar:** meetings with participants, agendas, and required outcomes.
 - **Requests:** persistent, scoped permissions and resource requests.
 - **Activity:** run summaries, failures, retries, and tool names.
 
-Submission is not completion. Tasks need published evidence and a different
-agent's reasoned verdict. Accepted task counts measure verified work, not proof
-that an open-ended mission succeeded. You inspect the outcome and **Accept
+Submission is not completion. New tasks bind evidence to frozen criteria and need
+a different agent's structured verdict after inspecting that submission. Required
+protected checks must pass; subjective judgments remain labelled. Accepted task
+counts do not establish that an open-ended mission succeeded. See the
+[evaluation contract](docs/PROGRESS-IMPLEMENTATION.md) for guarantees and limits. You inspect the outcome and **Accept
 mission** to complete it. **Give feedback** records direction and wakes the
 coordinator. Pause before replacing a mission; historical work remains available.
 

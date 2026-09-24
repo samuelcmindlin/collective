@@ -1,3 +1,4 @@
+import { reviewFields, inspectSubmission } from './progress-helpers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
@@ -346,10 +347,11 @@ test('acceptance rechecks access to a cited source after withdrawal', async () =
     const evidence = s.repo.get(atlas, { documentId: 'platform.contract' });
     const task = await s.service.tool('nova', 'task_create', { title: 'Inspect contract', description: 'Review core source', acceptance: 'Explain the contract', ownerId: 'atlas' }) as Task;
     await s.service.tool('atlas', 'task_submit', { taskId: task.id, evidenceIds: [evidence.id], note: 'Ready' });
+    await inspectSubmission(s.service, 'iris', task.id);
     importRegisteredSnapshot(s.repo, registered(undefined, ['operator']));
-    await assert.rejects(s.service.tool('iris', 'task_review', { taskId: task.id, accepted: true, note: 'Looks good' }), /not found or unavailable/);
+    await assert.rejects(s.service.tool('iris', 'task_review', { ...reviewFields(s.service, task.id, true), taskId: task.id, accepted: true, note: 'Looks good' }), /not found or unavailable/);
     assert.equal(s.store.require('tasks', task.id).status, 'review');
-    await s.service.tool('iris', 'task_review', { taskId: task.id, accepted: false, note: 'Evidence is no longer available.' });
+    await s.service.tool('iris', 'task_review', { ...reviewFields(s.service, task.id, false), taskId: task.id, accepted: false, note: 'Evidence is no longer available.' });
     assert.equal(s.store.require('tasks', task.id).status, 'todo');
   } finally { s.close(); }
 });

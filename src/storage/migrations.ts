@@ -1,8 +1,9 @@
 import type { DatabaseSync } from 'node:sqlite';
 import type { Job, Mission, Task } from '../types.js';
 import { knowledgeSchema, migrateLegacyKnowledge } from './knowledge-migration.js';
+import { progressSchema } from './progress-migration.js';
 
-export const schemaVersion = 3;
+export const schemaVersion = 4;
 
 const migrations = [
   `CREATE TABLE IF NOT EXISTS entities (collection TEXT NOT NULL,id TEXT NOT NULL,data TEXT NOT NULL,PRIMARY KEY(collection,id));
@@ -23,6 +24,7 @@ const migrations = [
    );
    CREATE INDEX command_receipts_mission ON command_receipts(mission_id, principal_id, created_at);`,
   knowledgeSchema,
+  progressSchema,
 ];
 
 export function migrate(db: DatabaseSync) {

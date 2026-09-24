@@ -23,13 +23,23 @@ export class SimulationHarness implements Harness {
     const store = this.service.store;
     if (job.kind === 'mission') {
       await tool('room_say', { content: 'For this rehearsal, let’s make a small memory game called Orbit. Atlas will define the rules, Ember will build it, and Iris will review the result.' });
-      const research = await tool('task_create', { title: 'Define Orbit’s rules', description: 'Choose a compact game loop and write acceptance criteria.', ownerId: 'atlas', acceptance: 'A design note specifies pair matching, move counting, and restart behavior.', dependencies: [] });
-      await tool('task_create', { title: 'Build a playable Orbit prototype', description: 'Create a self-contained browser game from the design note.', ownerId: 'ember', acceptance: 'Eight cards form four pairs. Matched cards stay revealed. Restart resets all state.', dependencies: [research.id] });
+      const research = await tool('task_create', { title: 'Define Orbit’s rules', description: 'Choose a compact game loop and write acceptance criteria.', ownerId: 'atlas', acceptance: 'A design note specifies pair matching, move counting, and restart behavior.', criteria: [
+        { id: 'rules', description: 'Rules describe matching, move counting and restart.', method: 'judgment', evidenceKind: 'knowledge' },
+        { id: 'manifest', description: 'A structured rules manifest declares pairs, matching and restart.', method: 'json.fields.v1', evidenceKind: 'artifact', fields: [{ name: 'pairs', type: 'number' }, { name: 'matching', type: 'string' }, { name: 'restart', type: 'string' }] },
+      ], dependencies: [] });
+      await tool('task_create', { title: 'Build a playable Orbit prototype', description: 'Create a self-contained browser game from the design note.', ownerId: 'ember', acceptance: 'Eight cards form four pairs. Matched cards stay revealed. Restart resets all state.', criteria: [{ id: 'playable', description: 'Eight cards form four pairs, matched cards stay revealed, and restart resets state.', method: 'judgment', evidenceKind: 'artifact' }], dependencies: [research.id] });
       await tool('knowledge_write', { title: 'Rehearsal direction: Orbit', content: 'A compact memory game gives the collective a bounded build-and-review cycle. This direction is seeded by the simulation; it is not an autonomous model decision.', kind: 'decision', sources: [] });
     } else if (job.payload.review) {
       const task = store.require('tasks', String(job.payload.taskId));
+      if (task.status !== 'review' || (job.payload.submissionId && task.submissionId !== job.payload.submissionId)) return this.result('This review event is stale.');
       await tool('room_enter', { roomId: 'lab' });
-      await tool('task_review', { taskId: task.id, accepted: true, note: 'Simulation verdict: evidence is attached and the demonstration fixture meets the seeded acceptance criteria. A live agent review has not run.' });
+      const { submission } = await tool('task_get', { taskId: task.id });
+      if (!submission) return this.result('Legacy review needs a fresh owner submission.');
+      for (const evidence of submission.evidence) await tool('task_evidence_read', { submissionId: submission.id, evidenceId: evidence.id });
+      const accepted = submission.checks.every((check: any) => check.status === 'pass');
+      await tool('task_review', { taskId: task.id, submissionId: submission.id, expectedVersion: task.version, accepted,
+        verdicts: submission.bindings.map((binding: any) => ({ ...binding, verdict: submission.checks.some((check: any) => check.criterionId === binding.criterionId && check.status !== 'pass') ? 'fail' : 'pass', rationale: 'Seeded fixture judgment after reading the bound evidence. Protected JSON checks run separately; no browser behavior test or real-model review was performed.' })),
+        note: 'Deterministic rehearsal evaluation. Subjective verdicts are fixture judgments, not live agent validation.' });
       await tool('room_say', { content: `Rehearsal review complete: “${task.title}”. The evidence and review note are now on the work board.` });
     } else if ((job.kind === 'task' || job.kind === 'continue') && job.payload.taskId) {
       const task = store.require('tasks', String(job.payload.taskId));
@@ -38,7 +48,9 @@ export class SimulationHarness implements Harness {
       if (agent.id === 'atlas') {
         await tool('room_enter', { roomId: 'studio' });
         const knowledge = await tool('knowledge_write', { title: 'Orbit: rules and acceptance criteria', content: 'Eight cards contain four pairs. Reveal two cards per move. Matching cards stay revealed; mismatches flip back after a short delay. Win when all four pairs are found. Restart must clear moves, matches, pending timers, and revealed cards.', kind: 'decision', sources: [] });
-        await tool('task_submit', { taskId: task.id, evidenceIds: [knowledge.id], note: 'The game loop and edge cases are specified.' });
+        writeFileSync(join(this.service.workspace(agent.id), 'orbit-rules.json'), JSON.stringify({ pairs: 4, matching: 'Equal symbols stay revealed.', restart: 'Clear moves, matches, pending timers and revealed cards.' }));
+        const manifest = await tool('artifact_publish', { title: 'Orbit — rules manifest', description: 'Structured rules data for a protected JSON field check.', path: 'orbit-rules.json', taskId: task.id });
+        await tool('task_submit', { taskId: task.id, bindings: [{ criterionId: 'rules', evidenceIds: [knowledge.id] }, { criterionId: 'manifest', evidenceIds: [manifest.id] }], note: 'The game loop and edge cases are specified.', limitations: ['The JSON check validates structure only.'] });
       } else {
         await tool('room_enter', { roomId: 'workshop' });
         writeFileSync(join(this.service.workspace(agent.id), 'orbit.html'), game);

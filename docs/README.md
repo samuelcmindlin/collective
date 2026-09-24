@@ -8,6 +8,7 @@ document is not a claim that its interfaces or safeguards already exist.
 
 | Document | Purpose | Status |
 | --- | --- | --- |
+| [Criterion-bound evaluation](PROGRESS-IMPLEMENTATION.md) | Frozen criteria, immutable attempts, protected data checks and independent judgments | Implemented first increment |
 | [Knowledge and evidence review](REVIEW-2026-09-23.md) | Reproduced defects, corrections, verification and remaining boundaries | Completed review |
 | [Shared knowledge implementation](KNOWLEDGE-IMPLEMENTATION.md) | Versioned records, source import, keyword retrieval and remaining gates | Implemented bounded increment |
 | [Core foundation implementation](FOUNDATION.md) | Shipped guarantees, retry limits, migration and verification | Implemented first increment |

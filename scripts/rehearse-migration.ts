@@ -5,6 +5,7 @@ import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
 import { Store } from '../src/store.js';
+import { progressTables } from '../src/storage/progress-migration.js';
 
 function snapshot(db: DatabaseSync) {
   return {
@@ -14,6 +15,8 @@ function snapshot(db: DatabaseSync) {
     receipts: db.prepare("SELECT name FROM sqlite_master WHERE name='command_receipts'").get()
       ? db.prepare('SELECT * FROM command_receipts ORDER BY principal_id,command_id').all() : [],
     knowledge: ['knowledge_documents', 'knowledge_revisions', 'knowledge_generation'].map(table => ({ table,
+      rows: db.prepare('SELECT name FROM sqlite_master WHERE name=?').get(table) ? db.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all() : [] })),
+    progress: progressTables.map(table => ({ table,
       rows: db.prepare('SELECT name FROM sqlite_master WHERE name=?').get(table) ? db.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all() : [] })),
   };
 }
@@ -45,6 +48,13 @@ for (const sourcePath of sources) {
         assert.deepEqual(unchanged(after.entities), unchanged(before.entities), 'non-runtime entities retain their exact content');
         assert.deepEqual(after.events, before.events, 'historical events are preserved');
         assert.deepEqual(after.receipts, before.receipts, 'command receipts are preserved');
+        if (before.version >= 3) assert.deepEqual(after.knowledge, before.knowledge, 'existing knowledge records are byte-preserved');
+        if (before.version >= 4) assert.deepEqual(after.progress, before.progress, 'existing evaluation ledgers are byte-preserved');
+        else {
+          const legacy = migrated.db.prepare('SELECT id,data FROM progress_legacy_tasks ORDER BY id').all().map(row => ({ ...row }));
+          assert.deepEqual(legacy, before.entities.filter(row => row.collection === 'tasks').map(({ id, data }) => ({ id, data })), 'legacy task snapshots preserve exact history');
+          assert.ok(after.progress.filter(row => row.table !== 'progress_legacy_tasks').every(row => row.rows.length === 0), 'migration invents no criteria or evaluations');
+        }
         assert.equal(after.entities.length, before.entities.length, 'no entity was removed');
         assert.equal((migrated.db.prepare('PRAGMA integrity_check').get() as { integrity_check: string }).integrity_check, 'ok');
         for (const row of before.entities.filter(row => row.collection === 'knowledge')) {

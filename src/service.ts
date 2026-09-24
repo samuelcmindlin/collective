@@ -9,6 +9,8 @@ import { TaskCommands, taskSchemas, isTaskTool } from './application/tasks.js';
 import { stable } from './application/commands.js';
 import { KnowledgeRepository, knowledgeSchemas } from './knowledge/repository.js';
 import { MAX_ARTIFACT_BYTES, readArtifactSnapshot } from './storage/artifacts.js';
+import { ProgressRepository } from './progress/repository.js';
+import { progressSchemas } from './progress/schemas.js';
 export { stable } from './application/commands.js';
 
 const text = (max = 4000) => z.string().trim().min(1).max(max);
@@ -19,6 +21,7 @@ export const toolSchemas = {
   room_enter: z.object({ roomId: text(100) }),
   room_say: z.object({ content: text(1800), toAgentIds: ids.optional() }),
   ...taskSchemas,
+  ...progressSchemas,
   ...knowledgeSchemas,
   artifact_publish: z.object({ title: text(200), description: text(), path: text(1000), taskId: text(100).optional() }),
   artifact_read: z.object({ artifactId: text(100) }),
@@ -34,10 +37,12 @@ export const toolDescriptions: Record<ToolName, string> = {
   collective_context: 'Read your mission, room conversation, work, calendar, requests, shared knowledge, and artifacts. Other rooms are not live-attended.',
   room_enter: 'Enter a room. Future conversations there become available to you. Movement is immediate and free.',
   room_say: 'Speak in your current room through Discord. Optionally address specific occupants. Unaddressed messages are visible but do not wake everyone. Do not speak just to acknowledge.',
-  task_create: 'Create concrete work for the active mission with an owner, criteria and dependencies. Supply a stable commandId and reuse it for identical retries; recentTaskCommands shows committed actions.',
+  task_create: 'Create active-mission work with frozen agent-proposed criteria and dependencies. Optional typed criteria distinguish judgment from protected JSON field checks. Without them, acceptance becomes one subjective criterion. These are not operator-approved mission requirements. Supply stable commandId for retries.',
   task_update: 'Mark your own active-mission task doing or blocked. Include commandId for retry safety and expectedVersion from context to reject stale edits.',
-  task_submit: 'Submit your active-mission task with published evidence for independent review. Include commandId and expectedVersion. Reuse the ID only for an identical retry; submission is not completion.',
-  task_review: 'Independently review an active-mission task. Inspect evidence, explain the verdict, and include commandId and expectedVersion. Reuse the ID for an identical retry.',
+  task_submit: 'Submit your task with bindings for every frozen criterion and known limitations. evidenceIds shorthand works only for one criterion. Exact evidence and protected check results are preserved, including failures. Include commandId and expectedVersion; submission is not completion.',
+  task_review: 'Review an exact submissionId with one verdict/rationale and matching evidence IDs for every criterion. Acceptance requires independent task_evidence_read receipts and all protected checks passing. Failures cannot be overridden. Rejection can record corrupt/unavailable evidence without reading it. Include commandId and expectedVersion.',
+  task_get: 'Read a task contract, exact submission, protected checks, review and bounded attempt history. Follow nextOffset as offset; pass submissionId to inspect an older attempt. Legacy accepted work has no fabricated evaluation.',
+  task_evidence_read: 'Inspect exact evidence bound to a submission. Verifies hash and access, returns bounded text and a submission-specific read receipt. Follow nextOffset for more. Binary metadata or one text chunk is not proof of full inspection or correctness.',
   knowledge_write: 'Create a shared or private agent note, or revise using documentId and the exact current previousId. Include stable commandId for retries. Stale revisions conflict; resolveHeads explicitly merges every conflicting legacy head. Protected docs are read-only.',
   knowledge_search: 'Search all authorized current knowledge using literal keywords (all terms must occur). No recency cutoff. Returns bounded snippets and exact citations, not verified answers. Empty query browses the catalog; pass nextOffset as offset for subsequent pages. Nonempty queries return at most 20 hits; refine keywords to narrow results. Try alternate terms for paraphrases.',
   knowledge_get: 'Read exact knowledge by documentId (current revision) or revisionId (immutable citation). Inspect evidence with this tool; summaries are incomplete. Conflicts require an exact revision.',
@@ -56,9 +61,11 @@ export class CollectiveService {
   private capabilityLocks = new Set<string>();
   readonly tasks: TaskCommands;
   readonly knowledge: KnowledgeRepository;
+  readonly progress: ProgressRepository;
   constructor(readonly store: Store, readonly config: Config) {
     this.knowledge = new KnowledgeRepository(store);
-    this.tasks = new TaskCommands(store, this.knowledge, artifact => readArtifactSnapshot(config.dataDir, artifact));
+    this.progress = new ProgressRepository(store, this.knowledge, artifact => readArtifactSnapshot(config.dataDir, artifact));
+    this.tasks = new TaskCommands(store, this.progress);
   }
   workspace(agentId: string) { this.store.require('agents', agentId); const path = resolve(this.config.dataDir, 'workspaces', agentId); mkdirSync(path, { recursive: true, mode: 0o700 }); return path; }
   activeMission() { return this.store.all('missions').find(m => m.status === 'active'); }
@@ -154,9 +161,11 @@ export class CollectiveService {
   async tool(agentId: string, name: ToolName, raw: unknown, job?: Job, commandId?: string): Promise<unknown> {
     if (isTaskTool(name)) return this.store.transaction(() => {
       if (job) this.assertJob(agentId, job);
-      return this.tasks.execute(agentId, name, raw, commandId);
+      return this.tasks.execute(agentId, name, raw, commandId, job);
     });
     if (job) this.assertJob(agentId, job);
+    if (name === 'task_get') { this.store.require('agents', agentId); return this.progress.get(raw); }
+    if (name === 'task_evidence_read') return this.progress.inspect(agentId, raw, { jobId: job?.id, attempt: job?.attempts });
     if (name === 'knowledge_write') return this.knowledge.write(agentId, raw, commandId);
     if (name === 'knowledge_search') return this.knowledge.search({ kind: 'agent', id: agentId }, raw);
     if (name === 'knowledge_get') return this.knowledge.inspect(agentId, raw);

@@ -57,6 +57,7 @@ export function createHttpServer(service: CollectiveService, scheduler: Schedule
       if (url.pathname.startsWith('/api/')) {
         if (!equal(cookie, operatorToken) || !validOrigin(req.headers.origin, config.port) || req.headers['sec-fetch-site'] === 'cross-site') return json(res, 403, { error: 'Open the local Collective app to access this endpoint.' });
         if (req.method !== 'GET' && req.headers['x-collective-local'] !== '1') return json(res, 403, { error: 'Local operator header required.' });
+        if (url.pathname === '/api/tasks/get' && req.method === 'GET') return json(res, 200, service.progress.get({ taskId: url.searchParams.get('taskId'), submissionId: url.searchParams.get('submissionId') ?? undefined, offset: Number(url.searchParams.get('offset') ?? 0) }));
         if (url.pathname === '/api/knowledge/search' && req.method === 'GET') {
           const query = url.searchParams.get('query') ?? '';
           const offset = z.coerce.number().int().min(0).max(100000).parse(url.searchParams.get('offset') ?? 0);

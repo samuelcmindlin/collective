@@ -1,0 +1,63 @@
+{
+  "recordedAt": "2026-09-24T03:25:45.791Z",
+  "method": "In-memory domain probes; no models, credentials, app databases, or network",
+  "sourceHashes": {
+    "src/service.ts": "fb383ac3c1d6af90a9ca4692f505e8a2afc984837da3e53af22aae6a7e0ca369",
+    "src/store.ts": "40d085d36065dd72e3ecf71e1f74efa1f764bdc14c3c668de0164b3754e9ce29",
+    "src/scheduler.ts": "5b53faba0cc1735a7f7ac7a6b3510e9fb274c01c2f6464a99fbd23f0d4ec17ac",
+    "src/discord.ts": "c0c3ef7b2e985a68f690318f95192c982e725efa6c73c5b51285dbe4432fb4dc",
+    "src/claude.ts": "2402835dea9a83750f7e7ae23f8dcb67136e8ae10591fa221a0184d089ea0001",
+    "src/application/tasks.ts": "876e7bd5fbd466afa6fb41662f25e4dc608ea497ccec6f7136a4a484b145a22c",
+    "src/application/commands.ts": "6666cf9a05b72a69f559f4ee9a98e4b7b1a94fcac490de40c9983a78b211fb1c",
+    "src/storage/migrations.ts": "21e22e03e3951554a38b146d49f93e4ec08c86cd89268d405cce60b8f15b7450",
+    "src/knowledge/repository.ts": "394bc8d7ddef2012deb3744e8c3edb43a98098b73a986e8d01b1f714b5f56bc6",
+    "src/knowledge/import.ts": "de71c26cd021acab6ea59d214d8df63d3d31a78e12b063f47e1c6280c699f760",
+    "src/knowledge/search.ts": "1ad049c52cd2d4670b1f58a9d8fc477b320ad57129b12c748b9ec6fe6709644b",
+    "src/progress/repository.ts": "e5fe424e312251d6644e3035663302231cd400c6bfb79de37e821ac2f9521520",
+    "src/progress/checks.ts": "492db506dde35bda21467d939f8c918ccee01ff4cc5c3f2137ea5038e507f94c",
+    "src/progress/schemas.ts": "f6e492d9a7710e9165e2733f5c78278c93cd8d7e269db391fea3d3471ffee2e0"
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "probe": "Failure between task creation and job enqueue",
+      "commandRejected": true,
+      "tasksPersisted": 0,
+      "jobsAdded": 0
+    },
+    {
+      "id": "R2",
+      "probe": "Mutation of a task after its mission is replaced",
+      "taskInActiveMission": false,
+      "oldTaskStatus": "todo",
+      "submissionRejected": true,
+      "reviewRejected": true
+    },
+    {
+      "id": "R4",
+      "probe": "Acceptance of current-mission work with unrelated evidence",
+      "taskInActiveMission": true,
+      "unstructuredReviewRejected": true,
+      "subjectiveSemanticGapRemains": true,
+      "taskStatus": "done",
+      "evidenceTitle": "Unrelated note",
+      "reviewNote": "Looks fine"
+    },
+    {
+      "id": "R3a",
+      "probe": "Retrieval after 30 newer records",
+      "storedRecords": 31,
+      "recordsInContext": 10,
+      "importantDecisionPresent": false,
+      "searchableBeyondContext": true
+    },
+    {
+      "id": "R3b",
+      "probe": "Competing revisions from the same parent",
+      "competingRevisionRejected": true,
+      "currentRevision": "know_203d643e-6708-40d7-b3f9-142a4ed850b0",
+      "originalCitationStillReadable": true,
+      "acceptedRevision": "know_203d643e-6708-40d7-b3f9-142a4ed850b0"
+    }
+  ]
+}
