@@ -1,0 +1,34 @@
+{
+  "name": "collective",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A persistent, room-based collective powered by Claude Code and Discord",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "demo": "COLLECTIVE_MODE=simulation COLLECTIVE_PORT=4311 COLLECTIVE_DATA_DIR=.collective-demo tsx src/main.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "check": "npm run typecheck && npm test && npm run docs:check",
+    "docs:check": "node scripts/check-docs.mjs",
+    "migration:rehearse": "tsx scripts/rehearse-migration.ts",
+    "doctor": "tsx scripts/doctor.ts",
+    "quota": "tsx scripts/quota.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "0.3.281",
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "discord.js": "^14.25.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
