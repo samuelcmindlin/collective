@@ -8,6 +8,7 @@ document is not a claim that its interfaces or safeguards already exist.
 
 | Document | Purpose | Status |
 | --- | --- | --- |
+| [Fixed MCP scope](MCP-SCOPE.md) | Real gateway tool-scope checks before/after VM restart and the remaining bridge requirements | Synthetic integration passed |
 | [Worker review](REVIEW-2026-09-24.md) | Rehearsal defects, fixes and stricter containment evidence | 123 tests and 67 VM checks passed |
 | [Isolation architecture](ISOLATION.md) | Trust boundaries, containers versus microVMs, threat model and explicit limits | Architecture and acceptance contract |
 | [Worker VM rehearsal](WORKER-REHEARSAL.md) | Initial evidence, remaining host integrations and bounded episode design | Initial report superseded by worker review; live gate closed |

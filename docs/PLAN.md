@@ -162,6 +162,12 @@ adapter: close host clipboard/MCP integration questions, then test scoped domain
 tools, subscription authentication, session separation, cancellation and quota.
 Keep the existing live gate closed until that end-to-end path passes.
 
+The subsequent [review](REVIEW-2026-09-24.md) corrected rehearsal acceptance and
+replaced its lifecycle evidence. The [fixed MCP scope experiment](MCP-SCOPE.md)
+then verified tool restriction through the actual gateway before/after restart.
+Next is the authenticated, run-scoped domain bridge and its cancellation/recovery
+protocol; clipboard and pinned-image admission remain open.
+
 Bind submissions and reviews to criterion versions and immutable evidence.
 Require evaluators to record what they checked; retain failed experiments and
 limitations. Add a deterministic check where the criterion is executable. Keep

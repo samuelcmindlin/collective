@@ -87,6 +87,9 @@ The local MCP gateway has no registered servers today. Registering a host shell,
 filesystem or Docker tool would deliberately give authority back to the worker.
 An empty registration list must become an explicit per-worker tool allowlist;
 future unrelated server registrations must not silently expand agent authority.
+The later [fixed MCP scope experiment](MCP-SCOPE.md) verifies that restriction
+for two arithmetic fixtures before and after restart, including indirect dispatch.
+Run identity and application permission enforcement still need integration.
 
 ## Next implementation: one bounded worker episode
 

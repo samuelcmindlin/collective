@@ -1,0 +1,473 @@
+{
+  "createdAt": "2026-09-24T14:40:58.549Z",
+  "authority": "synthetic-mcp-scope-rehearsal",
+  "productionExecutionEnabled": false,
+  "modelInvoked": false,
+  "image": "docker/sandbox-templates:claude-code-docker",
+  "name": "collective-mcp-16aac8a0-3707-48ea-8c09-46ab9c02607c",
+  "registrations": [
+    "collective-mcp-16aac8a0-3707-48ea-8c09-46ab9c02607c-allowed",
+    "collective-mcp-16aac8a0-3707-48ea-8c09-46ab9c02607c-unlisted"
+  ],
+  "result": "pass",
+  "sourceSha256": "2582f6d37ee5756abb198238960fd41bd277b462e8f72563d431aad4c5e46df6",
+  "sbx": "sbx version: v0.45.1 9d79d90ee4c5d297fb3d36b75384e8cea7a4fbcb",
+  "clientBundleSha256": "a11948ecec649f9d784619198da839c267b9bad3549cddff03e5a4b8b6d6d419",
+  "creationAttempted": true,
+  "runtime": {
+    "image": "docker/sandbox-templates:claude-code-docker",
+    "imageDigest": "sha256:549730947ed8a43182547bb5628245fe6d6c089564dd73d2194e899f791d970f",
+    "daemonVersion": "v0.45.1",
+    "mounts": []
+  },
+  "beforeRestart": {
+    "configuredServers": [
+      "mcp-gateway"
+    ],
+    "gatewayEnvironmentPresent": true,
+    "observations": [
+      {
+        "name": "mcp-gateway",
+        "endpoint": "http://mcp-gateway.docker.internal/mcp",
+        "tools": [
+          {
+            "name": "allowed_add",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "a": {
+                  "maximum": 100,
+                  "minimum": -100,
+                  "type": "integer"
+                },
+                "b": {
+                  "maximum": 100,
+                  "minimum": -100,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "a",
+                "b"
+              ],
+              "$schema": "http://json-schema.org/draft-07/schema#",
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "code-mode",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Tool names to make available in the JavaScript runtime"
+                }
+              },
+              "required": [
+                "tools"
+              ]
+            }
+          },
+          {
+            "name": "mcp-exec",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Tool name to execute"
+                },
+                "arguments": {
+                  "type": "object",
+                  "description": "Arguments for the target tool"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          }
+        ],
+        "allowedResult": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"server\":\"allowed\",\"sum\":5}"
+            }
+          ]
+        },
+        "unlistedAttempts": [
+          {
+            "method": "unlisted_add",
+            "rejected": true,
+            "error": "MCP error -32602: unknown tool \"unlisted_add\""
+          },
+          {
+            "method": "mcp-exec",
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Tool \"unlisted_add\" not found in gateway."
+                }
+              ],
+              "isError": true
+            }
+          },
+          {
+            "method": "code-mode",
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "error: tools not found in gateway: unlisted_add"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ambient-gateway",
+        "endpoint": "http://mcp-gateway.docker.internal/mcp",
+        "tools": [
+          {
+            "name": "allowed_add",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "a": {
+                  "maximum": 100,
+                  "minimum": -100,
+                  "type": "integer"
+                },
+                "b": {
+                  "maximum": 100,
+                  "minimum": -100,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "a",
+                "b"
+              ],
+              "$schema": "http://json-schema.org/draft-07/schema#",
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "code-mode",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Tool names to make available in the JavaScript runtime"
+                }
+              },
+              "required": [
+                "tools"
+              ]
+            }
+          },
+          {
+            "name": "mcp-exec",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Tool name to execute"
+                },
+                "arguments": {
+                  "type": "object",
+                  "description": "Arguments for the target tool"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          }
+        ],
+        "allowedResult": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"server\":\"allowed\",\"sum\":5}"
+            }
+          ]
+        },
+        "unlistedAttempts": [
+          {
+            "method": "unlisted_add",
+            "rejected": true,
+            "error": "MCP error -32602: unknown tool \"unlisted_add\""
+          },
+          {
+            "method": "mcp-exec",
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Tool \"unlisted_add\" not found in gateway."
+                }
+              ],
+              "isError": true
+            }
+          },
+          {
+            "method": "code-mode",
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "error: tools not found in gateway: unlisted_add"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "afterRestart": {
+    "configuredServers": [
+      "mcp-gateway"
+    ],
+    "gatewayEnvironmentPresent": true,
+    "observations": [
+      {
+        "name": "mcp-gateway",
+        "endpoint": "http://mcp-gateway.docker.internal/mcp",
+        "tools": [
+          {
+            "name": "allowed_add",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "a": {
+                  "maximum": 100,
+                  "minimum": -100,
+                  "type": "integer"
+                },
+                "b": {
+                  "maximum": 100,
+                  "minimum": -100,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "a",
+                "b"
+              ],
+              "$schema": "http://json-schema.org/draft-07/schema#",
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "code-mode",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Tool names to make available in the JavaScript runtime"
+                }
+              },
+              "required": [
+                "tools"
+              ]
+            }
+          },
+          {
+            "name": "mcp-exec",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Tool name to execute"
+                },
+                "arguments": {
+                  "type": "object",
+                  "description": "Arguments for the target tool"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          }
+        ],
+        "allowedResult": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"server\":\"allowed\",\"sum\":5}"
+            }
+          ]
+        },
+        "unlistedAttempts": [
+          {
+            "method": "unlisted_add",
+            "rejected": true,
+            "error": "MCP error -32602: unknown tool \"unlisted_add\""
+          },
+          {
+            "method": "mcp-exec",
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Tool \"unlisted_add\" not found in gateway."
+                }
+              ],
+              "isError": true
+            }
+          },
+          {
+            "method": "code-mode",
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "error: tools not found in gateway: unlisted_add"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ambient-gateway",
+        "endpoint": "http://mcp-gateway.docker.internal/mcp",
+        "tools": [
+          {
+            "name": "allowed_add",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "a": {
+                  "maximum": 100,
+                  "minimum": -100,
+                  "type": "integer"
+                },
+                "b": {
+                  "maximum": 100,
+                  "minimum": -100,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "a",
+                "b"
+              ],
+              "$schema": "http://json-schema.org/draft-07/schema#",
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "code-mode",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Tool names to make available in the JavaScript runtime"
+                }
+              },
+              "required": [
+                "tools"
+              ]
+            }
+          },
+          {
+            "name": "mcp-exec",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Tool name to execute"
+                },
+                "arguments": {
+                  "type": "object",
+                  "description": "Arguments for the target tool"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          }
+        ],
+        "allowedResult": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"server\":\"allowed\",\"sum\":5}"
+            }
+          ]
+        },
+        "unlistedAttempts": [
+          {
+            "method": "unlisted_add",
+            "rejected": true,
+            "error": "MCP error -32602: unknown tool \"unlisted_add\""
+          },
+          {
+            "method": "mcp-exec",
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Tool \"unlisted_add\" not found in gateway."
+                }
+              ],
+              "isError": true
+            }
+          },
+          {
+            "method": "code-mode",
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "error: tools not found in gateway: unlisted_add"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "cleanup": [
+    {
+      "sandbox": "collective-mcp-16aac8a0-3707-48ea-8c09-46ab9c02607c",
+      "absent": true
+    },
+    {
+      "server": "collective-mcp-16aac8a0-3707-48ea-8c09-46ab9c02607c-allowed",
+      "absent": true
+    },
+    {
+      "server": "collective-mcp-16aac8a0-3707-48ea-8c09-46ab9c02607c-unlisted",
+      "absent": true
+    }
+  ]
+}

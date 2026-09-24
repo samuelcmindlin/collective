@@ -2,6 +2,17 @@
   "version": 1,
   "documents": [
     {
+      "id": "platform.mcp-scope",
+      "path": "docs/MCP-SCOPE.md",
+      "namespace": "platform",
+      "kind": "assessment",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": ["operator", "developer", "agent"],
+      "importMode": "read-only",
+      "tags": ["isolation", "mcp", "rehearsal"]
+    },
+    {
       "id": "platform.review-2026-09-24",
       "path": "docs/REVIEW-2026-09-24.md",
       "namespace": "platform",

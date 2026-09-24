@@ -20,7 +20,8 @@
     "doctor": "tsx scripts/doctor.ts",
     "quota": "tsx scripts/quota.ts",
     "isolation:rehearse": "tsx scripts/rehearse-isolation.ts",
-    "worker:rehearse": "tsx scripts/rehearse-worker.ts"
+    "worker:rehearse": "tsx scripts/rehearse-worker.ts",
+    "mcp:rehearse": "tsx scripts/rehearse-mcp-scope.ts"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "0.3.281",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.0",
+    "esbuild": "0.28.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
