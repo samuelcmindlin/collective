@@ -1,0 +1,399 @@
+{
+  "createdAt": "2026-09-24T04:36:49.588Z",
+  "authority": "synthetic-worker-rehearsal",
+  "image": "docker/sandbox-templates:claude-code-docker",
+  "fixtureSha256": "136557c06d98531e8791bcb2d4cad718cea7ae06f9fffa1372846115855ac808",
+  "names": [
+    "collective-probe-4273c095-a",
+    "collective-probe-524793ba-b"
+  ],
+  "productionExecutionEnabled": false,
+  "modelInvoked": false,
+  "checks": {
+    "sshForwardingDisabled": true,
+    "sharedSkillsDisabled": true,
+    "hostLocalMcpRequired": true,
+    "worker0:hostSentinelUnreadable": true,
+    "worker0:peerHostSentinelUnreadable": true,
+    "worker0:hostSentinelUnwritable": true,
+    "worker0:rootCannotReadHostSentinel": true,
+    "worker0:symlinkDoesNotCrossVM": true,
+    "worker0:platformCheckoutAbsent": true,
+    "worker0:hostHomeAbsent": true,
+    "worker0:hostDockerSocketAbsent": true,
+    "worker0:hostSshSocketAbsent": true,
+    "worker0:noSshAgentSocket": true,
+    "worker0:sshSigningUnavailable": true,
+    "worker0:ownWorkspaceWritable": true,
+    "worker0:rootAvailableInsideVM": true,
+    "worker0:noUnexpectedVirtioShares": true,
+    "worker0:proxyDenies:public-web": true,
+    "worker0:proxyDenies:provider": true,
+    "worker0:proxyDenies:github": true,
+    "worker0:proxyDenies:host-service": true,
+    "worker0:directHttpExchangeDenied": true,
+    "worker0:directTlsExchangeDenied": true,
+    "worker0:vmLoopbackDoesNotReachHost": true,
+    "worker0:claudeUnauthenticated": true,
+    "worker0:detachedProcessStarted": true,
+    "worker1:hostSentinelUnreadable": true,
+    "worker1:peerHostSentinelUnreadable": true,
+    "worker1:hostSentinelUnwritable": true,
+    "worker1:rootCannotReadHostSentinel": true,
+    "worker1:symlinkDoesNotCrossVM": true,
+    "worker1:platformCheckoutAbsent": true,
+    "worker1:hostHomeAbsent": true,
+    "worker1:hostDockerSocketAbsent": true,
+    "worker1:hostSshSocketAbsent": true,
+    "worker1:noSshAgentSocket": true,
+    "worker1:sshSigningUnavailable": true,
+    "worker1:ownWorkspaceWritable": true,
+    "worker1:rootAvailableInsideVM": true,
+    "worker1:noUnexpectedVirtioShares": true,
+    "worker1:proxyDenies:public-web": true,
+    "worker1:proxyDenies:provider": true,
+    "worker1:proxyDenies:github": true,
+    "worker1:proxyDenies:host-service": true,
+    "worker1:directHttpExchangeDenied": true,
+    "worker1:directTlsExchangeDenied": true,
+    "worker1:vmLoopbackDoesNotReachHost": true,
+    "worker1:claudeUnauthenticated": true,
+    "worker1:detachedProcessStarted": true,
+    "distinctKernels": true,
+    "distinctDockerEngines": true,
+    "peerCannotOverwritePrivateWorkspace": true,
+    "heartbeatActiveBeforeStop": true,
+    "workerReportedStopped": true,
+    "privateFilesPersistAcrossStop": true,
+    "freshKernelAfterStop": true,
+    "detachedProcessDoesNotResume": true,
+    "hostSentinelUnchanged": true,
+    "peerHostSentinelUnchanged": true,
+    "hostOperatorNeverReached": true
+  },
+  "cleanup": [
+    {
+      "name": "collective-probe-4273c095-a",
+      "absent": true
+    },
+    {
+      "name": "collective-probe-524793ba-b",
+      "absent": true
+    }
+  ],
+  "sbx": "sbx version: v0.45.1 9d79d90ee4c5d297fb3d36b75384e8cea7a4fbcb",
+  "settings": {
+    "ssh.agentForwardingEnabled": "false",
+    "skills.defaultMode": "off",
+    "mcp.forceLocalGateway": "true"
+  },
+  "worker0": {
+    "observations": {
+      "hostSentinelUnreadable": true,
+      "peerHostSentinelUnreadable": true,
+      "hostSentinelUnwritable": true,
+      "rootCannotReadHostSentinel": true,
+      "symlinkDoesNotCrossVM": true,
+      "platformCheckoutAbsent": true,
+      "hostHomeAbsent": true,
+      "hostDockerSocketAbsent": true,
+      "hostSshSocketAbsent": true,
+      "noSshAgentSocket": true,
+      "sshSigningUnavailable": true,
+      "ownWorkspaceWritable": true,
+      "rootAvailableInsideVM": true,
+      "noUnexpectedVirtioShares": true,
+      "proxyDenies:public-web": true,
+      "proxyDenies:provider": true,
+      "proxyDenies:github": true,
+      "proxyDenies:host-service": true,
+      "directHttpExchangeDenied": true,
+      "directTlsExchangeDenied": true,
+      "vmLoopbackDoesNotReachHost": true,
+      "claudeUnauthenticated": true,
+      "detachedProcessStarted": true
+    },
+    "networks": [
+      {
+        "name": "public-web",
+        "code": 0,
+        "output": "403"
+      },
+      {
+        "name": "provider",
+        "code": 0,
+        "output": "403"
+      },
+      {
+        "name": "github",
+        "code": 0,
+        "output": "403"
+      },
+      {
+        "name": "host-service",
+        "code": 0,
+        "output": "403"
+      }
+    ],
+    "direct": "connected",
+    "directHttp": {
+      "code": 52,
+      "output": "000"
+    },
+    "directTls": {
+      "code": 35,
+      "output": "000"
+    },
+    "mounts": [
+      {
+        "path": "/",
+        "type": "overlay"
+      },
+      {
+        "path": "/proc",
+        "type": "proc"
+      },
+      {
+        "path": "/dev",
+        "type": "tmpfs"
+      },
+      {
+        "path": "/dev/pts",
+        "type": "devpts"
+      },
+      {
+        "path": "/dev/shm",
+        "type": "tmpfs"
+      },
+      {
+        "path": "/dev/mqueue",
+        "type": "mqueue"
+      },
+      {
+        "path": "/sys",
+        "type": "sysfs"
+      },
+      {
+        "path": "/run",
+        "type": "tmpfs"
+      },
+      {
+        "path": "/sys/fs/cgroup",
+        "type": "cgroup2"
+      },
+      {
+        "path": "/run/secrets",
+        "type": "tmpfs"
+      },
+      {
+        "path": "/var/lib/docker",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/projects",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/sessions",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/todos",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/shell-snapshots",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/statsig",
+        "type": "ext4"
+      },
+      {
+        "path": "/etc/resolv.conf",
+        "type": "virtiofs"
+      }
+    ],
+    "boot": "43cbbd30-023e-492e-92df-a4d66e2f7d9c",
+    "marker": "private worker 0",
+    "heartbeat": "1790224617357",
+    "childPid": 410,
+    "runtime": {
+      "node": "v22.22.1",
+      "kernel": "7.0.12",
+      "cpus": 2,
+      "memoryBytes": 2114682880,
+      "claude": "2.1.280 (Claude Code)",
+      "docker": "29.8.1",
+      "dockerId": "8e883512-9a1c-48d8-8220-06db07fcb9cb"
+    },
+    "integrations": {
+      "ghTokenVariablePresent": true,
+      "mcpGatewayVariablePresent": true,
+      "secretFileCount": 0,
+      "loggedIn": false
+    }
+  },
+  "worker1": {
+    "observations": {
+      "hostSentinelUnreadable": true,
+      "peerHostSentinelUnreadable": true,
+      "hostSentinelUnwritable": true,
+      "rootCannotReadHostSentinel": true,
+      "symlinkDoesNotCrossVM": true,
+      "platformCheckoutAbsent": true,
+      "hostHomeAbsent": true,
+      "hostDockerSocketAbsent": true,
+      "hostSshSocketAbsent": true,
+      "noSshAgentSocket": true,
+      "sshSigningUnavailable": true,
+      "ownWorkspaceWritable": true,
+      "rootAvailableInsideVM": true,
+      "noUnexpectedVirtioShares": true,
+      "proxyDenies:public-web": true,
+      "proxyDenies:provider": true,
+      "proxyDenies:github": true,
+      "proxyDenies:host-service": true,
+      "directHttpExchangeDenied": true,
+      "directTlsExchangeDenied": true,
+      "vmLoopbackDoesNotReachHost": true,
+      "claudeUnauthenticated": true,
+      "detachedProcessStarted": true
+    },
+    "networks": [
+      {
+        "name": "public-web",
+        "code": 0,
+        "output": "403"
+      },
+      {
+        "name": "provider",
+        "code": 0,
+        "output": "403"
+      },
+      {
+        "name": "github",
+        "code": 0,
+        "output": "403"
+      },
+      {
+        "name": "host-service",
+        "code": 0,
+        "output": "403"
+      }
+    ],
+    "direct": "connected",
+    "directHttp": {
+      "code": 52,
+      "output": "000"
+    },
+    "directTls": {
+      "code": 35,
+      "output": "000"
+    },
+    "mounts": [
+      {
+        "path": "/",
+        "type": "overlay"
+      },
+      {
+        "path": "/proc",
+        "type": "proc"
+      },
+      {
+        "path": "/dev",
+        "type": "tmpfs"
+      },
+      {
+        "path": "/dev/pts",
+        "type": "devpts"
+      },
+      {
+        "path": "/dev/shm",
+        "type": "tmpfs"
+      },
+      {
+        "path": "/dev/mqueue",
+        "type": "mqueue"
+      },
+      {
+        "path": "/sys",
+        "type": "sysfs"
+      },
+      {
+        "path": "/run",
+        "type": "tmpfs"
+      },
+      {
+        "path": "/sys/fs/cgroup",
+        "type": "cgroup2"
+      },
+      {
+        "path": "/run/secrets",
+        "type": "tmpfs"
+      },
+      {
+        "path": "/var/lib/docker",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/projects",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/sessions",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/todos",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/shell-snapshots",
+        "type": "ext4"
+      },
+      {
+        "path": "/home/agent/.claude/statsig",
+        "type": "ext4"
+      },
+      {
+        "path": "/etc/resolv.conf",
+        "type": "virtiofs"
+      }
+    ],
+    "boot": "e07d57b2-88d5-4560-8d35-b674bea9a351",
+    "marker": "private worker 1",
+    "heartbeat": "1790224624478",
+    "childPid": 411,
+    "runtime": {
+      "node": "v22.22.1",
+      "kernel": "7.0.12",
+      "cpus": 2,
+      "memoryBytes": 2114682880,
+      "claude": "2.1.280 (Claude Code)",
+      "docker": "29.8.1",
+      "dockerId": "2d93d193-2ef7-4d2f-9ba5-8a18d7f2327b"
+    },
+    "integrations": {
+      "ghTokenVariablePresent": true,
+      "mcpGatewayVariablePresent": true,
+      "secretFileCount": 0,
+      "loggedIn": false
+    }
+  },
+  "beforeStop": {
+    "marker": "private worker 0",
+    "boot": "43cbbd30-023e-492e-92df-a4d66e2f7d9c",
+    "heartbeatBefore": "1790224625475",
+    "heartbeatAfter": "",
+    "dockerId": "8e883512-9a1c-48d8-8220-06db07fcb9cb"
+  },
+  "afterRestart": {
+    "marker": "private worker 0",
+    "boot": "f5b2de8e-7e8b-4c41-9b26-a28b21fee611",
+    "heartbeatBefore": "1790224631498",
+    "heartbeatAfter": "1790224631498",
+    "dockerId": "8e883512-9a1c-48d8-8220-06db07fcb9cb"
+  },
+  "result": "pass"
+}

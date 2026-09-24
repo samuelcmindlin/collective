@@ -5,6 +5,9 @@ rehearsal, not permission to run autonomous workers. It follows
 [the workspace design](designs/03-workspaces-prs.md) and
 [criterion-bound evaluation](PROGRESS-IMPLEMENTATION.md).
 
+For the consolidated architecture, threat model and meaning of isolation, see
+[Isolation architecture](ISOLATION.md).
+
 ## Decision and scope
 
 Separate two gates: containing a candidate program, and containing the complete
@@ -71,17 +74,21 @@ Docker Desktop. This machine meets the documented macOS/Apple silicon prerequisi
 and `sbx` was initially absent. Docker Sandboxes **0.45.1** is now installed via
 the official Homebrew tap; `sbx version` reports commit
 `9d79d90ee4c5d297fb3d36b75384e8cea7a4fbcb`. Its actual `sbx ls` readiness check
-stops with **Not authenticated to Docker** and instructs `sbx login`.
-No sandbox or model was launched through `sbx`.
+initially stopped with **Not authenticated to Docker**. After the operator's
+Docker login, `sbx ls` succeeds. The new runtime is initialized with default-deny
+networking, SSH-agent forwarding disabled, shared skills off and MCP forced local.
+The subsequent [worker VM rehearsal](WORKER-REHEARSAL.md) passed 60 synthetic
+checks across two VMs, including stop/restart and separate workspaces. Authenticated
+Claude execution and the complete host-integration boundary remain unverified;
+no model call has been made.
 The [Claude subscription flow](https://docs.docker.com/ai/sandboxes/get-started/)
 uses login inside the sandbox; that has not been tried here. A native-process
 alternative is [Anthropic sandbox-runtime](https://github.com/anthropics/sandbox-runtime),
 but its filesystem/network controls alone do not establish the whole-worker
 credential, lifecycle and resource contract.
 
-The remaining local setup action is to run `sbx login` in a terminal and complete
-Docker's browser sign-in. No password/token should enter this repository or chat.
-After that, use a dedicated disposable worker directory, an explicit locked-down
+Docker sign-in is complete. No password/token should enter this repository or chat.
+Use a dedicated disposable worker environment, an explicit locked-down
 network policy and a reviewed launch kit. Do not launch from the platform checkout:
 the default workspace sharing would give the worker that checkout. Verify the
 actual subscription plan/login, restricted non-interactive CLI, resume/cancel,

@@ -7,8 +7,11 @@ owns the durable work, room routing, calendars, evidence, and permission boundar
 This is a working first prototype. The local workflow and interfaces are tested.
 **Live Claude launches are currently disabled pending whole-worker isolation
 verification.** The [isolation rehearsal](docs/ISOLATION-REHEARSAL.md) tests frozen
-code candidates in disposable containers; it does not yet contain the complete
-Claude harness. No model calls have been made during development.
+code candidates in disposable containers. The subsequent
+[worker VM rehearsal](docs/WORKER-REHEARSAL.md) verifies initial containment and
+lifecycle checks; authenticated Claude execution is not yet integrated. The
+[isolation architecture](docs/ISOLATION.md) defines the boundaries and remaining
+gates. No model calls have been made during development.
 
 ## Try it
 

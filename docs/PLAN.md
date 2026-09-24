@@ -155,6 +155,13 @@ and native live launch is now blocked explicitly. Executable criteria must await
 the documented durable evaluation-intent/result integration; rehearsal passes do
 not count as production acceptance checks.
 
+The [worker compatibility increment](WORKER-REHEARSAL.md) now records 60 synthetic
+checks across two mountless microVMs. Workspace separation, network denial and
+stop/restart were observed. The next concrete increment is the bounded VM episode
+adapter: close host clipboard/MCP integration questions, then test scoped domain
+tools, subscription authentication, session separation, cancellation and quota.
+Keep the existing live gate closed until that end-to-end path passes.
+
 Bind submissions and reviews to criterion versions and immutable evidence.
 Require evaluators to record what they checked; retain failed experiments and
 limitations. Add a deterministic check where the criterion is executable. Keep

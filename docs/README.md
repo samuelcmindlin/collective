@@ -8,6 +8,8 @@ document is not a claim that its interfaces or safeguards already exist.
 
 | Document | Purpose | Status |
 | --- | --- | --- |
+| [Isolation architecture](ISOLATION.md) | Trust boundaries, containers versus microVMs, threat model and explicit limits | Architecture and acceptance contract |
+| [Worker VM rehearsal](WORKER-REHEARSAL.md) | Two-VM containment/lifecycle evidence, remaining host integrations and bounded episode design | 60 synthetic checks passed; live gate closed |
 | [Isolation and behavioral rehearsal](ISOLATION-REHEARSAL.md) | Candidate containment evidence, lifecycle fixes and the remaining whole-worker gate | Controlled fixture rehearsal |
 | [Criterion-bound evaluation](PROGRESS-IMPLEMENTATION.md) | Frozen criteria, immutable attempts, protected data checks and independent judgments | Implemented first increment |
 | [Knowledge and evidence review](REVIEW-2026-09-23.md) | Reproduced defects, corrections, verification and remaining boundaries | Completed review |
@@ -37,7 +39,8 @@ the [lexical screening](KNOWLEDGE-IMPLEMENTATION.md#retrieval-experiment-and-pro
 The four designs are targets with implementation tracked in the
 [foundation record](FOUNDATION.md) and [knowledge record](KNOWLEDGE-IMPLEMENTATION.md).
 The suite covers fault injection, knowledge boundaries and six offline GitHub
-protocol tests. GitHub and Discord remain unconfigured. QMD was tested in a
+protocol tests. The maintainer repository is connected to GitHub; the agent GitHub
+broker and Discord remain unconfigured. QMD was tested in a
 temporary directory; the application has no new knowledge dependency.
 
 ## Decision records

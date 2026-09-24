@@ -18,6 +18,10 @@ budget. These are configuration defaults, not a measured capacity claim.
 
 ## Components and authority
 
+The [isolation architecture](ISOLATION.md) expands the process/VM boundaries,
+allowed communication paths, credential handling and verified-versus-pending gates.
+Rooms route conversations; they do not allocate or isolate execution environments.
+
 ```mermaid
 flowchart TB
     Operator[Operator] --> UI[Local operator UI]

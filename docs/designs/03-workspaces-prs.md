@@ -10,6 +10,11 @@ remaining whole-worker and evaluator-ledger gates. The native live harness is
 disabled until those worker boundaries are verified. No GitHub remote or PR was
 created by that rehearsal.
 
+The [subsequent worker experiment](../WORKER-REHEARSAL.md) records two-VM filesystem,
+network and lifecycle observations, and the next bounded-episode adapter design.
+The maintainer platform repository is now connected to GitHub; this does not
+configure the agent broker or grant workers remote credentials.
+
 ## What needs isolation now
 
 | Activity | Boundary needed for the next stage |
