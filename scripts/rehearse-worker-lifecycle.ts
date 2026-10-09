@@ -29,7 +29,7 @@ async function command(args: string[], signal?: AbortSignal) {
 }
 
 async function child(dir: string, mode: string) {
-  assert.ok(['crash', 'pause'].includes(mode));
+  assert.ok(['complete', 'crash', 'pause'].includes(mode));
   const store = new Store(join(dir, 'db.sqlite')); seed(store);
   const config = { root, dataDir: dir, port: 0, mode: 'simulation' as const, claudeBin: 'unused', operatorIds: [] };
   const service = new CollectiveService(store, config);
@@ -58,17 +58,25 @@ async function child(dir: string, mode: string) {
         assert.equal(result[0]!.isError, false); assert.equal(result[0]!.value.you.id, 'atlas');
         writeFileSync(join(dir, 'observed.json'), JSON.stringify({ intentId: intent.id, runId: run.id, phase: intent.phase, authenticatedAs: 'atlas', mode }), { mode: 0o600 });
         if (mode === 'crash') process.kill(process.pid, 'SIGKILL');
-        else { scheduler.pause(); assert.equal(scheduler.authenticateRun(token), undefined); }
-        // Pause must clean up even if this work callback never returns.
-        await new Promise(() => {});
+        else if (mode === 'pause') {
+          scheduler.pause(); assert.equal(scheduler.authenticateRun(token), undefined);
+          // Pause must clean up even if this work callback never returns.
+          await new Promise(() => {});
+        }
       });
     } catch (error) {
       const worker = lifecycle.repository.forRun(run.id);
       if (!(mode === 'pause' && signal.aborted && worker?.phase === 'removed')) failure = error;
     } finally { finish(); }
-    return { summary: 'Synthetic lifecycle episode', inputTokens: 0, outputTokens: 0, estimatedCost: 0, turns: 0, interrupted: true };
+    return { summary: 'Synthetic lifecycle episode', inputTokens: 0, outputTokens: 0, estimatedCost: 0, turns: 0, interrupted: mode !== 'complete' };
   } };
-  try { await scheduler.tick(); await finished; if (failure) throw failure; }
+  try {
+    await scheduler.tick(); await finished; if (failure) throw failure;
+    // Let the scheduler commit the harness outcome before shutdown can abort it.
+    const deadline = performance.now() + 5000;
+    while (scheduler.controllers.size && performance.now() < deadline) await new Promise(r => setTimeout(r, 10));
+    assert.equal(scheduler.controllers.size, 0);
+  }
   finally { await lifecycle.shutdown(); await scheduler.stop(); server.closeAllConnections(); await new Promise<void>(r => server.close(() => r())); service.knowledge.close(); store.close(); }
 }
 
@@ -83,7 +91,7 @@ else {
   process.once('SIGINT', cancel); process.once('SIGTERM', cancel);
   try {
     const before = JSON.parse(await command(['ls', '--json'])).sandboxes.map((vm: { name: string }) => vm.name).sort();
-    for (const mode of ['pause', 'crash']) {
+    for (const mode of ['complete', 'pause', 'crash']) {
       controller.signal.throwIfAborted();
       const dir = mkdtempSync(join(tmpdir(), 'collective-lifecycle-vm-'));
       const trial: Record<string, unknown> = { mode, directory: dir, result: 'incomplete' };
@@ -100,13 +108,14 @@ else {
         unresolved = repo.pending().length > 0;
         Object.assign(trial, { beforeRecovery, blockedBefore, unresolved, childCode: childResult.code, childStopped: childResult.stopped });
         assert.equal(unresolved, false, 'Cleanup is unresolved; fixture ledger retained.');
-        assert.equal(childResult.stopped, undefined); assert.equal(childResult.code, mode === 'pause' ? 0 : null);
+        assert.equal(childResult.stopped, undefined); assert.equal(childResult.code, mode === 'crash' ? null : 0);
         const observed = JSON.parse(readFileSync(join(dir, 'observed.json'), 'utf8'));
         assert.equal(observed.authenticatedAs, 'atlas'); assert.equal(observed.phase, 'ready');
+        assert.equal(observed.mode, mode);
         assert.equal(repo.get(observed.intentId)!.phase, 'removed');
         assert.equal(existsSync(recovery.launchFile(repo.get(observed.intentId)!)), false);
         assert.equal(blockedBefore, mode === 'crash');
-        if (mode === 'crash') assert.equal(store.require('runs', observed.runId).status, 'interrupted');
+        assert.equal(store.require('runs', observed.runId).status, mode === 'complete' ? 'complete' : 'interrupted');
         trial.observed = observed; trial.result = 'pass';
       } finally { store.close(); if (!unresolved) { rmSync(dir, { recursive: true, force: true }); trial.fixtureRemoved = !existsSync(dir); } save(); }
     }

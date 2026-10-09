@@ -3,6 +3,8 @@
 Recorded 2026-10-09. Implements the single-supervisor lifecycle from
 [design 6](designs/06-worker-lifecycle.md). This adds ownership, termination and
 recovery infrastructure; the live Claude execution gate remains closed.
+The subsequent [focused review](REVIEW-2026-10-09.md) fixes peer cancellation during
+cleanup and closes the episode signal on every exit, with expanded VM evidence.
 
 ## What changed
 

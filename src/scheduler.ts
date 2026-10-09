@@ -33,10 +33,14 @@ export class Scheduler {
     return { run, job, agent: this.store.require('agents', run.agentId) };
   }
   blockReason(at = new Date()): string | undefined {
+    return this.runtimeError ?? this.workerAdmissionBlock() ?? this.executionBlockReason(at);
+  }
+  private workerAdmissionBlock(): string | undefined {
+    return new WorkerRepository(this.store).blockReason(new Set([...this.controllers].filter(([, c]) => !c.signal.aborted).map(([id]) => id)));
+  }
+  private executionBlockReason(at: Date): string | undefined {
     const settings = this.store.settings();
     if (this.runtimeError) return this.runtimeError;
-    const workerBlock = new WorkerRepository(this.store).blockReason(new Set([...this.controllers].filter(([, c]) => !c.signal.aborted).map(([id]) => id)));
-    if (workerBlock) return workerBlock;
     if (settings.paused) return 'Paused by you';
     if (!this.service.activeMission()) return 'Set an active mission to begin';
     if (this.config.mode === 'simulation') return undefined;
@@ -90,11 +94,13 @@ export class Scheduler {
     if (this.ticking || this.stopping) return;
     this.ticking = true;
     try {
-      const reason = this.blockReason(at);
+      const reason = this.executionBlockReason(at);
       if (reason) {
         if (reason !== 'Daily work-episode limit reached') this.abortActive();
         return;
       }
+      // Resource cleanup prevents new admission. It must not cancel healthy peers.
+      if (this.workerAdmissionBlock()) return;
       this.advanceMeetings(at);
       while (this.controllers.size < this.store.settings().maxConcurrent && !this.blockReason(at)) {
         const started = this.store.transaction(() => {

@@ -28,8 +28,12 @@ Persist revocation before cleanup, and reject tools for an intent that is not
 ready or has been revoked. Cancellation revokes its in-memory token immediately;
 restart also invalidates all old tokens. A transport reconnect grants no authority.
 
-Unknown cleanup blocks new admission across the supervisor. Stopping the local
-CLI is not proof the daemon stopped its work. In particular, an interrupted create
+Unknown cleanup blocks new admission across the supervisor. An admission block
+does not cancel already admitted healthy peers; execution stops such as pause
+still do. Every episode exit, including success, aborts its internal operation
+signal before cleanup while preserving the completed result.
+
+Stopping the local CLI is not proof the daemon stopped its work. An interrupted create
 can finish after an inventory read reported absence. If dispatch was recorded but
 provision was not acknowledged, attempt cleanup but retain `unknown`, even if
 the VM currently appears absent. This conservative case needs backend-specific

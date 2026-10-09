@@ -542,6 +542,25 @@
         "isolation",
         "recovery"
       ]
+    },
+    {
+      "id": "platform.review-2026-10-09",
+      "path": "docs/REVIEW-2026-10-09.md",
+      "namespace": "platform",
+      "kind": "assessment",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
+      "importMode": "read-only",
+      "tags": [
+        "review",
+        "execution",
+        "recovery"
+      ]
     }
   ]
 }

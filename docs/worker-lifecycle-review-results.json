@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "modelInvoked": false,
+  "productionExecutionEnabled": false,
+  "sourceHash": "99b2e50c6f238f0a6d2b69c2164860049f8dd13572cafafc15f950ccb58183ce",
+  "image": "docker.io/docker/sandbox-templates:claude-code-docker@sha256:549730947ed8a43182547bb5628245fe6d6c089564dd73d2194e899f791d970f",
+  "result": "pass",
+  "trials": [
+    {
+      "mode": "complete",
+      "directory": "/var/folders/80/ls1pg2x15vv_s392pg7fb81c0000gn/T/collective-lifecycle-vm-WTMrgV",
+      "result": "pass",
+      "beforeRecovery": [],
+      "blockedBefore": false,
+      "unresolved": false,
+      "childCode": 0,
+      "observed": {
+        "intentId": "b510d82c-706c-4dca-b997-56d8df187134",
+        "runId": "run_559b19ac-29ff-4755-bbef-e64f33954c6c",
+        "phase": "ready",
+        "authenticatedAs": "atlas",
+        "mode": "complete"
+      },
+      "fixtureRemoved": true
+    },
+    {
+      "mode": "pause",
+      "directory": "/var/folders/80/ls1pg2x15vv_s392pg7fb81c0000gn/T/collective-lifecycle-vm-piZaLh",
+      "result": "pass",
+      "beforeRecovery": [],
+      "blockedBefore": false,
+      "unresolved": false,
+      "childCode": 0,
+      "observed": {
+        "intentId": "128ee700-516c-4d89-a611-340c2b072e1a",
+        "runId": "run_c7714e40-0815-440c-8d41-bb74aa184465",
+        "phase": "ready",
+        "authenticatedAs": "atlas",
+        "mode": "pause"
+      },
+      "fixtureRemoved": true
+    },
+    {
+      "mode": "crash",
+      "directory": "/var/folders/80/ls1pg2x15vv_s392pg7fb81c0000gn/T/collective-lifecycle-vm-CzXg6r",
+      "result": "pass",
+      "beforeRecovery": [
+        {
+          "id": "47a12a19-934d-4aa8-9589-a233382c2dff",
+          "phase": "ready",
+          "provisioned": true
+        }
+      ],
+      "blockedBefore": true,
+      "unresolved": false,
+      "childCode": null,
+      "observed": {
+        "intentId": "47a12a19-934d-4aa8-9589-a233382c2dff",
+        "runId": "run_37947f95-6fe3-4a5f-8a7a-9c7e598ee840",
+        "phase": "ready",
+        "authenticatedAs": "atlas",
+        "mode": "crash"
+      },
+      "fixtureRemoved": true
+    }
+  ],
+  "unrelatedVMInventoryPreserved": true
+}

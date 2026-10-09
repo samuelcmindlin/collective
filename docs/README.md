@@ -8,6 +8,7 @@ document is not a claim that its interfaces or safeguards already exist.
 
 | Document | Purpose | Status |
 | --- | --- | --- |
+| [Lifecycle review](REVIEW-2026-10-09.md) | Fixes for peer cancellation during cleanup and operations outliving successful episodes | Regressions reproduced and corrected |
 | [Worker lifecycle](WORKER-LIFECYCLE.md) | Durable ownership, revocation, pause/deadline cleanup and process-crash recovery | Synthetic integration; live gate closed |
 | [Work cycle and domain bridge](WORK-CYCLE-IMPLEMENTATION.md) | Reproducible scenario, actual run-scoped VM tools, image pin and limitations | Deterministic/synthetic integration passed; live gate closed |
 | [Evaluation and organization research](EVALUATION-RESEARCH.md) | Python boundary, reusable tools, teams/rooms literature, RL relationship and deferred experiments | Recorded evidence and hypotheses |

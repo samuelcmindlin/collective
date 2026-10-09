@@ -56,6 +56,52 @@ test('lifecycle persists intent before dispatch and revokes before verified clea
   } finally { s.close(); }
 });
 
+test('one worker cleaning up blocks new admission without cancelling running peers', async () => {
+  const s = fixture();
+  try {
+    const intent = s.repo.reserve(s.run.id, image);
+    s.repo.update(intent.id, { phase: 'provisioning', dispatched: true });
+    s.repo.update(intent.id, { phase: 'ready', provisioned: true });
+    const peerJob = s.store.enqueue('iris', 'task', {}, 'peer-job'); s.store.claimJob();
+    const peer = s.store.put('runs', { ...s.run, id: id('run'), agentId: 'iris', jobId: peerJob.id });
+    const peerController = new AbortController(); s.scheduler.controllers.set(peer.id, peerController);
+    const peerIntent = s.repo.reserve(peer.id, image);
+    s.repo.update(peerIntent.id, { phase: 'provisioning', dispatched: true });
+    s.repo.update(peerIntent.id, { phase: 'ready', provisioned: true });
+    const peerToken = s.scheduler.grantRun(peer.id);
+    const pending = s.store.enqueue('ember', 'task', {}, 'pending-job');
+    s.repo.update(intent.id, { phase: 'stopping', revokedAt: nowIso() });
+    await s.scheduler.tick();
+    assert.equal(peerController.signal.aborted, false, 'Cleanup must not cancel an unrelated running episode.');
+    assert.equal(s.scheduler.authenticateRun(peerToken)?.run.id, peer.id);
+    assert.equal(s.store.require('jobs', pending.id).status, 'pending');
+    s.repo.update(intent.id, { phase: 'unknown', error: 'Cleanup pending verification.' });
+    await s.scheduler.tick();
+    assert.equal(peerController.signal.aborted, false, 'Uncertain cleanup blocks admission, not already admitted peers.');
+    assert.equal(s.scheduler.authenticateRun(peerToken)?.run.id, peer.id);
+    // A separate execution stop still wins while cleanup blocks admission.
+    s.store.patch('settings', 'settings', { paused: true });
+    await s.scheduler.tick(); assert.equal(peerController.signal.aborted, true);
+  } finally { s.close(); }
+});
+
+test('successful completion aborts episode-scoped background work before VM removal', async () => {
+  const s = fixture();
+  try {
+    await s.lifecycle.reconcile(); let episodeSignal: AbortSignal | undefined, backgroundActive = false;
+    s.backend.remove = async () => {
+      assert.equal(episodeSignal?.aborted, true, 'Episode lifetime must end before cleanup starts.');
+      assert.equal(backgroundActive, false, 'Background commands must receive cancellation before removal.');
+    };
+    const result = await s.lifecycle.execute(s.run.id, image, launch, new AbortController().signal, async (_intent, signal) => {
+      episodeSignal = signal; backgroundActive = true;
+      signal.addEventListener('abort', () => { backgroundActive = false; }, { once: true });
+      return 'finished';
+    });
+    assert.equal(result, 'finished'); assert.equal(s.repo.forRun(s.run.id)!.phase, 'removed');
+  } finally { s.close(); }
+});
+
 test('preflight and local dispatch-write failures create no external resources', async () => {
   for (const failure of ['preflight', 'write']) {
     const s = fixture();

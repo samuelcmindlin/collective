@@ -44,14 +44,16 @@ export class WorkerLifecycle {
     const timer = setTimeout(() => controller.abort(), this.store.settings().maxRunSeconds * 1000);
     const abort = () => this.revoke(runId);
     combined.addEventListener('abort', abort, { once: true });
-    const done = this.run(intent, launch, combined, work).finally(() => {
+    const done = this.run(intent, launch, combined, work, () => {
+      clearTimeout(timer); controller.abort();
+    }).finally(() => {
       clearTimeout(timer); combined.removeEventListener('abort', abort); this.operations.delete(intent.id);
     });
     this.operations.set(intent.id, { runId, controller, done });
     return done;
   }
   private async run<T>(intent: WorkerIntent, launch: McpLaunch, signal: AbortSignal,
-    work: (intent: WorkerIntent, signal: AbortSignal) => Promise<T>): Promise<T> {
+    work: (intent: WorkerIntent, signal: AbortSignal) => Promise<T>, endEpisode: () => void): Promise<T> {
     let failure: unknown, failed = false, value: T | undefined;
     try {
       await this.backend.preflight(intent, signal);
@@ -75,6 +77,7 @@ export class WorkerLifecycle {
       });
       signal.throwIfAborted();
     } catch (error) { failed = true; failure = error; }
+    finally { endEpisode(); }
     try { await this.cleanup(intent.id); }
     catch (error) { throw new AggregateError([failure, error].filter(Boolean), 'Sandbox cleanup is unresolved; replacement work is blocked.'); }
     if (failed) throw failure;

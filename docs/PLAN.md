@@ -18,6 +18,8 @@ that boundary: schema-5 intents, admission fencing, termination and recovery of
 acknowledged workers. Unacknowledged dispatch stays blocked explicitly. Next are
 bounded guest snapshot transfer and the remaining host/provider admission checks,
 then the first measured real episode and Python adapter.
+The [lifecycle review](REVIEW-2026-10-09.md) corrects peer cancellation during
+cleanup and episode-signal lifetime; it retains this next-step ordering.
 
 Pause feature expansion for a focused foundation pass. Keep the current stack,
 harness reuse, Discord room model and UI. Move incrementally toward the
