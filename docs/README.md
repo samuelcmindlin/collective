@@ -8,6 +8,7 @@ document is not a claim that its interfaces or safeguards already exist.
 
 | Document | Purpose | Status |
 | --- | --- | --- |
+| [Worker lifecycle](WORKER-LIFECYCLE.md) | Durable ownership, revocation, pause/deadline cleanup and process-crash recovery | Synthetic integration; live gate closed |
 | [Work cycle and domain bridge](WORK-CYCLE-IMPLEMENTATION.md) | Reproducible scenario, actual run-scoped VM tools, image pin and limitations | Deterministic/synthetic integration passed; live gate closed |
 | [Evaluation and organization research](EVALUATION-RESEARCH.md) | Python boundary, reusable tools, teams/rooms literature, RL relationship and deferred experiments | Recorded evidence and hypotheses |
 | [Reproducible work cycle](designs/05-work-cycle.md) | Next milestone, scenario contract and worker/evaluator integration sequence | Accepted direction; implementation in progress |
@@ -41,6 +42,7 @@ the [lexical screening](KNOWLEDGE-IMPLEMENTATION.md#retrieval-experiment-and-pro
 | [3. Isolated workspaces and PRs](designs/03-workspaces-prs.md) | When isolation is needed, worker compatibility, immutable candidates and publication |
 | [4. Progress and live validation](designs/04-progress.md) | Criteria, protected checks, independent review, comparison trials and stopping rules |
 | [5. Reproducible work cycle](designs/05-work-cycle.md) | Actual scheduler/tool path, Python boundary, isolated scenarios and phased live admission |
+| [6. Durable sandbox lifecycle](designs/06-worker-lifecycle.md) | Persisted resource ownership, unknown effects, cleanup and startup reconciliation |
 
 The designs are targets with implementation tracked in the
 [foundation record](FOUNDATION.md) and [knowledge record](KNOWLEDGE-IMPLEMENTATION.md).

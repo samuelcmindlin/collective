@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "modelInvoked": false,
+  "productionExecutionEnabled": false,
+  "sourceHash": "2c515b45a18d2492acd24f9f3e1acaf8b822dfc9ada7163cc5467b90d8ad3d3b",
+  "image": "docker.io/docker/sandbox-templates:claude-code-docker@sha256:549730947ed8a43182547bb5628245fe6d6c089564dd73d2194e899f791d970f",
+  "result": "pass",
+  "trials": [
+    {
+      "mode": "pause",
+      "directory": "/var/folders/80/ls1pg2x15vv_s392pg7fb81c0000gn/T/collective-lifecycle-vm-cximIR",
+      "result": "pass",
+      "beforeRecovery": [],
+      "blockedBefore": false,
+      "unresolved": false,
+      "childCode": 0,
+      "observed": {
+        "intentId": "77845c56-84da-4fd8-a5c1-c6c59620a5d9",
+        "runId": "run_0a547a3f-5f48-4fe6-b507-134545de5ab2",
+        "phase": "ready",
+        "authenticatedAs": "atlas",
+        "mode": "pause"
+      },
+      "fixtureRemoved": true
+    },
+    {
+      "mode": "crash",
+      "directory": "/var/folders/80/ls1pg2x15vv_s392pg7fb81c0000gn/T/collective-lifecycle-vm-5WrTwW",
+      "result": "pass",
+      "beforeRecovery": [
+        {
+          "id": "5c801026-a9c8-4471-9083-401c45295184",
+          "phase": "ready",
+          "provisioned": true
+        }
+      ],
+      "blockedBefore": true,
+      "unresolved": false,
+      "childCode": null,
+      "observed": {
+        "intentId": "5c801026-a9c8-4471-9083-401c45295184",
+        "runId": "run_6df79f89-25ee-4a03-b4b8-55ac341ccc52",
+        "phase": "ready",
+        "authenticatedAs": "atlas",
+        "mode": "crash"
+      },
+      "fixtureRemoved": true
+    }
+  ],
+  "unrelatedVMInventoryPreserved": true
+}

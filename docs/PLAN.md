@@ -13,6 +13,12 @@ preserves the evaluation-tool survey, organization/rooms evidence, RL relationsh
 and deferred experiments. This ordering takes precedence over broad feature or
 evaluation-framework expansion below; live-worker admission gates remain binding.
 
+The [durable worker lifecycle](WORKER-LIFECYCLE.md) now provides the next part of
+that boundary: schema-5 intents, admission fencing, termination and recovery of
+acknowledged workers. Unacknowledged dispatch stays blocked explicitly. Next are
+bounded guest snapshot transfer and the remaining host/provider admission checks,
+then the first measured real episode and Python adapter.
+
 Pause feature expansion for a focused foundation pass. Keep the current stack,
 harness reuse, Discord room model and UI. Move incrementally toward the
 [HLA](HLA.md), introducing knowledge management as a core module during the same

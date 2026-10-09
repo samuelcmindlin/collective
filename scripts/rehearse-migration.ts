@@ -18,6 +18,8 @@ function snapshot(db: DatabaseSync) {
       rows: db.prepare('SELECT name FROM sqlite_master WHERE name=?').get(table) ? db.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all() : [] })),
     progress: progressTables.map(table => ({ table,
       rows: db.prepare('SELECT name FROM sqlite_master WHERE name=?').get(table) ? db.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all() : [] })),
+    workers: db.prepare("SELECT name FROM sqlite_master WHERE name='worker_intents'").get()
+      ? db.prepare('SELECT * FROM worker_intents ORDER BY id').all() : [],
   };
 }
 const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -48,6 +50,7 @@ for (const sourcePath of sources) {
         assert.deepEqual(unchanged(after.entities), unchanged(before.entities), 'non-runtime entities retain their exact content');
         assert.deepEqual(after.events, before.events, 'historical events are preserved');
         assert.deepEqual(after.receipts, before.receipts, 'command receipts are preserved');
+        assert.deepEqual(after.workers, before.workers, 'worker intents are preserved; migration creates no external resources');
         if (before.version >= 3) assert.deepEqual(after.knowledge, before.knowledge, 'existing knowledge records are byte-preserved');
         if (before.version >= 4) assert.deepEqual(after.progress, before.progress, 'existing evaluation ledgers are byte-preserved');
         else {

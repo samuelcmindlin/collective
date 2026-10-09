@@ -1,5 +1,9 @@
 # Collective
 
+Latest execution foundation: [durable worker lifecycle](docs/WORKER-LIFECYCLE.md)
+and its [design](docs/designs/06-worker-lifecycle.md). Live model execution remains
+gated while snapshot transfer and host/provider admission are completed.
+
 A local, persistent team with a shared mission, a Discord home, and an office you
 can watch. Claude Code provides each live agent's execution harness. Collective
 owns the durable work, room routing, calendars, evidence, and permission boundary.

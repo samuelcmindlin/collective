@@ -285,13 +285,14 @@ test('migration preserves legacy accepted work and requires fresh submissions fo
   const task: Task = { ...input, id: 'old-done', missionId, status: 'done', dependencies: [], evidence: [knowledge.id], createdAt: new Date().toISOString(), review: { reviewerId: 'iris', accepted: true, note: 'Old review', at: new Date().toISOString() } };
   s.store.put('tasks', task); s.store.put('tasks', { ...task, id: 'old-review', status: 'review', review: undefined });
   for (const table of progressTables) s.store.db.exec(`DROP TABLE ${table}`);
+  s.store.db.exec('DROP TABLE worker_intents');
   s.store.db.exec('PRAGMA user_version=3'); s.store.patch('settings', 'settings', { paused: false });
   const taskBytes = s.store.db.prepare("SELECT id,data FROM entities WHERE collection='tasks' ORDER BY id").all();
   const knowledgeBytes = s.store.db.prepare('SELECT * FROM knowledge_revisions ORDER BY id').all();
   s.service.knowledge.close(); s.store.close();
   const upgraded = new Store(join(s.dir, 'db.sqlite')); const service = new CollectiveService(upgraded, s.config);
   try {
-    assert.equal(upgraded.db.prepare('PRAGMA user_version').get()!.user_version, 4);
+    assert.equal(upgraded.db.prepare('PRAGMA user_version').get()!.user_version, 5);
     assert.equal(upgraded.settings().paused, true);
     assert.deepEqual(upgraded.db.prepare('SELECT id,data FROM progress_legacy_tasks ORDER BY id').all(), taskBytes);
     assert.deepEqual(upgraded.db.prepare("SELECT id,data FROM entities WHERE collection='tasks' ORDER BY id").all(), taskBytes);

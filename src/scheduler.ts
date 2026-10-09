@@ -5,6 +5,7 @@ import type { Config } from './config.js';
 import type { Harness, RunResult } from './claude.js';
 import type { CollectiveService } from './service.js';
 import type { Job, Run, RuntimeStatus } from './types.js';
+import { WorkerRepository } from './workers/repository.js';
 
 export class Scheduler {
   readonly controllers = new Map<string, AbortController>();
@@ -18,12 +19,15 @@ export class Scheduler {
     this.status = { mode: config.mode, discord: config.discordToken && config.discordGuildId ? 'connecting' : 'unconfigured', claude: 'unknown', activeRuns: 0 };
   }
   grantRun(runId: string) { const token = randomBytes(32).toString('hex'); this.tokens.set(token, { runId, expires: Date.now() + (this.store.settings().maxRunSeconds + 60) * 1000 }); return token; }
+  revokeRun(runId: string) { for (const [token, entry] of this.tokens) if (entry.runId === runId) this.tokens.delete(token); }
   authenticateRun(token: string) {
     const entry = this.tokens.get(token);
     if (!entry || entry.expires < Date.now() || this.store.settings().paused) return undefined;
     const run = this.store.get('runs', entry.runId);
     const controller = run && this.controllers.get(run.id);
     if (!run || run.status !== 'running' || !controller || controller.signal.aborted) return undefined;
+    const worker = new WorkerRepository(this.store).forRun(run.id);
+    if (worker && (worker.phase !== 'ready' || worker.revokedAt)) return undefined;
     const job = this.store.require('jobs', run.jobId);
     if (job.status !== 'running' || job.agentId !== run.agentId || job.attempts !== run.attempt || !this.store.isCurrentMission(job)) return undefined;
     return { run, job, agent: this.store.require('agents', run.agentId) };
@@ -31,6 +35,8 @@ export class Scheduler {
   blockReason(at = new Date()): string | undefined {
     const settings = this.store.settings();
     if (this.runtimeError) return this.runtimeError;
+    const workerBlock = new WorkerRepository(this.store).blockReason(new Set([...this.controllers].filter(([, c]) => !c.signal.aborted).map(([id]) => id)));
+    if (workerBlock) return workerBlock;
     if (settings.paused) return 'Paused by you';
     if (!this.service.activeMission()) return 'Set an active mission to begin';
     if (this.config.mode === 'simulation') return undefined;

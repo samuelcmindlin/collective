@@ -12,6 +12,8 @@ import { createHttpServer } from './http.js';
 import { QuotaMonitor } from './quota.js';
 import { backupBeforeMigration } from './storage/backup.js';
 import { readRegisteredSnapshot, importRegisteredSnapshot } from './knowledge/import.js';
+import { WorkerLifecycle } from './workers/lifecycle.js';
+import { SandboxBackend } from './workers/sandbox.js';
 
 const config = loadConfig();
 mkdirSync(config.dataDir, { recursive: true, mode: 0o700 });
@@ -36,6 +38,8 @@ try {
   console.log(`Registered knowledge from ${imported.commit.slice(0, 12)}: ${imported.created} revisions, ${imported.unchanged} unchanged, ${imported.withdrawn} withdrawn.`);
 } catch (error) { service.knowledge.close(); store.close(); try { unlinkSync(lock); } catch {} throw error; }
 const scheduler = new Scheduler(store, config, service, null as unknown as Harness);
+const workers = new WorkerLifecycle(store, config.dataDir, new SandboxBackend(config.root), runId => scheduler.revokeRun(runId));
+await workers.reconcile();
 scheduler.harness = config.mode === 'simulation' ? new SimulationHarness(service) : new ClaudeHarness(service, config, runId => scheduler.grantRun(runId));
 const discord = new DiscordBridge(service, config, scheduler);
 const quota = new QuotaMonitor(store, config);
@@ -50,7 +54,7 @@ server.listen(config.port, '127.0.0.1', () => {
 let closing = false;
 async function shutdown() {
   if (closing) return; closing = true;
-  await Promise.all([quota.stop(), scheduler.stop()]); await discord.stop(); server.closeAllConnections(); server.close(); service.knowledge.close(); store.close();
+  await Promise.all([quota.stop(), scheduler.stop(), workers.shutdown()]); await discord.stop(); server.closeAllConnections(); server.close(); service.knowledge.close(); store.close();
   try { unlinkSync(lock); } catch {} process.exit(0);
 }
 process.on('SIGINT', () => void shutdown()); process.on('SIGTERM', () => void shutdown());

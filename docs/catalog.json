@@ -504,6 +504,44 @@
         "execution",
         "rehearsal"
       ]
+    },
+    {
+      "id": "platform.design-worker-lifecycle",
+      "path": "docs/designs/06-worker-lifecycle.md",
+      "namespace": "platform",
+      "kind": "design",
+      "owner": "maintainer",
+      "status": "accepted",
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
+      "importMode": "read-only",
+      "tags": [
+        "execution",
+        "isolation",
+        "recovery"
+      ]
+    },
+    {
+      "id": "platform.worker-lifecycle",
+      "path": "docs/WORKER-LIFECYCLE.md",
+      "namespace": "platform",
+      "kind": "description",
+      "owner": "maintainer",
+      "status": "recorded",
+      "audience": [
+        "operator",
+        "developer",
+        "agent"
+      ],
+      "importMode": "read-only",
+      "tags": [
+        "execution",
+        "isolation",
+        "recovery"
+      ]
     }
   ]
 }

@@ -5,6 +5,9 @@ No model was invoked. The production live-worker gate remains closed. Implements
 the first scenario and domain-transport portions of [design 5](designs/05-work-cycle.md).
 The [research record](EVALUATION-RESEARCH.md) preserves the later Python/framework,
 organizational, room and learning experiments.
+The subsequent [lifecycle implementation](WORKER-LIFECYCLE.md), recorded 2026-10-09,
+adds durable ownership and actual supervisor-crash recovery. The remaining-work
+list below describes this earlier increment's boundary.
 
 ## One-command local scenario
 

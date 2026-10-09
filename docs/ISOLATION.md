@@ -11,6 +11,8 @@ and records the current, stricter acceptance results.
 The subsequent [work-cycle/bridge increment](WORK-CYCLE-IMPLEMENTATION.md) adds
 actual authenticated domain-tool evidence and a verified image pin. It leaves
 whole-worker live admission closed.
+The [durable lifecycle](WORKER-LIFECYCLE.md) subsequently adds persisted VM
+ownership, revocation and acknowledged-worker recovery after supervisor death.
 
 ## Definition
 

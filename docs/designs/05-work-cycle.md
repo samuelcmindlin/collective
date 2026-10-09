@@ -5,6 +5,8 @@ experiments are retained in [the research record](../EVALUATION-RESEARCH.md).
 The first scenario/domain-bridge implementation is recorded
 [separately](../WORK-CYCLE-IMPLEMENTATION.md); it does not enable live workers.
 Refines [progress design](04-progress.md) and [worker admission](../WORKER-REHEARSAL.md).
+The subsequent [lifecycle increment](../WORKER-LIFECYCLE.md) implements durable
+ownership, cleanup and acknowledged-worker recovery; snapshot/provider gates remain.
 
 ## Objective and order
 
